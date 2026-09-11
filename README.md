@@ -39,16 +39,93 @@
 
 ## 🏗️ Architecture Stack
 
-- **L1 Blockchain**: Monad Testnet / Mainnet (Parallel EVM, 800ms finality)
-- **Smart Contracts**: Solidity 0.8.24+ (Foundry)
-  - `ProfileRegistry.sol`: Builder profile, availability, and Gate policy version hashes.
-  - `IntroductionEscrow.sol`: Evaluation fees, attention bonds, timeouts, and resolution.
-  - `IntroductionReceipt.sol`: Evaluation and introduction outcome hashes.
-- **Account Abstraction & Authentication**: Dynamic embedded wallets and signing
-- **AI Experience**: Tencent Hunyuan 3D Agent Persona, Intro Coach, and recipient Gatekeeper
-- **Verified Context**: Opt-in Nansen onchain signals
-- **Indexing & Events**: Envio HyperIndex
-- **Frontend**: Next.js 14 App Router, Tailwind CSS, Framer Motion
+- **L1 Blockchain**: Monad Testnet (chain `10143`) / Mainnet — parallel EVM, 800ms finality
+- **Smart Contracts**: Solidity 0.8.24 (Foundry)
+  - `ProfileRegistry.sol`: builder profile, availability, and versioned gate-policy hashes.
+  - `IntroductionEscrow.sol`: evaluation fee, attention bond, unresolved limits, timeouts, resolution.
+  - `IntroductionReceipt.sol`: anchored evaluation and outcome receipts.
+- **Domain Core**: `@signalpass/core` — Introduction state machine, pricing curve, zod schemas and EIP-712 payloads. Shipped as TypeScript source so the API, evaluator, indexer and web app all run the *same* logic as the contracts' off-chain twin.
+- **Services (Node.js + Hono)**: `services/api` (read/write API), `services/evaluator` (bilateral evaluation + recommendation guardrail), `services/indexer` (Envio HyperIndex event handlers and aggregation).
+- **Frontend**: Next.js 15 App Router with a hand-written CSS design system (custom properties, no UI framework).
+- **AI Experience**: Tencent Hunyuan 3D agent persona, sender-facing Intro Coach, recipient-side Gatekeeper.
+- **Account Abstraction**: Dynamic embedded wallets — *not wired in this build; demo identities are used instead.*
+- **Verified Context**: opt-in onchain signals — *consent record is real and hashed into the payload; third-party verification is not wired.*
+
+---
+
+## 📦 Repository Layout
+
+```
+packages/core        domain model: state machine, pricing, schemas, EIP-712
+packages/contracts   Foundry: ProfileRegistry, IntroductionEscrow, IntroductionReceipt
+services/api         Hono API: profiles, quote, submit, evaluate, transition, queue
+services/evaluator   Hono service: /evaluate and /persona, mock + Hunyuan providers
+services/indexer     Envio HyperIndex config, schema, event handlers, aggregations
+apps/web             Next.js App Router UI
+scripts/e2e.mjs      boots both services and drives the whole loop
+```
+
+---
+
+## ▶️ Running It
+
+```bash
+pnpm install
+
+# terminal 1 — API (falls back to an in-process mock evaluator)
+pnpm api:dev
+
+# terminal 2 — the UI
+pnpm --filter @signalpass/web dev        # http://localhost:3000
+```
+
+To run the real evaluator as a separate process, start it and point the API at it:
+
+```bash
+EVALUATOR_MODE=mock pnpm --filter @signalpass/evaluator start   # :8788
+EVALUATOR_URL=http://localhost:8788 pnpm api:dev
+```
+
+The web app reads `NEXT_PUBLIC_API_URL` (default `http://localhost:8787`). See `.env.example` for
+the full list, including the Hunyuan, Nansen and Dynamic keys.
+
+---
+
+## ✅ Verifying It
+
+```bash
+pnpm verify     # typecheck + unit tests + Foundry tests + end-to-end
+```
+
+Individually:
+
+| Command | What it proves |
+| --- | --- |
+| `pnpm -r typecheck` | 6 of 6 projects compile under `strict` |
+| `pnpm contracts:test` | 34 Foundry tests, incl. a 257-run fuzz over every terminal path |
+| `pnpm --filter @signalpass/indexer test` | 8 aggregation tests (queue health, standing, pressure index) |
+| `pnpm e2e` | 46 assertions over the live loop: quote → lock → evaluate → queue → decide, plus the negative cases |
+
+The contracts expose four invariants that are each covered by a test that fails if broken:
+
+1. **No path ever seizes the bond.** The fuzz test walks every terminal state and asserts the sender's balance is exactly restored.
+2. **Only the recipient can decide.** Accept and decline revert for the sender and for strangers.
+3. **An agent can never approve access.** The evaluator role cannot move an introduction past review.
+4. **Unanswered introductions always expire**, and the pre-evaluation case refunds fee and bond in full.
+
+### Deploying the contracts
+
+```bash
+# reproduce the deploy against the real network without a key or funds
+cd packages/contracts
+forge script script/Deploy.s.sol --rpc-url monad_testnet --sender 0xYourAddress
+
+# broadcast for real
+DEPLOYER_PRIVATE_KEY=0x... forge script script/Deploy.s.sol --rpc-url monad_testnet --broadcast
+```
+
+The dry run has been executed against the live Monad testnet RPC: three contracts, ~3.54M gas,
+~0.72 MON at the gas price observed at the time. Broadcasting needs a funded key.
 
 ---
 
@@ -57,4 +134,5 @@ MIT License
 
 ## AI Coding Assistance
 
-AI coding tools are used during development. All generated changes are reviewed, integrated, and tested by the project team.
+AI coding tools are used during development. All generated changes are reviewed, integrated, and tested by the project team. Specifically: the contract, domain, service and UI code was drafted with AI assistance and then verified by the test suites above — the state machine, the pricing curve and the four contract invariants were each checked by executing them, not by inspection.
+
