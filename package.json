@@ -1,0 +1,22 @@
+{
+  "name": "signalpass",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SignalPass — high-signal introductions for Monad builders",
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=22.11"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
+    "contracts:build": "pnpm --filter @signalpass/contracts build",
+    "contracts:test": "pnpm --filter @signalpass/contracts test",
+    "api:dev": "pnpm --filter @signalpass/api dev"
+  },
+  "devDependencies": {
+    "typescript": "5.7.2"
+  }
+}

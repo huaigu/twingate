@@ -1,0 +1,11 @@
+{
+  "name": "@signalpass/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test -vv",
+    "fmt": "forge fmt",
+    "deploy:testnet": "forge script script/Deploy.s.sol --rpc-url monad_testnet --broadcast"
+  }
+}

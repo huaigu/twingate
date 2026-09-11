@@ -4,6 +4,7 @@ Thumbs.db
 
 # Dependencies
 node_modules/
+.pnpm-store/
 .pnp
 .pnp.js
 
@@ -12,19 +13,23 @@ dist/
 build/
 out/
 .next/
+.turbo/
+*.tsbuildinfo
 cache/
 artifacts/
 
-# Foundry / Hardhat
+# Foundry
 broadcast/
 cache_forge/
 
+# Envio
+generated/
+envio.log
+
 # Environment Variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Logs
 *.log
