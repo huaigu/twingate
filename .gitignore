@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build Outputs & Cache
+dist/
+build/
+out/
+.next/
+cache/
+artifacts/
+
+# Foundry / Hardhat
+broadcast/
+cache_forge/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
