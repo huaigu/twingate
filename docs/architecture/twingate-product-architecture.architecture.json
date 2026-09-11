@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "SignalPass Product Architecture",
+    "subtitle": "High-signal introductions for Monad builders",
+    "output": "twingate-product-architecture.html",
+    "viewBox": [1470, 760]
+  },
+  "components": [
+    {
+      "id": "sender",
+      "type": "external",
+      "label": "Sender",
+      "sublabel": "Monad builder",
+      "pos": [20, 280],
+      "size": [125, 60]
+    },
+    {
+      "id": "recipient",
+      "type": "external",
+      "label": "Recipient",
+      "sublabel": "Monad builder",
+      "pos": [20, 510],
+      "size": [125, 60]
+    },
+    {
+      "id": "profile",
+      "type": "frontend",
+      "label": "Builder Profile",
+      "sublabel": "3D Agent Persona",
+      "pos": [195, 120],
+      "size": [140, 60]
+    },
+    {
+      "id": "composer",
+      "type": "frontend",
+      "label": "Intro Composer",
+      "sublabel": "structured request",
+      "pos": [195, 290],
+      "size": [140, 60]
+    },
+    {
+      "id": "review_queue",
+      "type": "frontend",
+      "label": "Protected Queue",
+      "sublabel": "owner-facing summary",
+      "pos": [195, 500],
+      "size": [140, 60]
+    },
+    {
+      "id": "dynamic",
+      "type": "security",
+      "label": "Dynamic",
+      "sublabel": "auth + embedded wallet",
+      "pos": [400, 120],
+      "size": [150, 60]
+    },
+    {
+      "id": "gate_service",
+      "type": "backend",
+      "label": "SignalPass Service",
+      "sublabel": "quotes + orchestration",
+      "pos": [400, 320],
+      "size": [150, 60]
+    },
+    {
+      "id": "payload_store",
+      "type": "database",
+      "label": "Encrypted Store",
+      "sublabel": "requests + persona assets",
+      "pos": [610, 120],
+      "size": [160, 60]
+    },
+    {
+      "id": "concierge",
+      "type": "backend",
+      "label": "Private Concierge",
+      "sublabel": "Coach + Gatekeeper",
+      "pos": [610, 320],
+      "size": [160, 60]
+    },
+    {
+      "id": "envio",
+      "type": "cloud",
+      "label": "Envio Indexer",
+      "sublabel": "queue + aggregates",
+      "pos": [610, 540],
+      "size": [160, 60]
+    },
+    {
+      "id": "hunyuan",
+      "type": "external",
+      "label": "Tencent Hunyuan",
+      "sublabel": "3D + evaluation",
+      "pos": [840, 160],
+      "size": [155, 60]
+    },
+    {
+      "id": "nansen",
+      "type": "external",
+      "label": "Nansen",
+      "sublabel": "opt-in context",
+      "pos": [840, 320],
+      "size": [155, 60]
+    },
+    {
+      "id": "profile_registry",
+      "type": "backend",
+      "label": "Profile Registry",
+      "sublabel": "policy hash + key",
+      "pos": [1050, 240],
+      "size": [145, 60]
+    },
+    {
+      "id": "intro_escrow",
+      "type": "backend",
+      "label": "Introduction Escrow",
+      "sublabel": "fee + bond",
+      "pos": [1050, 380],
+      "size": [145, 60]
+    },
+    {
+      "id": "receipt_registry",
+      "type": "backend",
+      "label": "Receipt Registry",
+      "sublabel": "result + resolution",
+      "pos": [1250, 310],
+      "size": [145, 60]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "SignalPass Social App",
+      "wraps": ["profile", "composer", "review_queue", "dynamic", "gate_service", "payload_store", "concierge", "envio"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Monad Introduction Contracts",
+      "wraps": ["profile_registry", "intro_escrow", "receipt_registry"]
+    }
+  ],
+  "connections": [
+    {
+      "from": "sender",
+      "to": "composer",
+      "variant": "emphasis"
+    },
+    {
+      "from": "recipient",
+      "to": "profile",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "recipient",
+      "to": "review_queue",
+      "variant": "emphasis"
+    },
+    {
+      "from": "profile",
+      "to": "dynamic",
+      "variant": "security"
+    },
+    {
+      "from": "profile",
+      "to": "hunyuan",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left",
+      "route": "orthogonal-h"
+    },
+    {
+      "from": "composer",
+      "to": "dynamic",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "composer",
+      "to": "gate_service",
+      "variant": "emphasis"
+    },
+    {
+      "from": "dynamic",
+      "to": "gate_service",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "gate_service",
+      "to": "payload_store",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "gate_service",
+      "to": "concierge",
+      "variant": "dashed"
+    },
+    {
+      "from": "concierge",
+      "to": "hunyuan",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "concierge",
+      "to": "nansen",
+      "variant": "security"
+    },
+    {
+      "from": "gate_service",
+      "to": "profile_registry",
+      "variant": "default",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "from": "gate_service",
+      "to": "intro_escrow",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "concierge",
+      "to": "receipt_registry",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "from": "intro_escrow",
+      "to": "receipt_registry",
+      "variant": "emphasis"
+    },
+    {
+      "from": "intro_escrow",
+      "to": "envio",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "envio",
+      "to": "review_queue",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "route": "orthogonal-v"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Social Surface",
+      "items": [
+        "3D personas make a builder's availability visible",
+        "The app presents introductions, not a payment inbox"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Private Evaluation",
+      "items": [
+        "Hunyuan coach and gatekeeper stay behind the UI",
+        "Nansen facts are opt-in and explainable"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Consent + Settlement",
+      "items": [
+        "Sender funds evaluation and locks a refundable bond",
+        "Monad records the lifecycle without storing private content"
+      ]
+    }
+  ]
+}
