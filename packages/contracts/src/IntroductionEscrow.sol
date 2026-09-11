@@ -199,11 +199,16 @@ contract IntroductionEscrow {
         emit IntroductionStateChanged(id, State.Locked);
     }
 
-    /// @notice Sender withdraws before evaluation starts. Bond returns in full.
+    /// @notice Sender withdraws before the introduction reaches review. Both the
+    ///         fee and the bond return, because no evaluation was delivered.
+    ///         `NeedsContext` is included deliberately: being asked for more
+    ///         context must never cost the sender anything.
     function withdraw(bytes32 id) external nonReentrant {
         Introduction storage intro = _require(id);
         if (intro.sender != msg.sender) revert NotSender();
-        if (intro.state != State.Locked) revert IllegalState(intro.state);
+        if (intro.state != State.Locked && intro.state != State.NeedsContext) {
+            revert IllegalState(intro.state);
+        }
         _settleRefund(id, intro, State.Withdrawn);
     }
 

@@ -1,0 +1,57 @@
+# Raw entities mirror what the contracts actually store, nothing more.
+
+type Builder {
+  id: ID!
+  address: String!
+  profileId: BigInt!
+  handleHash: String!
+  profileHash: String!
+  policyHash: String!
+  policyVersion: Int!
+  acceptsIntroductions: Boolean!
+  registeredAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type Introduction {
+  id: ID!
+  sender: String!
+  recipient: String!
+  recipientProfileId: BigInt!
+  policyVersion: Int!
+  evaluationFee: BigInt!
+  attentionBond: BigInt!
+  lockedAt: BigInt!
+  expiresAt: BigInt!
+  state: Int!
+  resolvedAt: BigInt
+  receiptHash: String
+  recommendation: Int
+  modelVersion: String
+}
+
+# Derived entities. These are what the Envio bounty scores for, and they are the
+# inputs the pricing curve reads: pressureIndex and sender pass rate are what
+# turn a static fee into a congestion-aware quote.
+type QueueHealth {
+  id: ID!
+  recipient: String!
+  pending: Int!
+  accepted: Int!
+  declined: Int!
+  expired: Int!
+  declinedRate: Float!
+  avgResponseSeconds: Int!
+  pressureIndex: Float!
+  updatedAt: BigInt!
+}
+
+type SenderStanding {
+  id: ID!
+  sender: String!
+  total: Int!
+  accepted: Int!
+  declined: Int!
+  passRate: Float!
+  updatedAt: BigInt!
+}

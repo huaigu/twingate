@@ -1,5 +1,6 @@
 import type {
   BuilderProfile,
+  EvaluationOutcome,
   GatePolicy,
   Introduction,
   Quote,
@@ -10,6 +11,14 @@ export interface StoredIntroduction extends Introduction {
   readonly quote: Quote
   readonly payloadHash: Hex
   readonly evaluationReceiptHash: Hex | null
+  /**
+   * The bilateral verdict, kept so the receipt can be re-read after the fact.
+   * Without this the only copy of what each side was told lives in the response
+   * to the evaluation call, which a reload would lose.
+   */
+  readonly evaluationOutcome: EvaluationOutcome | null
+  /** Which provider produced it: 'mock', 'hunyuan', or the in-process fallback. */
+  readonly evaluationProvider: string | null
 }
 
 /**

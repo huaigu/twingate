@@ -11,6 +11,8 @@
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
+    "e2e": "node scripts/e2e.mjs",
+    "verify": "pnpm -r typecheck && pnpm -r test && pnpm contracts:test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
     "contracts:build": "pnpm --filter @signalpass/contracts build",
     "contracts:test": "pnpm --filter @signalpass/contracts test",

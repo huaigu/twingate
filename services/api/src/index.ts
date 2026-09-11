@@ -178,6 +178,8 @@ app.post('/introductions', async (c) => {
     quote,
     payloadHash: hashDocument(intent),
     evaluationReceiptHash: null,
+    evaluationOutcome: null,
+    evaluationProvider: null,
   }
 
   store.introductions.set(id, stored)
@@ -203,17 +205,79 @@ app.get('/queue/:handle', (c) => {
   )
 })
 
-/** Stand-in for the evaluator callback until the Hunyuan service is wired up. */
-app.post('/introductions/:id/evaluate', (c) => {
+type EvaluatorHalf = Omit<EvaluationOutcome, 'receiptHash'>
+
+/**
+ * Runs the bilateral evaluation. Prefers the dedicated evaluator service when
+ * EVALUATOR_URL is configured, and falls back to the local mock so the demo
+ * works from a single process during development.
+ */
+async function runEvaluation(
+  intro: StoredIntroduction,
+  recipientHandle: string,
+): Promise<{ outcome: EvaluationOutcome; provider: string }> {
+  const url = process.env.EVALUATOR_URL
+  const policy = store.policies.get(recipientHandle)
+
+  if (url && policy) {
+    try {
+      const response = await fetch(`${url.replace(/\/$/, '')}/evaluate`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        // jsonSafe, not JSON.stringify: the policy carries wei-denominated
+        // bigints and a bare stringify throws on them.
+        body: JSON.stringify(
+          jsonSafe({
+            introductionId: intro.id,
+            senderHandle: profileByOwner(store, intro.sender)?.handle ?? 'unknown',
+            recipientHandle,
+            intent: intro.intent,
+            recipientPolicy: policy,
+            disclosedSignals: intro.disclosedSignals,
+          }),
+        ),
+      })
+
+      if (response.ok) {
+        const body = (await response.json()) as { outcome: EvaluatorHalf; provider: string }
+        return {
+          provider: body.provider,
+          outcome: {
+            ...body.outcome,
+            receiptHash: hashDocument({
+              introductionId: intro.id,
+              policyVersion: intro.policyVersion,
+              provider: body.provider,
+              outcome: body.outcome,
+            }),
+          },
+        }
+      }
+
+      console.warn(
+        `[evaluator] ${url} answered ${response.status}; falling back to the in-process mock`,
+      )
+    } catch (error) {
+      // Evaluator unreachable: fall through to the local mock rather than
+      // failing the sender's request. Log it — a silent fallback hides real
+      // wiring bugs.
+      console.warn(
+        `[evaluator] ${url} unreachable (${error instanceof Error ? error.message : 'unknown error'}); falling back to the in-process mock`,
+      )
+    }
+  }
+
+  return { outcome: mockEvaluate(intro, policy?.topics ?? []), provider: 'mock-local' }
+}
+
+app.post('/introductions/:id/evaluate', async (c) => {
   const id = c.req.param('id') as Hex
   const intro = store.introductions.get(id)
   if (!intro) return c.json({ error: 'introduction_not_found' }, 404)
   if (intro.state !== 'locked') return c.json({ error: 'illegal_state', state: intro.state }, 409)
 
-  const policy = store.policies.get(
-    profileByOwner(store, intro.recipient)?.handle ?? '',
-  )
-  const outcome = mockEvaluate(intro, policy?.topics ?? [])
+  const recipientHandle = profileByOwner(store, intro.recipient)?.handle ?? ''
+  const { outcome, provider } = await runEvaluation(intro, recipientHandle)
 
   const nextState: IntroductionState =
     outcome.recommendation === 'ask_for_context' ? 'needs_context' : 'ready_for_review'
@@ -223,10 +287,12 @@ app.post('/introductions/:id/evaluate', (c) => {
     state: nextState,
     updatedAt: Math.floor(Date.now() / 1000),
     evaluationReceiptHash: outcome.receiptHash,
+    evaluationOutcome: outcome,
+    evaluationProvider: provider,
   }
   store.introductions.set(id, updated)
 
-  return c.json(jsonSafe({ introduction: updated, outcome }))
+  return c.json(jsonSafe({ introduction: updated, outcome, provider }))
 })
 
 app.post('/introductions/:id/transition', async (c) => {

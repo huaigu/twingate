@@ -1,0 +1,38 @@
+# Envio HyperIndex configuration for SignalPass on Monad testnet.
+#
+# Addresses are filled in after `forge script script/Deploy.s.sol --broadcast`.
+# Run codegen + the indexer with:
+#   pnpm --filter @signalpass/indexer codegen
+#   pnpm --filter @signalpass/indexer dev
+name: signalpass-indexer
+description: SignalPass builder profiles and introduction lifecycle on Monad
+
+networks:
+  - id: 10143
+    start_block: 0
+    contracts:
+      - name: ProfileRegistry
+        address:
+          - "0x0000000000000000000000000000000000000000" # replace with the deployed ProfileRegistry
+        handler: src/EventHandlers.ts
+        events:
+          - event: ProfileRegistered(uint256 indexed profileId, address indexed owner, bytes32 handleHash, bytes32 profileHash)
+          - event: PolicyUpdated(uint256 indexed profileId, uint32 policyVersion, bytes32 policyHash)
+          - event: ProfileUpdated(uint256 indexed profileId, bytes32 profileHash)
+          - event: AvailabilityChanged(uint256 indexed profileId, bool acceptsIntroductions)
+
+      - name: IntroductionEscrow
+        address:
+          - "0x0000000000000000000000000000000000000000" # replace with the deployed IntroductionEscrow
+        handler: src/EventHandlers.ts
+        events:
+          - event: IntroductionLocked(bytes32 indexed id, address indexed sender, address indexed recipient, uint256 recipientProfileId, uint256 evaluationFee, uint256 attentionBond, uint64 expiresAt)
+          - event: IntroductionStateChanged(bytes32 indexed id, uint8 state)
+          - event: AttentionBondRefunded(bytes32 indexed id, address indexed to, uint256 amount)
+
+      - name: IntroductionReceipt
+        address:
+          - "0x0000000000000000000000000000000000000000" # replace with the deployed IntroductionReceipt
+        handler: src/EventHandlers.ts
+        events:
+          - event: ReceiptAnchor(bytes32 indexed introductionId, bytes32 receiptHash, uint32 policyVersion, uint8 recommendation, string modelVersion)

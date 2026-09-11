@@ -26,6 +26,12 @@ cache_forge/
 generated/
 envio.log
 
+# Next.js (next-env.d.ts is regenerated on every build)
+next-env.d.ts
+
+# Local run artifacts (dev server logs, screenshots)
+.run/
+
 # Environment Variables
 .env
 .env.*
