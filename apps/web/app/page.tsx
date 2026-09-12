@@ -1,247 +1,437 @@
-import Link from 'next/link'
+'use client'
 
-const HANDSHAKE = [
+import { useRef, useState, type KeyboardEvent } from 'react'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import '@fontsource-variable/manrope'
+import styles from './home.module.css'
+
+const PersonaScene = dynamic(() => import('@/components/PersonaScene'), {
+  ssr: false,
+  loading: () => <div className={styles.sceneLoading}>Getting the introductions ready…</div>,
+})
+
+function Arrow({ diagonal = false }: { diagonal?: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d={diagonal ? 'M6 18 18 6M6 6h12v12' : 'M4 12h15m-6-6 6 6-6 6'}
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function SignalMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="34"
+      height="34"
+      viewBox="0 0 34 34"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M13 5 4 14v6l9 9V5Zm8 0 9 9v6l-9 9V5Z" fill="currentColor" />
+      <circle cx="17" cy="17" r="2" fill="currentColor" />
+    </svg>
+  )
+}
+
+function Spark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="m20 2 4.3 13.7L38 20l-13.7 4.3L20 38l-4.3-13.7L2 20l13.7-4.3L20 2Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+const PREVIEW = [
   {
-    step: '01',
-    title: 'The sender writes and locks',
-    body: 'Four questions instead of a cold paragraph: who you are, why this person, what you offer, what you want next. A non-refundable evaluation fee and a refundable attention bond are split onchain in the same transaction.',
+    label: 'The spark',
+    title: 'A good reason to say hello.',
+    text: 'Alice builds simulation tools. Bob designs event pipelines. There might be something here.',
+    note: 'A shared interest in Monad tooling',
+    action: 'Meet Bob',
+    href: '/builders/bob',
   },
   {
-    step: '02',
-    title: 'Two agents read it, one per side',
-    body: 'Your Intro Coach tightens the card. Their Gatekeeper reads it against the policy they published. Neither agent can approve access, rank anyone by wealth, or touch a single wei.',
+    label: 'The summary',
+    title: 'Common ground, found.',
+    text: 'Alice can help test Bob’s indexing pipeline. Bob brings the event expertise her simulator needs.',
+    note: 'Your agent brings you the useful part',
+    action: 'Try this introduction',
+    href: '/introduce/bob',
   },
   {
-    step: '03',
-    title: 'Only the recipient can open it',
-    body: 'The introduction waits in their private queue with a short summary. They accept or decline. Either way the bond is refunded — a rule the escrow contract enforces, not a promise we make.',
+    label: 'Your call',
+    title: 'Worth a conversation?',
+    text: 'The introduction is ready for a decision. Bob can accept or decline. A little context goes a long way.',
+    note: 'People make the final decision',
+    action: 'Explore the demo inbox',
+    href: '/inbox/bob',
   },
 ] as const
 
-const METRICS = [
-  { value: '0 MON', label: 'ever seized by an agent. The bond has exactly one destination.' },
-  { value: '4', label: 'questions. An introduction is a card, not an essay.' },
-  { value: '2', label: 'agents, one per person. Neither sees the other’s reasoning.' },
-  { value: '1', label: 'person who can open it — the one it was addressed to.' },
+const STEPS = [
+  {
+    title: 'Find someone who gets it.',
+    text: 'Discover what people are building, what they can offer, and who they’d love to meet.',
+  },
+  {
+    title: 'Let your agents connect the dots.',
+    text: 'You cover the evaluation. Your agents help prepare the introduction and bring back a clear summary.',
+  },
+  {
+    title: 'Make the human connection.',
+    text: 'See why it might matter. Choose whether to say hello. Your attention stays yours.',
+  },
 ] as const
 
 export default function HomePage() {
+  const [phase, setPhase] = useState(1)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const preview = PREVIEW[phase] ?? PREVIEW[1]
+
+  function moveTab(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let next = index
+    if (event.key === 'ArrowRight') next = (index + 1) % PREVIEW.length
+    else if (event.key === 'ArrowLeft') next = (index + PREVIEW.length - 1) % PREVIEW.length
+    else if (event.key === 'Home') next = 0
+    else if (event.key === 'End') next = PREVIEW.length - 1
+    else return
+    event.preventDefault()
+    setPhase(next)
+    tabRefs.current[next]?.focus()
+  }
+
   return (
-    <div className="wrap">
-      <section className="hero">
-        <div className="hero-grid">
-          <div className="fade-in">
-            <div className="eyebrow">Monad Metropolis · Track 03 — Social, Attention &amp; Culture</div>
-            <h1 className="display" style={{ marginTop: 18 }}>
-              Nobody wants another inbox.
+    <div className={styles.landing}>
+      <a href="#main" className={styles.skipLink}>
+        Skip to content
+      </a>
+      <header className={styles.header}>
+        <Link href="/" className={styles.brand} aria-label="SignalPass home">
+          <SignalMark />
+          SignalPass
+          <span className={styles.brandDot} />
+        </Link>
+        <nav className={styles.desktopNav} aria-label="Main navigation">
+          <a href="#how-it-works">The idea</a>
+          <Link href="/builders">Meet builders</Link>
+          <Link href="/inbox/bob">Your introductions</Link>
+        </nav>
+        <div className={styles.headerActions}>
+          <Link href="/builders" className={styles.navCta}>
+            Try the demo <Arrow diagonal />
+          </Link>
+          <button
+            className={styles.menuToggle}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d={menuOpen ? 'm6 6 12 12M6 18 18 6' : 'M4 8h16M4 16h16'}
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <nav
+          className={styles.mobileNav}
+          id="mobile-menu"
+          hidden={!menuOpen}
+          aria-label="Mobile navigation"
+        >
+          <a href="#how-it-works" onClick={() => setMenuOpen(false)}>
+            The idea
+          </a>
+          <Link href="/builders">Meet builders</Link>
+          <Link href="/inbox/bob">Your introductions</Link>
+          <Link href="/status">Demo status</Link>
+        </nav>
+      </header>
+      <main id="main">
+        <section className={styles.hero} aria-labelledby="hero-title">
+          <div className={styles.heroCopy}>
+            <h1 id="hero-title">
+              Your people.
               <br />
-              Everybody wants a good introduction.
+              Closer than
+              <br />
+              <span>you think.</span>
+              <Spark className={styles.titleSpark} />
             </h1>
-            <p className="lede" style={{ marginTop: 22 }}>
-              Every builder network eventually becomes the same problem: the people worth reaching are
-              reachable, so they get buried. Filters do not fix this, because the cost of sending is
-              zero. SignalPass changes the unit of contact. An <strong>introduction</strong> is a small,
-              deliberate, paid-for object that only one person can open — and both sides have to want it.
+            <p className={styles.heroDescription}>
+              A social space for Monad builders.
+              <br />
+              Let your agents find the common ground.
+              <br />
+              You take it from there.
             </p>
-
-            <div className="hero-actions">
-              <Link href="/builders" className="btn">
-                Open the directory
+            <div className={styles.heroActions}>
+              <Link href="/builders" className={styles.primaryButton}>
+                Find your people <Arrow diagonal />
               </Link>
-              <Link href="/inbox/bob" className="btn btn-ghost">
-                See a recipient’s inbox
+              <a href="#introduction-preview" className={styles.playLink}>
+                <span className={styles.playIcon}>
+                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                    <path d="m4 2 6 4-6 4V2Z" fill="currentColor" />
+                  </svg>
+                </span>
+                See an introduction
+              </a>
+            </div>
+            <div className={styles.demoNote}>
+              <span />
+              An early look. Try it with Alice &amp; Bob.
+              <Link href="/status" aria-label="See what works in this demo">
+                <Arrow />
               </Link>
             </div>
-
-            <p className="tiny dim" style={{ marginTop: 18 }}>
-              This build runs on seeded demo identities. Read what is real today on the{' '}
-              <Link href="/status" className="btn-link">
-                build status
-              </Link>{' '}
-              page.
-            </p>
           </div>
-
-          <div className="intro-card fade-in" aria-hidden="true">
-            <div className="intro-card-head">
-              <div>
-                <div className="eyebrow">Introduction</div>
-                <div className="strong" style={{ marginTop: 2 }}>
-                  to @bob
-                </div>
-              </div>
-              <span className="pill" data-tone="accent">
-                <span className="pill-dot" />
-                in review queue
+          <div className={styles.heroStage} id="introduction-preview">
+            <div className={styles.stageTop}>
+              <span>
+                <span className={styles.networkDiamond} />
+                Made for a more human internet
               </span>
+              <Spark />
             </div>
-            <div className="intro-card-body">
-              {[
-                ['01', 'Who I am', 'I build a deterministic simulation harness for Monad contracts.'],
-                ['02', 'Why you', 'You designed the event pipeline I keep reading about.'],
-                ['03', 'What I offer', 'Simulation tooling, and honest feedback on protocol design.'],
-                ['04', 'Next step', 'A 20-minute call, or a written exchange.'],
-              ].map(([num, label, text]) => (
-                <div className="intro-q" key={num}>
-                  <div className="row" style={{ gap: 10 }}>
-                    <span className="intro-q-num">{num}</span>
-                    <span className="tiny strong">{label}</span>
-                  </div>
-                  <p className="intro-q-text">{text}</p>
-                </div>
+            <div className={styles.sceneWrap}>
+              <PersonaScene phase={phase} />
+            </div>
+            <span className={`${styles.agentName} ${styles.aliceLabel}`}>
+              <span />
+              Alice’s agent
+            </span>
+            <span className={`${styles.agentName} ${styles.bobLabel}`}>
+              <span />
+              Bob’s agent
+            </span>
+            <div
+              className={styles.resultCard}
+              role="tabpanel"
+              id="intro-panel"
+              aria-labelledby={`intro-tab-${phase}`}
+            >
+              <div className={styles.resultMeta}>
+                <span className={styles.matchIcon}>
+                  <SignalMark />
+                </span>
+                <span>Alice &amp; Bob</span>
+                <span className={styles.exampleLabel}>Illustrated example</span>
+              </div>
+              <div className={styles.resultContent} aria-live="polite">
+                <h2>{preview.title}</h2>
+                <p>{preview.text}</p>
+              </div>
+              <div className={styles.resultBottom}>
+                <span>{preview.note}</span>
+                <Link href={preview.href} aria-label={preview.action}>
+                  <Arrow diagonal />
+                </Link>
+              </div>
+            </div>
+            <div className={styles.previewTabs} role="tablist" aria-label="Explore an introduction">
+              {PREVIEW.map((item, index) => (
+                <button
+                  key={item.label}
+                  id={`intro-tab-${index}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={phase === index}
+                  aria-controls="intro-panel"
+                  tabIndex={phase === index ? 0 : -1}
+                  ref={(element) => {
+                    tabRefs.current[index] = element
+                  }}
+                  onClick={() => setPhase(index)}
+                  onKeyDown={(event) => moveTab(event, index)}
+                >
+                  <span>{index + 1}</span>
+                  {item.label}
+                </button>
               ))}
             </div>
           </div>
+        </section>
+        <div className={styles.beliefStrip}>
+          <span>Less cold outreach.</span>
+          <Spark />
+          <span>More common ground.</span>
+          <Spark />
+          <span>Always your call.</span>
         </div>
-      </section>
-
-      <section className="section">
-        <div className="metric-row">
-          {METRICS.map((metric) => (
-            <div className="metric" key={metric.value}>
-              <div className="metric-value">{metric.value}</div>
-              <div className="metric-label">{metric.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section" id="how">
-        <div className="eyebrow">How it moves</div>
-        <h2 className="h2" style={{ marginTop: 12, maxWidth: '24ch' }}>
-          Three steps, and the middle one is where we earn our keep.
-        </h2>
-
-        <div className="handshake section-tight">
-          {HANDSHAKE.map((item) => (
-            <div className="handshake-step" key={item.step}>
-              <span className="handshake-step-num">{item.step}</span>
-              <div className="h3" style={{ fontSize: 16 }}>
-                {item.title}
-              </div>
-              <p className="small muted" style={{ marginTop: 10 }}>
-                {item.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section split">
-        <div>
-          <div className="eyebrow">The money is shaped like the incentive</div>
-          <h2 className="h2" style={{ marginTop: 12 }}>
-            A fee that is spent, a bond that comes back.
-          </h2>
-          <p className="lede" style={{ marginTop: 16 }}>
-            Two numbers, and they do different jobs. The evaluation fee is small and never refunded — it
-            pays for reading the request, nothing else. The attention bond is larger, fully refundable, and
-            exists purely to make sending in bulk expensive while leaving one honest introduction cheap.
-          </p>
-
-          <div className="grid-2 section-tight">
-            <div className="notice" data-tone="fee">
-              <span className="pill" data-tone="fee">
-                spent
-              </span>
-              <p className="small" style={{ marginTop: 10 }}>
-                Covers one bilateral evaluation. It is not a price on attention and it does not buy a reply.
-              </p>
-            </div>
-            <div className="notice" data-tone="bond">
-              <span className="pill" data-tone="bond">
-                refundable
-              </span>
-              <p className="small" style={{ marginTop: 10 }}>
-                Locked while the introduction is open. Refunded on accept, on decline, on withdrawal, and
-                on expiry. There is no path where it is seized — that is a tested invariant, not a policy.
-              </p>
-            </div>
-          </div>
-
-          <p className="small muted" style={{ marginTop: 18 }}>
-            The bond still has to be <em>worth</em> something, or it filters nobody. It scales with
-            published availability, live queue congestion and how often this sender has been declined
-            before — all recomputed from public data, so anyone can check the number they were quoted.
-          </p>
-        </div>
-
-        <div className="card">
-          <div className="eyebrow">What the bond is not</div>
-          <ul className="bullets" style={{ marginTop: 14 }}>
-            <li>Not a bid for attention.</li>
-            <li>Not a deposit that can be forfeited by an AI verdict.</li>
-            <li>Not a score attached to a person.</li>
-            <li>Not a subscription, and not a tip.</li>
-          </ul>
-          <hr className="divider" style={{ margin: '18px 0' }} />
-          <p className="small muted">
-            Verified context is opt-in and per-introduction. If you disclose onchain activity or a deployed
-            contract, it is explained to the recipient — never turned into a wealth score, and never used
-            on its own to decide access.
-          </p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="row-between">
-          <div>
-            <div className="eyebrow">Scope discipline</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>
-              What SignalPass deliberately is not.
+        <section className={styles.howSection} id="how-it-works" aria-labelledby="how-title">
+          <div className={styles.sectionLead}>
+            <h2 id="how-title">
+              A little help with
+              <br />
+              the first hello.
             </h2>
+            <p>
+              The best connections start with something in common. SignalPass helps you find it,
+              before you give someone your time.
+            </p>
           </div>
-          <Link href="/status" className="btn btn-ghost btn-sm">
-            What is built
+          <ol className={styles.steps}>
+            {STEPS.map((step, index) => (
+              <li key={step.title}>
+                <span className={styles.stepNumber}>0{index + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+        <section className={styles.peopleSection} aria-labelledby="people-title">
+          <div className={styles.peopleHeading}>
+            <h2 id="people-title">
+              Different talents.
+              <br />
+              <span>Something in common.</span>
+            </h2>
+            <Link href="/builders" className={styles.textLink}>
+              Explore the demo builders <Arrow diagonal />
+            </Link>
+          </div>
+          <div className={styles.peopleGrid}>
+            <Link href="/builders/alice" className={`${styles.personCard} ${styles.aliceCard}`}>
+              <div className={styles.personTop}>
+                <span className={styles.initial}>a.</span>
+                <span>Open to introductions</span>
+                <Arrow diagonal />
+              </div>
+              <h3>Alice</h3>
+              <p className={styles.personRole}>Making contracts easier to test.</p>
+              <p className={styles.personDetail}>
+                Building a deterministic simulation harness for Monad contracts. Looking for
+                protocol engineers who have shipped.
+              </p>
+              <div className={styles.personTags}>
+                <span>Simulation</span>
+                <span>Protocol design</span>
+                <span>Monad</span>
+              </div>
+              <span className={styles.sampleProfile}>Demo profile · @alice</span>
+            </Link>
+            <Link href="/builders/bob" className={`${styles.personCard} ${styles.bobCard}`}>
+              <div className={styles.personTop}>
+                <span className={styles.initial}>b.</span>
+                <span>Making room for the right idea</span>
+                <Arrow diagonal />
+              </div>
+              <h3>Bob</h3>
+              <p className={styles.personRole}>Connecting the onchain dots.</p>
+              <p className={styles.personDetail}>
+                Building indexing infrastructure for social graphs. Looking for builders solving
+                discovery and attention.
+              </p>
+              <div className={styles.personTags}>
+                <span>Social graphs</span>
+                <span>Indexing</span>
+                <span>Monad</span>
+              </div>
+              <span className={styles.sampleProfile}>Demo profile · @bob</span>
+            </Link>
+          </div>
+          <p className={styles.peopleFootnote}>
+            Two sample profiles. A small glimpse of the connections we’re building for.
+          </p>
+        </section>
+        <section className={styles.termsSection} aria-labelledby="terms-title">
+          <div>
+            <SignalMark className={styles.termsMark} />
+            <h2 id="terms-title">
+              A thoughtful hello.
+              <br />
+              On your terms.
+            </h2>
+            <p>
+              A little intention goes a long way.
+              <br />
+              Here’s what happens when you reach out.
+            </p>
+          </div>
+          <div className={styles.termsList}>
+            <article>
+              <span>01</span>
+              <div>
+                <h3>You cover the evaluation.</h3>
+                <p>
+                  The sender pays for the agents’ work, including the recipient’s evaluation. The
+                  quote is shown before you submit.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>Your bond comes back.</h3>
+                <p>
+                  A separate, refundable bond stays with the introduction until it resolves. The
+                  evaluation fee is spent.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>They choose to connect.</h3>
+                <p>
+                  Agents find context and suggest a next step. A person decides whether the
+                  introduction feels right.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section className={styles.closing} aria-labelledby="closing-title">
+          <Spark />
+          <h2 id="closing-title">
+            Your next good conversation
+            <br />
+            starts with a little signal.
+          </h2>
+          <Link href="/builders" className={styles.primaryButton}>
+            Find your people <Arrow diagonal />
+          </Link>
+          <p>Explore the working introduction demo.</p>
+        </section>
+      </main>
+      <footer className={styles.footer}>
+        <Link href="/" className={styles.brand}>
+          <SignalMark />
+          SignalPass
+        </Link>
+        <span>Built for people building on Monad.</span>
+        <div>
+          <Link href="/status">Demo status</Link>
+          <Link href="/builders">
+            Meet the builders <Arrow diagonal />
           </Link>
         </div>
-
-        <div className="grid-2 section-tight">
-          <div className="card-quiet">
-            <div className="strong small">Not a public feed</div>
-            <p className="small muted" style={{ marginTop: 6 }}>
-              There is no wall of open requests to browse. An introduction has one addressee.
-            </p>
-          </div>
-          <div className="card-quiet">
-            <div className="strong small">Not a chat platform</div>
-            <p className="small muted" style={{ marginTop: 6 }}>
-              SignalPass ends where a conversation begins. Once two people agree, they leave.
-            </p>
-          </div>
-          <div className="card-quiet">
-            <div className="strong small">Not pay-to-DM</div>
-            <p className="small muted" style={{ marginTop: 6 }}>
-              Money never buys a reply. Accept and decline are equally free, and the bond returns either way.
-            </p>
-          </div>
-          <div className="card-quiet">
-            <div className="strong small">Not an AI gatekeeper</div>
-            <p className="small muted" style={{ marginTop: 6 }}>
-              The agents describe fit and coach the sender. They cannot grant access or move funds.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="card-raised">
-          <div className="row-between" style={{ flexWrap: 'wrap' }}>
-            <div style={{ maxWidth: '52ch' }}>
-              <h2 className="h2">Try the whole loop.</h2>
-              <p className="small muted" style={{ marginTop: 10 }}>
-                Write an introduction as one builder, watch both halves of the evaluation, then switch to the
-                recipient’s inbox and decide. The quote recomputes as you type.
-              </p>
-            </div>
-            <div className="row">
-              <Link href="/builders" className="btn">
-                Start an introduction
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      </footer>
     </div>
   )
 }

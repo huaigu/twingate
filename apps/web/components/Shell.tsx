@@ -23,6 +23,8 @@ export function Shell({ children }: { readonly children: React.ReactNode }) {
   const pathname = usePathname()
   const active = activeSection(pathname)
 
+  if (pathname === '/') return <>{children}</>
+
   return (
     <div className="shell">
       <nav className="nav">
@@ -58,9 +60,7 @@ export function Shell({ children }: { readonly children: React.ReactNode }) {
 
       <footer className="footer">
         <div className="wrap footer-inner">
-          <span>
-            SignalPass — introductions for Monad builders. Both people have to opt in.
-          </span>
+          <span>SignalPass — introductions for Monad builders. Both people have to opt in.</span>
           <span className="mono">
             Built for the Monad Metropolis Hackathon · Track 03 Social, Attention &amp; Culture
           </span>

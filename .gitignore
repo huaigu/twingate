@@ -31,6 +31,7 @@ next-env.d.ts
 
 # Local run artifacts (dev server logs, screenshots)
 .run/
+apps/web/.impeccable/review/
 
 # Environment Variables
 .env
