@@ -4,7 +4,7 @@
   "meta": {
     "title": "SignalPass Product Architecture",
     "subtitle": "High-signal introductions for Monad builders",
-    "output": "twingate-product-architecture.html",
+    "output": "signalpass-product-architecture.html",
     "viewBox": [1470, 760]
   },
   "components": [

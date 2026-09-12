@@ -28,9 +28,9 @@
 
 In this repository:
 
-- [📒 Product Direction](./TWINGATE_PRODUCT_DIRECTION.md): the problem, the mechanism, the fee/bond split, the agent handshake, and an explicit list of what SignalPass does *not* do.
+- [📒 Product Direction](./SIGNALPASS_PRODUCT_DIRECTION.md): the problem, the mechanism, the fee/bond split, the agent handshake, and an explicit list of what SignalPass does *not* do.
 - [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): the canonical name, one-liner and description used on the submission form.
-- [🗺️ Product Architecture Diagram](./docs/architecture/twingate-product-architecture.html): interactive diagram with dark and light themes.
+- [🗺️ Product Architecture Diagram](./docs/architecture/signalpass-product-architecture.html): interactive diagram with dark and light themes.
 
 Hackathon research notes — the official catalog and rules, the bounty analysis, and the participant directory — are kept outside this repository. They contain sponsor access credentials and other participants' contact details, so they are deliberately not published here.
 
