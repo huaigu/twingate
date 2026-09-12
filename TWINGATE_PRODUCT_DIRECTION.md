@@ -116,7 +116,7 @@ Monad 合约只保存可结算和可验证的最小事实：Profile/Gate 策略�
 | Envio | 请求生命周期、队列和聚合实体的实时读模型。 |
 | Nansen | 经同意披露的、可解释的 Builder Verified Context。 |
 
-详细验收计划见 [Sponsor Bounty Plan](./TWINGATE_BOUNTY_PLAN.md)。
+详细验收计划保存在仓库之外（`_signalpass-research/TWINGATE_BOUNTY_PLAN.md`），因为它不属提交物。
 
 ## 10. 明确不做
 

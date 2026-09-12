@@ -26,14 +26,13 @@
 
 ## 📚 Project Documentation
 
-- [📘 Hackathon Comprehensive Guide (`MONAD_METROPOLIS_HACKATHON_GUIDE.md`)](./MONAD_METROPOLIS_HACKATHON_GUIDE.md): Detailed breakdown of rules, 4 tracks, $250k+ prize pool, rubrics, and sponsor bounties.
-- [📕 Original TwinGate System Specification](./TWINGATE_A2A_ATTENTION_FIREWALL_SPEC.md): Historical design record for the initial A2A attention-firewall concept.
-- [📙 AI + Social + Monad Innovation Research (`AI_SOCIAL_MONAD_INNOVATION_IDEAS.md`)](./AI_SOCIAL_MONAD_INNOVATION_IDEAS.md): Comparison of Web3 AI social paradigms and the 4 frontier concepts.
-- [📗 Social Track Deep Dive (`SOCIAL_TRACK_DEEP_DIVE_AND_IDEAS.md`)](./SOCIAL_TRACK_DEEP_DIVE_AND_IDEAS.md): Official 12 suggested starting points analysis.
-- [📒 Product Direction & Architecture](./TWINGATE_PRODUCT_DIRECTION.md): Research-backed product positioning, MVP scope, module plan, and target architecture.
-- [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): Canonical SignalPass name, one-liner, and Social-track description.
-- [🎯 Sponsor Bounty Plan](./TWINGATE_BOUNTY_PLAN.md): Selected Hunyuan, Dynamic, Envio, and Nansen integrations with their demo evidence.
-- [🗺️ Interactive Product Architecture](./docs/architecture/twingate-product-architecture.html): Archify diagram with dark/light themes and export controls.
+In this repository:
+
+- [📒 Product Direction](./TWINGATE_PRODUCT_DIRECTION.md): the problem, the mechanism, the fee/bond split, the agent handshake, and an explicit list of what SignalPass does *not* do.
+- [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): the canonical name, one-liner and description used on the submission form.
+- [🗺️ Product Architecture Diagram](./docs/architecture/twingate-product-architecture.html): interactive diagram with dark and light themes.
+
+Hackathon research notes — the official catalog and rules, the bounty analysis, and the participant directory — are kept outside this repository. They contain sponsor access credentials and other participants' contact details, so they are deliberately not published here.
 
 ---
 
