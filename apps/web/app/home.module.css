@@ -623,6 +623,111 @@
   height: 17px;
   color: #78987a;
 }
+.signalLoopSection {
+  width: min(1304px, calc(100% - 112px));
+  margin-inline: auto;
+  padding: 112px 0 96px;
+  scroll-margin-top: 24px;
+}
+.signalLoopIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.75fr);
+  align-items: end;
+  gap: 80px;
+}
+.sectionKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #6d6c75;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+.sectionKicker::before {
+  content: '';
+  width: 27px;
+  height: 1px;
+  background: #8c86d9;
+}
+.signalLoopIntro h2 {
+  max-width: 13ch;
+  margin-top: 20px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(42px, 5vw, 70px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+.signalLoopIntro > p {
+  max-width: 34ch;
+  margin-bottom: 7px;
+  color: var(--home-muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.signalLoopStage {
+  position: relative;
+  margin-top: 54px;
+  overflow: hidden;
+  border: 1px solid #dfd5c5;
+  border-radius: 18px;
+  background: #ede4d7;
+  box-shadow: 0 22px 46px -34px rgba(45, 35, 24, 0.6);
+}
+.signalLoopStage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.33);
+}
+.signalLoopStage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+.signalLoopSteps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+}
+.signalLoopSteps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  min-height: 127px;
+  padding: 20px 30px 0 0;
+  border-top: 1px solid #cfc6b8;
+}
+.signalLoopSteps li + li {
+  padding-left: 30px;
+  border-left: 1px solid #cfc6b8;
+}
+.signalLoopSteps li > span {
+  color: #6d6c75;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.signalLoopSteps h3 {
+  font-size: 17px;
+  letter-spacing: -0.025em;
+  line-height: 1.45;
+}
+.signalLoopSteps p {
+  max-width: 28ch;
+  margin-top: 8px;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
 .howSection {
   padding-block: 96px 82px;
   scroll-margin-top: 24px;
@@ -906,6 +1011,7 @@
   .howSection,
   .peopleSection,
   .termsSection,
+  .signalLoopSection,
   .footer {
     width: calc(100% - 64px);
   }
@@ -1074,6 +1180,16 @@
     flex-direction: column;
     gap: 23px;
   }
+  .signalLoopIntro {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.7fr);
+    gap: 42px;
+  }
+  .signalLoopSteps li {
+    padding-right: 20px;
+  }
+  .signalLoopSteps li + li {
+    padding-left: 20px;
+  }
   .sectionLead > p {
     max-width: 50ch;
   }
@@ -1136,6 +1252,7 @@
   .howSection,
   .peopleSection,
   .termsSection,
+  .signalLoopSection,
   .footer {
     width: calc(100% - 40px);
   }
@@ -1331,6 +1448,53 @@
   .beliefStrip > span:last-child,
   .beliefStrip > svg:last-of-type {
     display: none;
+  }
+  .signalLoopSection {
+    padding-block: 67px 57px;
+  }
+  .signalLoopIntro {
+    display: block;
+  }
+  .signalLoopIntro h2 {
+    max-width: 12ch;
+    margin-top: 17px;
+    font-size: 42px;
+  }
+  .signalLoopIntro > p {
+    max-width: 40ch;
+    margin-top: 22px;
+    font-size: 14px;
+  }
+  .signalLoopStage {
+    margin-top: 30px;
+    border-radius: 13px;
+  }
+  .signalLoopStage img {
+    width: 162%;
+    max-width: none;
+    transform: translateX(-19%);
+  }
+  .signalLoopSteps {
+    display: block;
+    margin-top: 26px;
+  }
+  .signalLoopSteps li,
+  .signalLoopSteps li + li {
+    grid-template-columns: 32px 1fr;
+    min-height: 0;
+    padding: 16px 0 17px;
+    border-left: 0;
+  }
+  .signalLoopSteps li > span {
+    padding-top: 2px;
+  }
+  .signalLoopSteps h3 {
+    font-size: 16px;
+  }
+  .signalLoopSteps p {
+    max-width: none;
+    margin-top: 5px;
+    font-size: 13px;
   }
   .howSection {
     padding-block: 58px 33px;

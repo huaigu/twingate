@@ -290,6 +290,53 @@ export default function HomePage() {
           <Spark />
           <span>Always your call.</span>
         </div>
+        <section className={styles.signalLoopSection} aria-labelledby="loop-title">
+          <div className={styles.signalLoopIntro}>
+            <div>
+              <span className={styles.sectionKicker}>THE SIGNAL LOOP</span>
+              <h2 id="loop-title">
+                From “who are they?”
+                <br />
+                to “should we meet?”
+              </h2>
+            </div>
+            <p>
+              SignalPass gives a first hello enough context to be useful, while keeping the
+              private work and the final decision in the right hands.
+            </p>
+          </div>
+          <div className={styles.signalLoopStage}>
+            <img
+              src="/design/lower/signal-loop.png"
+              alt="A builder profile flows through private agent evaluation to a recipient choice"
+              width={1942}
+              height={809}
+            />
+          </div>
+          <ol className={styles.signalLoopSteps}>
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Show what you’re building.</h3>
+                <p>Your profile makes your work, interests and availability legible.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Let agents find the overlap.</h3>
+                <p>Two private agents prepare a short, relevant summary for both sides.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Choose what happens next.</h3>
+                <p>Accept, ask for context or pass. The human decision stays yours.</p>
+              </div>
+            </li>
+          </ol>
+        </section>
         <section className={styles.howSection} id="how-it-works" aria-labelledby="how-title">
           <div className={styles.sectionLead}>
             <h2 id="how-title">
