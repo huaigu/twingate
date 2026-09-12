@@ -1,15 +1,9 @@
 'use client'
 
-import { useRef, useState, type KeyboardEvent } from 'react'
-import dynamic from 'next/dynamic'
+import { useState } from 'react'
 import Link from 'next/link'
 import '@fontsource-variable/manrope'
 import styles from './home.module.css'
-
-const PersonaScene = dynamic(() => import('@/components/PersonaScene'), {
-  ssr: false,
-  loading: () => <div className={styles.sceneLoading}>Getting the introductions ready…</div>,
-})
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
@@ -59,33 +53,6 @@ function Spark({ className }: { className?: string }) {
   )
 }
 
-const PREVIEW = [
-  {
-    label: 'The spark',
-    title: 'A good reason to say hello.',
-    text: 'Alice builds simulation tools. Bob designs event pipelines. There might be something here.',
-    note: 'A shared interest in Monad tooling',
-    action: 'Meet Bob',
-    href: '/builders/bob',
-  },
-  {
-    label: 'The summary',
-    title: 'Common ground, found.',
-    text: 'Alice can help test Bob’s indexing pipeline. Bob brings the event expertise her simulator needs.',
-    note: 'Your agent brings you the useful part',
-    action: 'Try this introduction',
-    href: '/introduce/bob',
-  },
-  {
-    label: 'Your call',
-    title: 'Worth a conversation?',
-    text: 'The introduction is ready for a decision. Bob can accept or decline. A little context goes a long way.',
-    note: 'People make the final decision',
-    action: 'Explore the demo inbox',
-    href: '/inbox/bob',
-  },
-] as const
-
 const STEPS = [
   {
     title: 'Find someone who gets it.',
@@ -102,21 +69,14 @@ const STEPS = [
 ] as const
 
 export default function HomePage() {
-  const [phase, setPhase] = useState(1)
   const [menuOpen, setMenuOpen] = useState(false)
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
-  const preview = PREVIEW[phase] ?? PREVIEW[1]
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
 
-  function moveTab(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let next = index
-    if (event.key === 'ArrowRight') next = (index + 1) % PREVIEW.length
-    else if (event.key === 'ArrowLeft') next = (index + PREVIEW.length - 1) % PREVIEW.length
-    else if (event.key === 'Home') next = 0
-    else if (event.key === 'End') next = PREVIEW.length - 1
-    else return
-    event.preventDefault()
-    setPhase(next)
-    tabRefs.current[next]?.focus()
+  function handleNotNow() {
+    setToastMessage('Introduction with Bob snoozed for now. Alice & Bob can reconnect anytime.')
+    setTimeout(() => {
+      setToastMessage(null)
+    }, 3500)
   }
 
   return (
@@ -124,29 +84,96 @@ export default function HomePage() {
       <a href="#main" className={styles.skipLink}>
         Skip to content
       </a>
-      <header className={styles.header}>
-        <Link href="/" className={styles.brand} aria-label="SignalPass home">
-          <SignalMark />
-          SignalPass
-          <span className={styles.brandDot} />
-        </Link>
-        <nav className={styles.desktopNav} aria-label="Main navigation">
-          <a href="#how-it-works">The idea</a>
-          <Link href="/builders">Meet builders</Link>
-          <Link href="/inbox/bob">Your introductions</Link>
-        </nav>
-        <div className={styles.headerActions}>
-          <Link href="/builders" className={styles.navCta}>
-            Try the demo <Arrow diagonal />
+
+      {/* Desktop 1:1 Hero Stage (Screens >= 1024px) */}
+      <section className={styles.desktopHeroStage} aria-label="SignalPass introduction overview">
+        <div className={styles.stageFrame}>
+          <img
+            src="/design/signalpass-home-reference.png"
+            className={styles.stageBackdrop}
+            alt="SignalPass — Builders find builders on Monad. Make the first hello count. Agents prepare. People decide."
+            width={1672}
+            height={941}
+          />
+
+          {/* Accessible content for screen readers & search engines */}
+          <div className={styles.srOnly}>
+            <header>
+              <h2>SignalPass — Builders find builders on Monad</h2>
+              <p>A more thoughtful internet starts with better introductions.</p>
+            </header>
+            <h1>Make the first hello count</h1>
+            <p>Agents prepare. People decide.</p>
+            <p>Same builders. A more human internet.</p>
+            <section>
+              <h3>Shared context, real conversations</h3>
+              <p>Alice: Building dev tools, Monad ecosystem, Open to collaboration, Values long-term builders</p>
+              <p>Bob: Building infrastructure, Monad ecosystem, Exploring partnerships, Values practical impact</p>
+              <p>Common Ground: Monad builders, Infrastructure x tools, Long-term mindset, Open to explore</p>
+            </section>
+            <aside>
+              <h3>Behind the scenes</h3>
+              <ol>
+                <li>Agents find genuine common ground privately.</li>
+                <li>They prepare relevant context (on both sides).</li>
+                <li>You decide whether to meet.</li>
+              </ol>
+              <p>Higher signal brighter builders on Monad.</p>
+            </aside>
+          </div>
+
+          {/* Top Nav Interactive Hotspots */}
+          <Link href="/" className={styles.stageNavBrand} aria-label="SignalPass home" />
+          <a href="#how-it-works" className={styles.stageNavLinkHow} aria-label="How it works" />
+          <Link href="/builders" className={styles.stageNavLinkBuilders} aria-label="For builders" />
+          <a href="#terms-title" className={styles.stageNavLinkApproach} aria-label="Our approach" />
+          <Link href="/builders" className={styles.stageNavCta} aria-label="Explore introductions" />
+
+          {/* Hero Left CTA Button */}
+          <Link href="/builders" className={styles.stageHeroCta} aria-label="Explore introductions" />
+
+          {/* Center Card Interactive Action Buttons */}
+          <button
+            type="button"
+            className={styles.stageCardNotNow}
+            onClick={handleNotNow}
+            aria-label="Not for now"
+            title="Snooze this introduction"
+          />
+          <Link
+            href="/introduce/bob"
+            className={styles.stageCardYourCall}
+            aria-label="Your call"
+            title="Review introduction with Bob"
+          />
+
+          {/* Venn Diagram Hotspots with Tooltips */}
+          <div className={styles.stageVennAlice} title="Alice: Building simulation harness & dev tools" />
+          <div className={styles.stageVennCommon} title="Common Ground: 4 shared alignment factors found by agents" />
+          <div className={styles.stageVennBob} title="Bob: Building indexing infrastructure & social graphs" />
+
+          {/* Right Behind the Scenes Steps */}
+          <a href="#how-it-works" className={styles.stageStep1} title="Step 1: Agents find genuine common ground privately." />
+          <a href="#how-it-works" className={styles.stageStep2} title="Step 2: They prepare relevant context (on both sides)." />
+          <a href="#terms-title" className={styles.stageStep3} title="Step 3: You decide whether to meet." />
+        </div>
+      </section>
+
+      {/* Mobile & Tablet Responsive Hero (Screens < 1024px) */}
+      <div className={styles.mobileHeroSection}>
+        <header className={styles.mobileHeader}>
+          <Link href="/" className={styles.mobileBrand} aria-label="SignalPass home">
+            <SignalMark />
+            <span className={styles.mobileBrandText}>SignalPass</span>
+            <span className={styles.mobileBrandSubtitle}>BUILDERS ON MONAD</span>
           </Link>
           <button
-            className={styles.menuToggle}
+            className={styles.mobileMenuToggle}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+            aria-label="Toggle menu"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path
                 d={menuOpen ? 'm6 6 12 12M6 18 18 6' : 'M4 8h16M4 16h16'}
                 stroke="currentColor"
@@ -155,126 +182,107 @@ export default function HomePage() {
               />
             </svg>
           </button>
+          {menuOpen && (
+            <nav className={styles.mobileNavDrawer} aria-label="Mobile navigation">
+              <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
+              <Link href="/builders" onClick={() => setMenuOpen(false)}>For builders</Link>
+              <a href="#terms-title" onClick={() => setMenuOpen(false)}>Our approach</a>
+              <Link href="/builders" className={styles.mobileDrawerCta} onClick={() => setMenuOpen(false)}>
+                Explore introductions →
+              </Link>
+            </nav>
+          )}
+        </header>
+
+        <div className={styles.mobileHeroCopy}>
+          <p className={styles.mobileEyebrow}>BUILDERS FIND BUILDERS ON MONAD</p>
+          <h1 className={styles.mobileHeadline}>
+            Make the<br />
+            first hello<br />
+            <span className={styles.mobileCountWrap}>
+              count
+              <img src="/design/layers/brush-stroke-orange.png" className={styles.mobileBrushImg} alt="" />
+            </span>
+          </h1>
+          <p className={styles.mobileSubtitle}>Agents prepare. People decide.</p>
+          <Link href="/builders" className={styles.mobilePrimaryBtn}>
+            Explore introductions <span>→</span>
+          </Link>
+          <p className={styles.mobileHandwrittenNote}>Same builders.<br />A more human internet.</p>
         </div>
-        <nav
-          className={styles.mobileNav}
-          id="mobile-menu"
-          hidden={!menuOpen}
-          aria-label="Mobile navigation"
-        >
-          <a href="#how-it-works" onClick={() => setMenuOpen(false)}>
-            The idea
-          </a>
-          <Link href="/builders">Meet builders</Link>
-          <Link href="/inbox/bob">Your introductions</Link>
-          <Link href="/status">Demo status</Link>
-        </nav>
-      </header>
+
+        <div className={styles.mobileStageCardWrap}>
+          <img
+            src="/design/layers/card-full-tablet.png"
+            className={styles.mobileCardImg}
+            alt="Shared context introduction between Alice and Bob"
+          />
+          <div className={styles.mobileCardBtnRow}>
+            <button
+              type="button"
+              className={styles.mobileBtnNotNow}
+              onClick={handleNotNow}
+              aria-label="Not for now"
+              title="Not for now"
+            />
+            <Link
+              href="/introduce/bob"
+              className={styles.mobileBtnYourCall}
+              aria-label="Your call"
+              title="Your call"
+            />
+          </div>
+        </div>
+
+        <div className={styles.mobileBehindScenes}>
+          <p className={styles.mobileScenesKicker}>BEHIND THE SCENES</p>
+          <ol className={styles.mobileScenesList}>
+            <li>
+              <img
+                src="/design/layers/icon-step-lock.png"
+                className={styles.mobileSceneBadge}
+                alt=""
+              />
+              <div>
+                <strong>1. Agents find</strong>
+                <p>genuine common ground privately.</p>
+              </div>
+            </li>
+            <li>
+              <img
+                src="/design/layers/icon-step-doc.png"
+                className={styles.mobileSceneBadge}
+                alt=""
+              />
+              <div>
+                <strong>2. They prepare</strong>
+                <p>relevant context (on both sides).</p>
+              </div>
+            </li>
+            <li>
+              <img
+                src="/design/layers/icon-step-star.png"
+                className={styles.mobileSceneBadge}
+                alt=""
+              />
+              <div>
+                <strong>3. You decide</strong>
+                <p>whether to meet.</p>
+              </div>
+            </li>
+          </ol>
+          <p className={styles.mobileScenesNote}>Higher signal brighter builders on Monad.</p>
+        </div>
+      </div>
+
+      {toastMessage && (
+        <div className={styles.toast} role="status" aria-live="polite">
+          <span className={styles.toastIcon}>🔒</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <main id="main">
-        <section className={styles.hero} aria-labelledby="hero-title">
-          <div className={styles.heroCopy}>
-            <h1 id="hero-title">
-              Your people.
-              <br />
-              Closer than
-              <br />
-              <span>you think.</span>
-              <Spark className={styles.titleSpark} />
-            </h1>
-            <p className={styles.heroDescription}>
-              A social space for Monad builders.
-              <br />
-              Let your agents find the common ground.
-              <br />
-              You take it from there.
-            </p>
-            <div className={styles.heroActions}>
-              <Link href="/builders" className={styles.primaryButton}>
-                Find your people <Arrow diagonal />
-              </Link>
-              <a href="#introduction-preview" className={styles.playLink}>
-                <span className={styles.playIcon}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-                    <path d="m4 2 6 4-6 4V2Z" fill="currentColor" />
-                  </svg>
-                </span>
-                See an introduction
-              </a>
-            </div>
-            <div className={styles.demoNote}>
-              <span />
-              An early look. Try it with Alice &amp; Bob.
-              <Link href="/status" aria-label="See what works in this demo">
-                <Arrow />
-              </Link>
-            </div>
-          </div>
-          <div className={styles.heroStage} id="introduction-preview">
-            <div className={styles.stageTop}>
-              <span>
-                <span className={styles.networkDiamond} />
-                Made for a more human internet
-              </span>
-              <Spark />
-            </div>
-            <div className={styles.sceneWrap}>
-              <PersonaScene phase={phase} />
-            </div>
-            <span className={`${styles.agentName} ${styles.aliceLabel}`}>
-              <span />
-              Alice’s agent
-            </span>
-            <span className={`${styles.agentName} ${styles.bobLabel}`}>
-              <span />
-              Bob’s agent
-            </span>
-            <div
-              className={styles.resultCard}
-              role="tabpanel"
-              id="intro-panel"
-              aria-labelledby={`intro-tab-${phase}`}
-            >
-              <div className={styles.resultMeta}>
-                <span className={styles.matchIcon}>
-                  <SignalMark />
-                </span>
-                <span>Alice &amp; Bob</span>
-                <span className={styles.exampleLabel}>Illustrated example</span>
-              </div>
-              <div className={styles.resultContent} aria-live="polite">
-                <h2>{preview.title}</h2>
-                <p>{preview.text}</p>
-              </div>
-              <div className={styles.resultBottom}>
-                <span>{preview.note}</span>
-                <Link href={preview.href} aria-label={preview.action}>
-                  <Arrow diagonal />
-                </Link>
-              </div>
-            </div>
-            <div className={styles.previewTabs} role="tablist" aria-label="Explore an introduction">
-              {PREVIEW.map((item, index) => (
-                <button
-                  key={item.label}
-                  id={`intro-tab-${index}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={phase === index}
-                  aria-controls="intro-panel"
-                  tabIndex={phase === index ? 0 : -1}
-                  ref={(element) => {
-                    tabRefs.current[index] = element
-                  }}
-                  onClick={() => setPhase(index)}
-                  onKeyDown={(event) => moveTab(event, index)}
-                >
-                  <span>{index + 1}</span>
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
         <div className={styles.beliefStrip}>
           <span>Less cold outreach.</span>
           <Spark />
@@ -409,7 +417,7 @@ export default function HomePage() {
         <section className={styles.closing} aria-labelledby="closing-title">
           <Spark />
           <h2 id="closing-title">
-            Your next good conversation
+            Your next good conversation{" "}
             <br />
             starts with a little signal.
           </h2>

@@ -32,6 +32,9 @@ next-env.d.ts
 # Local run artifacts (dev server logs, screenshots)
 .run/
 apps/web/.impeccable/review/
+graphify-out/
+*.blend1
+apps/web/public/models/
 
 # Environment Variables
 .env

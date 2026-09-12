@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { readonly children: React.Reac
         <template
           dangerouslySetInnerHTML={{
             __html:
-              '<!-- THESIS: Personal agents make a first introduction human and legible. OWN-WORLD: Cobalt and apricot ceramic personas on sky blue, chalk ground, Manrope lettering, compact result slips. STORY: Meet builders, understand shared context, try the seeded introduction. FIRST VIEWPORT: Large three-line headline at left, two interactive 3D personas and owner summary at right, visible directory action. FORM: Designer-toy introduction studio, grounded candidate 5, seed f1b06f20. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->',
+              '<!-- THESIS: Personal agents make a first introduction human and legible. OWN-WORLD: Blender-authored Builder Personas and a physical Introduction Card on a paper editorial stage, with ink navy, cobalt, Monad violet and signal mint. STORY: Meet builders, understand shared context, try the seeded introduction. FIRST VIEWPORT: Large invitation at left, two animated 3D personas and a 3D card at right, visible directory action. FORM: A tactile introduction studio where agents prepare and people decide. FINISH: unreviewed and undocumented is unfinished; the Blender source and exported GLB carry the scene provenance. -->',
           }}
         />
         <Shell>{children}</Shell>

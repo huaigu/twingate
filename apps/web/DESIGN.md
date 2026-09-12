@@ -56,6 +56,10 @@ components:
 
 ## Overview
 
+**Canonical visual reference:** `/Users/bojack/.codex/generated_images/01a09418-72f0-7e51-8ae4-6594147e69b7/exec-3c753038-4cb0-4e93-ad15-66720b233e3e.png`. Any homepage visual comparison or follow-up polish must use this image as the source of truth.
+
+The hero is implemented as a Figma-like layer stack: paper background and collage accents, header, left copy, two isolated character assets, a central introduction-card layer, signal nodes, and the right-side process notes. The full reference image is retained only as a comparison artifact and is not rendered as the page.
+
 **Creative North Star: "Designer-toy studio"**
 
 Bright, tactile personal characters make introductions feel approachable. Generous chalk space, direct Manrope typography, saturated cobalt and quiet pastel surfaces support a friendly, deliberate visual world.
@@ -64,7 +68,7 @@ This document applies only to the shipped homepage at `/`. Its source of truth i
 
 **Key Characteristics:**
 
-- Actual ceramic 3D personas with distinct blue and apricot silhouettes.
+- Imagegen-extracted left and right Builder Personas, plus a reference-derived central Introduction Card layer. Hunyuan/Blender GLBs remain optional runtime assets for future animation work.
 - Open typography and flat pastel panels, with selective ambient shadows.
 - Short introduction summaries and explicit human choice.
 
@@ -94,11 +98,11 @@ At 540px and below, gutters become 20px, steps and profiles become single column
 
 ## Elevation & Depth
 
-Depth comes primarily from the actual Three.js sculptures: rounded geometry, clear-coated materials, an orthographic camera, studio illumination and contact shadows on a pale plinth. The blue agent wears headphones; the apricot agent has a different silhouette. A small physical token passes between them as the preview changes. No generated raster assets or external character models are used.
+The reference hero uses composited raster layers for fidelity: paper stage, isolated imagegen character cutouts and a cropped introduction-card layer. Hunyuan/Blender GLBs remain available for a later animated variant; they are not required to render the reference-faithful first layer.
 
 UI elevation is selective: summary (`0 18px 35px -24px #284b8170`), name labels (`0 6px 12px -8px #293b5670`), mobile navigation (`0 14px 30px -15px #14202a33`) and profile hover (`0 20px 30px -25px #23382e66`). Most sections remain flat.
 
-The scene renders on demand, gently responds to pointer position and preview state, and pauses offscreen or in hidden tabs. Reduced motion disables pointer tilt and damping; CSS transitions are removed. Loading and unavailable WebGL states retain text or simple CSS character silhouettes.
+The optional 3D scene still loads on demand when used by a future variant. The current first layer is intentionally lightweight and deterministic; reduced motion disables CSS transitions.
 
 ## Shapes
 

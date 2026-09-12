@@ -2,7 +2,13 @@
 
 ## Direction
 
-Replace the document-like homepage with a social first impression: two authored ceramic 3D personas, a short invitation, and an introduction result that the visitor can explore. Palette: cobalt, sky blue, apricot, leaf green and chalk. Actual React/Three.js artwork; no generated images were used because this session had no image-generation tool or configured image API key.
+Canonical visual reference for this homepage: `/Users/bojack/.codex/generated_images/01a09418-72f0-7e51-8ae4-6594147e69b7/exec-3c753038-4cb0-4e93-ad15-66720b233e3e.png`. All visual comparisons should use this exact file.
+
+The shipped homepage now uses a Figma-like composited first impression: paper collage background, imagegen-extracted left and right Builder Personas, a cropped central Introduction Card layer, a short invitation, and an introduction result that the visitor can explore. Palette: paper ivory, ink navy, cobalt, Monad violet, signal mint and a small orange accent. Hunyuan/Blender 3D assets remain optional for a later animated treatment.
+
+## Preserved alternate direction
+
+The second visual direction remains a valid future variant: paper collage, oversized condensed type, Monad violet and acid-lime signal trails, with the Introduction Card held between two builders. It is the more kinetic hackathon treatment; the shipped homepage uses the first direction's quieter editorial world and borrows the signal trail as motion language.
 
 The homepage is a Persuade surface for Monad builders. Its main action opens the existing builder directory; the three preview tabs explain shared context, the agent summary and recipient choice. The example is labeled, and the demo-status route remains visible. Existing application routes retain their current styling and behavior.
 
@@ -18,7 +24,9 @@ Code-led redesign, grounded direction 5, concept seed f1b06f20. The reference wo
 
 ## Review locations
 
-Desktop and mobile captures are stored locally under .impeccable/review/. The 3D scene is an illustrative, code-authored asset with no external model or image attribution. The self-hosted Manrope font is provided by @fontsource-variable/manrope under its packaged license.
+The Blender source and exported asset live at `scripts/create_signalpass_personas.py` and `public/models/signalpass-personas.glb`. The asset is an illustrative demonstration scene, not an identity credential or a generated customer persona. The self-hosted Manrope font is provided by @fontsource-variable/manrope under its packaged license.
+
+The two Hunyuan character exports are web-optimized 2K GLBs under `public/models/`. The raw 75MB/76MB downloads are kept outside the repository; the optimized assets are about 25MB each after texture resizing and mesh decimation.
 
 ## Verification
 
