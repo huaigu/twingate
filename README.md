@@ -69,6 +69,7 @@ scripts/e2e.mjs      boots both services and drives the whole loop
 ## ▶️ Running It
 
 ```bash
+git submodule update --init --recursive   # pulls packages/contracts/lib/forge-std
 pnpm install
 
 # terminal 1 — API (falls back to an in-process mock evaluator)
