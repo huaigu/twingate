@@ -83,17 +83,34 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 
 ## 7. 技术边界
 
+交付物落在 **7 个自建部分**上：6 个链下单元 + 1 组链上合约。三处外部依赖（Dynamic / Hunyuan / Nansen）按下述边界接入，不与自建部分混作一层。
+
 ### 链上
 
-Monad 合约只保存可结算和可验证的最小事实：Profile/Gate 策略版本哈希、发起人与接收者、报价、Evaluation Fee、Attention Bond、请求状态、超时窗口、加密载荷哈希以及结果回执哈希。
+`packages/contracts` —— Monad 合约只保存可结算和可验证的最小事实，不保存原文与模型上下文。
+
+| 合约 | 保存什么 |
+| --- | --- |
+| `ProfileRegistry` | Profile 与 Gate 策略及其版本哈希。 |
+| `IntroductionEscrow` | 报价、Evaluation Fee、Attention Bond、请求状态机与超时窗口。 |
+| `IntroductionReceipt` | 双方同意后的结果回执哈希。 |
 
 ### 链下
 
+| 自建部分 | 位置 | 负责什么 |
+| --- | --- | --- |
+| 网页 | `apps/web` | 唯一的用户界面：Builder Profile、Introduction Card 编写、受保护队列、回执与状态页。 |
+| 编排 API | `services/api` | 最小化上下文编排：报价、落 Introduction、调用评估、驱动状态机、向接收者开放队列，以及加密载荷与通知。 |
+| Agent 服务 | `services/evaluator` | Intro Coach 与 Gatekeeper 的双侧受限评估，以及可选的 3D Agent Persona。 |
+| 索引服务 | `services/indexer` | 基于 Envio HyperIndex 索引事件，建立请求队列、回执历史与非敏感的聚合队列健康度。 |
+| 领域内核 | `packages/core` | 状态机、报价曲线、schema 与 EIP-712。API 与 Agent 共用同一份，避免两端规则漂移。 |
+| 端到端验证 | `scripts/e2e.mjs` | 拉起服务跑完整链路；不参与运行时。 |
+
+### 外部依赖
+
 - Dynamic：登录、嵌入式钱包和签名。
-- Tencent Hunyuan：3D Agent Persona，以及 Intro Coach / Gatekeeper 的受限评估。
+- Tencent Hunyuan：3D Agent Persona 的生成，以及 Intro Coach / Gatekeeper 的受限评估。
 - Nansen：用户授权的 Verified Context。
-- Envio：索引事件并建立请求队列、回执历史与非敏感的聚合队列健康度。
-- 应用服务：最小化上下文编排、加密载荷和通知。
 
 原文、原始 Agent 对话、模型上下文、向量、内部评分和未经许可的 Nansen 数据都不直接上链。
 
