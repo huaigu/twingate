@@ -1,0 +1,64 @@
+.progressContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepNode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: #f0ecdf;
+  color: #7d786d;
+  border: 1px solid #dcd7cb;
+  transition: all 0.2s ease;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6e685e;
+}
+
+.stepCurrent .circle {
+  background: #6e5bf0;
+  color: #ffffff;
+  border-color: #6e5bf0;
+  box-shadow: 0 2px 8px rgba(110, 91, 240, 0.3);
+}
+
+.stepCurrent .label {
+  color: #121016;
+  font-weight: 700;
+}
+
+.stepCompleted .circle {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.stepCompleted .label {
+  color: #374151;
+}
+
+.line {
+  width: 28px;
+  height: 2px;
+  background: #dcd7cb;
+}
+
+.lineCompleted {
+  background: #10b981;
+}

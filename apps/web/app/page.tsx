@@ -125,12 +125,12 @@ export default function HomePage() {
           {/* Top Nav Interactive Hotspots */}
           <Link href="/" className={styles.stageNavBrand} aria-label="SignalPass home" />
           <a href="#how-it-works" className={styles.stageNavLinkHow} aria-label="How it works" />
-          <Link href="/builders" className={styles.stageNavLinkBuilders} aria-label="For builders" />
-          <a href="#terms-title" className={styles.stageNavLinkApproach} aria-label="Our approach" />
-          <Link href="/builders" className={styles.stageNavCta} aria-label="Explore introductions" />
+          <Link href="/discover" className={styles.stageNavLinkBuilders} aria-label="Discover people" />
+          <Link href="/flow" className={styles.stageNavLinkApproach} aria-label="V3 Workflow" />
+          <Link href="/profile/import" className={styles.stageNavCta} aria-label="Build your profile" />
 
           {/* Hero Left CTA Button */}
-          <Link href="/builders" className={styles.stageHeroCta} aria-label="Explore introductions" />
+          <Link href="/profile/import" className={styles.stageHeroCta} aria-label="Build your profile" />
 
           {/* Center Card Interactive Action Buttons */}
           <button
@@ -138,10 +138,9 @@ export default function HomePage() {
             className={styles.stageCardNotNow}
             onClick={handleNotNow}
             aria-label="Not for now"
-            title="Snooze this introduction"
           />
           <Link
-            href="/introduce/bob"
+            href="/introductions/new/bob"
             className={styles.stageCardYourCall}
             aria-label="Your call"
             title="Review introduction with Bob"
@@ -185,17 +184,17 @@ export default function HomePage() {
           {menuOpen && (
             <nav className={styles.mobileNavDrawer} aria-label="Mobile navigation">
               <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
-              <Link href="/builders" onClick={() => setMenuOpen(false)}>For builders</Link>
-              <a href="#terms-title" onClick={() => setMenuOpen(false)}>Our approach</a>
-              <Link href="/builders" className={styles.mobileDrawerCta} onClick={() => setMenuOpen(false)}>
-                Explore introductions →
+              <Link href="/discover" onClick={() => setMenuOpen(false)}>Discover people</Link>
+              <Link href="/flow" onClick={() => setMenuOpen(false)}>V3 Workflow</Link>
+              <Link href="/profile/import" className={styles.mobileDrawerCta} onClick={() => setMenuOpen(false)}>
+                Build your profile →
               </Link>
             </nav>
           )}
         </header>
 
         <div className={styles.mobileHeroCopy}>
-          <p className={styles.mobileEyebrow}>BUILDERS FIND BUILDERS ON MONAD</p>
+          <p className={styles.mobileEyebrow}>PEOPLE WORTH KNOWING ON MONAD</p>
           <h1 className={styles.mobileHeadline}>
             Make the<br />
             first hello<br />
@@ -205,8 +204,8 @@ export default function HomePage() {
             </span>
           </h1>
           <p className={styles.mobileSubtitle}>Agents prepare. People decide.</p>
-          <Link href="/builders" className={styles.mobilePrimaryBtn}>
-            Explore introductions <span>→</span>
+          <Link href="/profile/import" className={styles.mobilePrimaryBtn}>
+            Build your profile <span>→</span>
           </Link>
           <p className={styles.mobileHandwrittenNote}>Same builders.<br />A more human internet.</p>
         </div>
@@ -226,7 +225,7 @@ export default function HomePage() {
               title="Not for now"
             />
             <Link
-              href="/introduce/bob"
+              href="/introductions/new/bob"
               className={styles.mobileBtnYourCall}
               aria-label="Your call"
               title="Your call"

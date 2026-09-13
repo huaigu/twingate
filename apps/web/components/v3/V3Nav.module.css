@@ -1,0 +1,283 @@
+.navHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(248, 244, 236, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e4dfd5;
+  transition: all 0.2s ease;
+}
+
+.navContainer {
+  max-width: 1672px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: #121016;
+}
+
+.brandIcon {
+  flex-shrink: 0;
+}
+
+.brandTitle {
+  font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #121016;
+}
+
+.brandTaglineStacked {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  padding-left: 1rem;
+  border-left: 1px solid #cfc9be;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.15;
+  color: #766f65;
+  text-transform: uppercase;
+}
+
+.centerEditorial {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 0.9375rem;
+  color: #5c5346;
+  font-style: italic;
+  text-align: center;
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .centerEditorial {
+    display: block;
+  }
+}
+
+.desktopLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4a453e;
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.navLink:hover {
+  color: #121016;
+}
+
+.navLinkActive {
+  color: #3b28cc;
+  font-weight: 600;
+}
+
+.exploreButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem;
+  background: #2528ab;
+  color: #ffffff !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(37, 40, 171, 0.25);
+  transition: all 0.15s ease;
+}
+
+.exploreButton:hover {
+  background: #1b1e8a;
+  transform: translateY(-1px);
+}
+
+.onboardNote {
+  display: flex;
+  align-items: center;
+}
+
+.noteAgentWrites {
+  height: 48px;
+  object-fit: contain;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  background: #6e5bf0;
+  border-radius: 999px;
+}
+
+.flowPill {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #4b39c4;
+  background: #ede9fe;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd6fe;
+}
+
+.rightGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.identityButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  padding: 0.25rem 0.75rem 0.25rem 0.3rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e2ddd3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+}
+
+.identityButton:hover {
+  border-color: #6e5bf0;
+  box-shadow: 0 2px 6px rgba(110, 91, 240, 0.12);
+}
+
+.avatarImg {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #ede9fe;
+}
+
+.identityText {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #27231e;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #10b981;
+}
+
+.mobileToggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid #ddd7cc;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.hamburgerLine {
+  width: 100%;
+  height: 2px;
+  background: #27231e;
+  border-radius: 2px;
+}
+
+.mobileDropdown {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.5rem;
+  background: #f8f4ec;
+  border-bottom: 1px solid #e4dfd5;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #38342f;
+  border-bottom: 1px solid #ede8de;
+}
+
+.mobileNavLinkActive {
+  color: #6e5bf0;
+  font-weight: 700;
+}
+
+.mobileDivider {
+  height: 12px;
+}
+
+.mobileCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  background: #2528ab;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
+}
+
+@media (max-width: 960px) {
+  .brandTaglineStacked {
+    display: none;
+  }
+  .centerEditorial {
+    display: none;
+  }
+  .desktopLinks {
+    display: none;
+  }
+  .mobileToggle {
+    display: flex;
+  }
+}

@@ -1,0 +1,172 @@
+.widgetCard {
+  background: #fdfbf7;
+  border: 1px solid #dfd8cc;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(18, 16, 22, 0.08), 0 1px 3px rgba(18, 16, 22, 0.04);
+  position: relative;
+  overflow: hidden;
+  max-width: 520px;
+  width: 100%;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brandName {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #121016;
+}
+
+.snapshotBadge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6e5bf0;
+  background: #ede9fe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd6fe;
+}
+
+.bodyRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.avatarWrapper {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #ede9fe;
+  border: 2px solid #e0d7c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(110, 91, 240, 0.12);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.infoCol {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #121016;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.01em;
+}
+
+.oneLiner {
+  font-size: 0.9375rem;
+  color: #4b463e;
+  line-height: 1.45;
+  margin: 0 0 0.85rem 0;
+}
+
+.interestsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
+.interestPill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.pillPurple {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #ddd6fe;
+}
+
+.pillGreen {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.pillBlue {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+.pillOrange {
+  background: #ffedd5;
+  color: #9a3412;
+  border-color: #fed7aa;
+}
+
+.pillDefault {
+  background: #f3f0e8;
+  color: #575248;
+  border-color: #e2ddd3;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #252085;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctaButton:hover {
+  background: #3930b8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 32, 133, 0.25);
+}
+
+@media (max-width: 480px) {
+  .bodyRow {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .interestsRow {
+    justify-content: center;
+  }
+}
