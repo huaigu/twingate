@@ -22,6 +22,8 @@ Agent 可以发现候选人、解释推荐理由、整理上下文和提醒用�
 
 OpenClaw、Hermes 等 Agent 宿主是未来的入口适配器，不是 SignalPass 的产品本体。用户可以通过它们使用同一套 SignalPass Agent 能力，但 Profile、Introduction、Gate Policy、评估和同意规则仍属于 SignalPass。
 
+“Monad builders”是黑客松阶段的示例人群，不是长期用户边界。Vision 使用更宽的 **People worth knowing, with context.** 用户可以因为合作、交流、学习或共同兴趣而发起 Introduction；Builder 只是第一批高密度、容易验证的场景。
+
 ## 2. 社交体验，而不是表单加交易
 
 SignalPass 的交互单位是 Introduction，不是 Message。

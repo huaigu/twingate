@@ -166,3 +166,70 @@ Recipient 可以接受、要求补充上下文或拒绝。接受后才允许进�
 5. Bob 通过 Web 或 Agent 宿主看到受保护请求，并明确选择接受、追问或拒绝。
 6. 应用展示状态、费用/Bond 结果和 Receipt；任何尚未实现的 private handoff、真实链上结算或宿主深度集成都明确标注为下一阶段。
 
+## 已确认的扩展方向（2026-09-13）
+
+### Vision 不限于 Builder
+
+SignalPass 的 Vision 是 **People worth knowing, with context.** Builder 只是本次黑客松最容易验证的示例人群，不是产品的永久边界。用户可以因为合作、交流、学习或共同兴趣而发现另一个人。
+
+Discovery 的输入使用自然语言，并可选一个轻量目标：`聊聊 / 交流`、`一起做事`、`学习 / 请教`。三种目标仍然共享同一个 Introduction 模型，只改变 Agent 的提示、解释和建议下一步。
+
+### Profile visibility 与 Agent matching 分离
+
+用户可以分别控制：
+
+```text
+Profile visibility: Public / Limited / Private
+Allow Agent matching: On / Off
+```
+
+Private Profile 只要打开 Agent matching，就可以参与服务器侧的私有兴趣比较。匹配结果默认只返回抽象后的共同主题；只有在双方进一步同意后，才揭示名字、Persona 或更多 Profile 内容。私有兴趣不能转化为公开信誉分。
+
+### Widget 是引流名片，不是完整 Profile
+
+用户批准 Profile 后，可以生成一个可嵌入个人网站、项目页或社交主页的轻量 Widget。Widget 只展示：
+
+- 3D Persona（可选）
+- 名字和一句个人介绍
+- 3–5 个公开兴趣标签
+- 一个引流 CTA，例如 `了解我` 或 `通过 SignalPass 认识我`
+
+Widget 的 CTA 打开 SignalPass 的 Public Profile，由访问者自己决定是否发起 Introduction。私有兴趣、Agent memory、Gate Policy 细节和钱包信息都不进入 Widget。
+
+Widget 使用版本化的公开 Profile snapshot；更新会生成新版本，用户可以撤回旧版本。Profile synthesis 和 Widget 生成可以由官方 Personal Agent 完成，也可以由用户自己的 Agent 通过一次性导入 URL 推送草稿，但发布前必须由用户批准。
+
+### Matching workflow 的真实实现边界
+
+黑客松使用 LangGraph（或等价的显式 workflow 编排）连接以下节点：
+
+```text
+load_profiles
+  → normalize_profile_fields
+  → extract_interests_and_goals
+  → retrieve_candidates
+  → score_similarity_and_complementarity
+  → explain_match
+  → await_human_confirmation
+```
+
+匹配器使用透明的硬条件 + 软评分：matching 授权、可接触状态和屏蔽规则是硬条件；兴趣相似、目标对齐、能力互补和 availability fit 用于排序与解释。前台展示理由，不展示单一匹配分数。
+
+黑客松数据源优先使用 GitHub 和用户提供的公开链接，同时保留 Alice/Bob fixture。所有未完成 OAuth 或 signed challenge 的来源都标记为 `user-provided / not verified`，只作为 Profile 上下文，不作为身份或信誉证明。
+
+### 收费边界
+
+```text
+官方托管 Personal Agent 生成 Profile / Widget
+  → Profile synthesis fee（黑客松可展示但不收取）
+
+用户自己的 OpenClaw / Hermes Agent
+  → 自己承担模型成本，SignalPass 不收托管推理费
+
+Agent-assisted discovery
+  → 黑客松阶段免费
+
+正式发起 Introduction
+  → Evaluation Fee + Attention Bond
+```
+
+任何收费都必须在动作前展示用途和金额，且不能暗示付费会获得更高信誉或优先匹配。
