@@ -1,6 +1,6 @@
 # SignalPass V3 流转图说明
 
-可视化入口：[flow-v3.html](./flow-v3.html)  
+可视化入口：[flow-v3.html](./flow-v3.html)
 可编辑规格：[flow-v3.workflow.json](./flow-v3.workflow.json)
 
 这张图是 V3 的“页面连接骨架”：横向列表示进度，泳道表示动作归属。主路径从左到右；同一列的上下连接表示跨责任边界的交接，而不是额外的页面跳转。
@@ -56,4 +56,3 @@ outcomes                → /introductions/:id/receipt
 4. `widget_snapshot` 是公开名片支线，不依赖对方接受，也不改变匹配权限。
 
 图中没有把 Accept / Ask / Decline 画成三条长回线：三种结果收敛到 `outcomes`，具体状态由 receipt 承载，避免主流程被分支线缠绕；页面实现时再在 `recipient_decision` 内展开三个按钮状态。
-
