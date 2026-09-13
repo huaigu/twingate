@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import { DEMO_SENDER_HANDLE } from '@/lib/api'
 
 const LINKS: readonly { href: string; label: string }[] = [
-  { href: '/builders', label: 'Directory' },
-  { href: '/inbox/bob', label: 'Inbox' },
+  { href: '/builders', label: 'Find builders' },
+  { href: '/inbox/bob', label: 'Introductions' },
   { href: '/status', label: 'Build status' },
 ]
 
@@ -50,7 +50,7 @@ export function Shell({ children }: { readonly children: React.ReactNode }) {
           <div className="nav-identity">
             <span className="pill" data-tone="accent">
               <span className="pill-dot" />
-              signing as {DEMO_SENDER_HANDLE}
+              Personal Agent · {DEMO_SENDER_HANDLE}
             </span>
           </div>
         </div>

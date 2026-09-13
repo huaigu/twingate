@@ -4,40 +4,41 @@ import Link from 'next/link'
 import type { BuilderProfileDto } from '@/lib/api'
 import { AvailabilityPill } from './Bits'
 
-/**
- * The persona slot is deliberately visible even when empty. 3D presence is an
- * asynchronous decoration on top of a profile that is already complete — the
- * placeholder says so rather than pretending the render exists.
- */
-function PersonaSlot({ persona }: { readonly persona: BuilderProfileDto['persona'] }) {
-  const status = persona?.status ?? 'none'
-  return (
-    <div className="persona persona-sm" title={`3D presence: ${status}`}>
-      <span className="mono tiny dim">
-        {status === 'ready' ? '3D' : status === 'pending' ? '…' : '—'}
-      </span>
-    </div>
-  )
+function fallbackPersona(handle: string): string {
+  return handle === 'alice'
+    ? '/design/builder-right-reference.png'
+    : '/design/builder-left-reference.png'
 }
 
 export function BuilderCard({ profile }: { readonly profile: BuilderProfileDto }) {
+  const personaSrc = profile.persona?.assetUrl ?? fallbackPersona(profile.handle)
   return (
-    <Link href={`/builders/${profile.handle}`} className="card card-link">
-      <div className="row" style={{ gap: 14, alignItems: 'flex-start' }}>
-        <PersonaSlot persona={profile.persona} />
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div className="row-between">
-            <div className="h3">{profile.displayName}</div>
+    <Link href={`/builders/${profile.handle}`} className="v2-builder-card">
+      <div className="v2-builder-card-top">
+        <div className="v2-builder-avatar">
+          <img src={personaSrc} alt="" />
+        </div>
+        <div className="v2-builder-card-identity">
+          <div className="v2-builder-card-name">
+            <span>{profile.displayName}</span>
             <span className="mono tiny dim">@{profile.handle}</span>
           </div>
-          <p className="small muted" style={{ marginTop: 8 }}>
-            {profile.building}
-          </p>
-          <div className="row" style={{ marginTop: 14, gap: 8, flexWrap: 'wrap' }}>
-            <AvailabilityPill value={profile.availability} />
-            <span className="pill">policy v{profile.policyVersion}</span>
-          </div>
+          <p>{profile.building}</p>
         </div>
+        <span className="v2-arrow" aria-hidden="true">↗</span>
+      </div>
+      <div className="v2-builder-card-section">
+        <span className="v2-mini-label">I can offer</span>
+        <p>{profile.canOffer}</p>
+      </div>
+      <div className="v2-builder-card-section">
+        <span className="v2-mini-label">I want to meet</span>
+        <p>{profile.wantsToMeet}</p>
+      </div>
+      <div className="v2-builder-card-footer">
+        <AvailabilityPill value={profile.availability} />
+        <span className="pill">policy v{profile.policyVersion}</span>
+        <span className="v2-view-profile">View profile <span aria-hidden="true">→</span></span>
       </div>
     </Link>
   )

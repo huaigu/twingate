@@ -64,7 +64,7 @@ The hero is implemented as a Figma-like layer stack: paper background and collag
 
 Bright, tactile personal characters make introductions feel approachable. Generous chalk space, direct Manrope typography, saturated cobalt and quiet pastel surfaces support a friendly, deliberate visual world.
 
-This document applies only to the shipped homepage at `/`. Its source of truth is `app/home.module.css`, `app/page.tsx` and `components/PersonaScene.tsx`. Other application routes retain the separate legacy system in `app/globals.css`; this document does not restyle them. Homepage strategy and product limitations live in `HOMEPAGE_REDESIGN.md` and `PRODUCT.md`.
+This document remains the source of truth for the shipped homepage at `/`, using `app/home.module.css`, `app/page.tsx` and `components/PersonaScene.tsx`. The related product routes now use the v2 paper-and-agent system in `app/globals.css`: Builders, Profile, Composer and Inbox separate public Profile, private Personal Agent suggestions and explicit human confirmation. V2 reference images live in `../design-explorations/signalpass-v2/`; product strategy and limitations live in `HOMEPAGE_REDESIGN.md` and `PRODUCT.md`.
 
 **Key Characteristics:**
 

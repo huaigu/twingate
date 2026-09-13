@@ -74,7 +74,7 @@ export default function IntroductionPage() {
 
   if (error) {
     return (
-      <div className="wrap">
+      <div className="wrap v2-page">
         <ApiDown error={error} retry={load} />
       </div>
     )
@@ -82,7 +82,7 @@ export default function IntroductionPage() {
 
   if (!intro) {
     return (
-      <div className="wrap">
+      <div className="wrap v2-page">
         <div className="card">
           <Loading lines={6} />
         </div>
@@ -105,7 +105,7 @@ export default function IntroductionPage() {
   }
 
   return (
-    <div className="wrap">
+    <div className="wrap v2-page v2-receipt-page">
       <Link href="/builders" className="btn-link tiny">
         ← Directory
       </Link>

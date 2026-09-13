@@ -632,7 +632,7 @@
 .signalLoopIntro {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.75fr);
-  align-items: end;
+  align-items: flex-end;
   gap: 80px;
 }
 .sectionKicker {

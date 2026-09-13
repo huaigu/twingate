@@ -222,20 +222,28 @@ export default function IntroducePage() {
   const policy = recipient.policy
 
   return (
-    <div className="wrap">
-      <Link href={`/builders/${recipientHandle}`} className="btn-link tiny">
+    <div className="wrap v2-page v2-composer-page">
+      <Link href={`/builders/${recipientHandle}`} className="v2-back-link">
         ← @{recipientHandle}
       </Link>
 
       <div className="row" style={{ gap: 14, marginTop: 18, flexWrap: 'wrap' }}>
-        <div className="eyebrow">Introduction to @{recipient.profile.displayName}</div>
+        <div className="v2-kicker">INTRODUCTION TO @{recipient.profile.displayName}</div>
         {policy ? <AvailabilityPill value={policy.availability} /> : null}
         <span className="pill">policy v{recipient.profile.policyVersion}</span>
       </div>
 
-      <h1 className="h2" style={{ marginTop: 12, maxWidth: '26ch' }}>
-        Four answers. Then the hard part is out of your hands.
-      </h1>
+      <div className="v2-composer-heading">
+        <div>
+          <h1>From possibility to people.</h1>
+          <p>Your Personal Agent drafts. You edit and approve before anything is shared.</p>
+        </div>
+        <ol className="v2-stepper" aria-label="Introduction steps">
+          <li className="is-done"><span>1</span>Choose</li>
+          <li className="is-current"><span>2</span>Draft</li>
+          <li><span>3</span>Confirm</li>
+        </ol>
+      </div>
 
       <div className="split" style={{ marginTop: 28 }}>
         <div className="stack">
@@ -258,7 +266,17 @@ export default function IntroducePage() {
             </div>
           ) : null}
 
-          <div className="intro-card">
+          <div className="v2-agent-draft-card">
+            <div className="v2-agent-draft-head">
+              <span className="v2-agent-orb">✦</span>
+              <div><strong>My Personal Agent</strong><span>suggestion · not sent</span></div>
+            </div>
+            <p className="v2-agent-draft-title">{recipient.profile.displayName} may be a good fit because…</p>
+            <p>You share a public interest in {(policy?.topics ?? ['building on Monad']).slice(0, 2).join(' and ')}. Your agent found a useful reason to start a conversation; you decide what to say.</p>
+            <span className="v2-agent-draft-note">Suggested by your agent — not sent</span>
+          </div>
+
+          <div className="intro-card v2-intro-card">
             <div className="intro-card-head">
               <div>
                 <div className="eyebrow">The introduction card</div>
@@ -399,11 +417,11 @@ export default function IntroducePage() {
                 onClick={handleSubmit}
               >
                 {submitting ? <span className="spin" /> : null}
-                {submitting ? 'Locking and evaluating…' : 'Lock the introduction'}
+                {submitting ? 'Approving and evaluating…' : 'Approve and send'}
               </button>
               <p className="tiny dim" style={{ marginTop: 12 }}>
-                Locking splits the fee and the bond in one transaction, then both agents read the card. This
-                build simulates the split and runs the mock evaluator; the same state machine runs onchain.
+                You approve the card and the quote before anything is shared. The fee and bond are then split,
+                and both agents read the request.
               </p>
             </div>
 

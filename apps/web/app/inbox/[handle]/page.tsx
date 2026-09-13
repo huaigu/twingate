@@ -79,13 +79,11 @@ export default function InboxPage() {
   const open = data.queue.filter((item) => resolved[item.id] === undefined)
 
   return (
-    <div className="wrap">
+    <div className="wrap v2-page v2-inbox-page">
       <div className="row-between" style={{ flexWrap: 'wrap' }}>
         <div>
-          <div className="eyebrow">Protected queue</div>
-          <h1 className="h2" style={{ marginTop: 8 }}>
-            @{data.profile.handle}’s introductions
-          </h1>
+          <span className="v2-kicker">RECIPIENT / PERSONAL AGENT</span>
+          <h1>Prepared for your review.</h1>
         </div>
         <div className="row" style={{ gap: 8 }}>
           <span className="pill" data-tone={open.length > 0 ? 'accent' : 'bond'}>
@@ -98,11 +96,15 @@ export default function InboxPage() {
         </div>
       </div>
 
-      <p className="lede" style={{ marginTop: 14 }}>
-        This is the only place these exist. Nobody can browse them, nobody can search them, and the sender
-        cannot see this page. Accept and decline are equally free — the bond goes back either way, so there
-        is no price for saying no.
+      <p className="v2-page-lede">
+        {data.profile.displayName}’s Personal Agent has filtered and summarized requests from builders who
+        chose to reach out. You decide what happens next; no action has been taken for you.
       </p>
+
+      <div className="v2-inbox-agent-note">
+        <span className="v2-agent-orb">✦</span>
+        <div><strong>Suggestion, not decision.</strong><span>Only public profiles and consented context are used here.</span></div>
+      </div>
 
       {actionError ? (
         <div className="notice section-tight" data-tone="danger">
@@ -128,7 +130,7 @@ export default function InboxPage() {
         </div>
       ) : null}
 
-      <div className="section-tight stack">
+      <div className="section-tight stack v2-inbox-list">
         {open.length === 0 ? (
           <EmptyState
             title="Nobody is waiting on you."
@@ -240,7 +242,7 @@ export default function InboxPage() {
                     onClick={() => decide(introduction, 'accepted')}
                   >
                     {busyId === introduction.id ? <span className="spin" /> : null}
-                    Meet them
+                    Accept introduction
                   </button>
                   <button
                     type="button"
@@ -248,7 +250,7 @@ export default function InboxPage() {
                     disabled={busyId === introduction.id}
                     onClick={() => decide(introduction, 'declined')}
                   >
-                    Not now
+                    Decline introduction
                   </button>
                   <Link
                     href={`/introductions/${introduction.id}`}

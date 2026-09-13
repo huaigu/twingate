@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Shell } from '@/components/Shell'
+import '@fontsource-variable/manrope'
 import './globals.css'
 
 export const metadata: Metadata = {

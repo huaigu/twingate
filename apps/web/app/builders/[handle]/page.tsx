@@ -13,217 +13,113 @@ import {
 } from '@/lib/api'
 import { formatMon, formatRelative, shortHash } from '@/lib/format'
 
+function fallbackPersona(handle: string): string {
+  return handle === 'alice'
+    ? '/design/builder-right-reference.png'
+    : '/design/builder-left-reference.png'
+}
+
 export default function BuilderPage() {
   const params = useParams<{ handle: string }>()
   const handle = typeof params?.handle === 'string' ? params.handle : ''
-
-  const [data, setData] = useState<{ profile: BuilderProfileDto; policy: GatePolicyDto | null } | null>(
-    null,
-  )
+  const [data, setData] = useState<{ profile: BuilderProfileDto; policy: GatePolicyDto | null } | null>(null)
   const [error, setError] = useState<ApiError | null>(null)
 
   const load = useCallback(() => {
-    if (handle.length === 0) return
+    if (!handle) return
     setError(null)
     getProfile(handle)
       .then(setData)
-      .catch((cause: unknown) => {
-        setError(cause instanceof ApiError ? cause : new ApiError(0, 'unknown_error', cause))
-      })
+      .catch((cause: unknown) => setError(cause instanceof ApiError ? cause : new ApiError(0, 'unknown_error', cause)))
   }, [handle])
 
   useEffect(load, [load])
 
   if (error) {
     return (
-      <div className="wrap">
+      <div className="wrap v2-page">
         {error.status === 404 ? (
-          <div className="notice">
-            <div className="strong">No builder is registered under @{handle}.</div>
-            <p className="small muted" style={{ marginTop: 6 }}>
-              <Link href="/builders" className="btn-link">
-                Back to the directory
-              </Link>
-            </p>
-          </div>
-        ) : (
-          <ApiDown error={error} retry={load} />
-        )}
+          <div className="v2-notice"><strong>No builder is registered under @{handle}.</strong><Link href="/builders">Back to builders</Link></div>
+        ) : <ApiDown error={error} retry={load} />}
       </div>
     )
   }
 
   if (!data) {
-    return (
-      <div className="wrap">
-        <div className="card">
-          <Loading lines={5} />
-        </div>
-      </div>
-    )
+    return <div className="wrap v2-page"><div className="v2-loading-card"><Loading lines={6} /></div></div>
   }
 
   const { profile, policy } = data
   const isSelf = profile.handle === DEMO_SENDER_HANDLE
+  const personaSrc = profile.persona?.assetUrl ?? fallbackPersona(profile.handle)
 
   return (
-    <div className="wrap">
-      <Link href="/builders" className="btn-link tiny">
-        ← Directory
-      </Link>
+    <div className="wrap v2-page v2-profile-page">
+      <Link href="/builders" className="v2-back-link">← Find builders</Link>
+      <div className="v2-profile-layout">
+        <aside className="v2-profile-persona">
+          <div className="v2-profile-persona-image">
+            <img src={personaSrc} alt={`${profile.displayName} visual persona`} />
+          </div>
+          <div className="v2-profile-persona-caption">
+            <span>OPTIONAL 3D PERSONA</span>
+            <p>{profile.persona?.status === 'ready' ? 'A visual layer for your public profile.' : 'A visual layer — not an identity proof.'}</p>
+          </div>
+        </aside>
 
-      <div className="split" style={{ marginTop: 22 }}>
-        <div>
-          <div className="row" style={{ gap: 18, alignItems: 'flex-start' }}>
-            <div className="persona" style={{ width: 116, height: 116, flex: 'none' }}>
+        <div className="v2-profile-content">
+          <header className="v2-profile-heading">
+            <span className="v2-kicker">YOUR PUBLIC PROFILE</span>
+            <div className="v2-profile-name-row">
+              <h1>{profile.displayName}</h1>
+              <span className="mono tiny dim">@{profile.handle}</span>
+            </div>
+            <div className="v2-profile-meta"><AvailabilityPill value={profile.availability} /><span className="pill">policy v{profile.policyVersion}</span></div>
+            <p className="v2-profile-lede">This is what other builders can learn before they decide whether to send you an introduction.</p>
+          </header>
+
+          <section className="v2-public-dossier" aria-labelledby="public-dossier-title">
+            <h2 id="public-dossier-title" className="sr-only">Public builder profile</h2>
+            <article>
+              <span className="v2-dossier-icon">↗</span>
+              <div><span className="v2-mini-label">Building</span><p>{profile.building}</p></div>
+            </article>
+            <article>
+              <span className="v2-dossier-icon">+</span>
+              <div><span className="v2-mini-label">I can offer</span><p>{profile.canOffer}</p></div>
+            </article>
+            <article>
+              <span className="v2-dossier-icon">✦</span>
+              <div><span className="v2-mini-label">I want to meet</span><p>{profile.wantsToMeet}</p></div>
+            </article>
+            <article>
+              <span className="v2-dossier-icon">◎</span>
+              <div><span className="v2-mini-label">Open to introductions</span><p>{profile.availability === 'closed' ? 'Not accepting new introductions right now.' : 'A thoughtful request is welcome.'}</p></div>
+            </article>
+          </section>
+
+          <section className="v2-agent-panel" aria-labelledby="agent-panel-title">
+            <div className="v2-agent-panel-head">
               <div>
-                <div className="mono small dim">3D presence</div>
-                <div className="tiny dim" style={{ marginTop: 4 }}>
-                  {profile.persona?.status === 'ready'
-                    ? 'rendered'
-                    : profile.persona?.status === 'pending'
-                      ? 'rendering…'
-                      : 'not generated'}
-                </div>
+                <span className="v2-kicker">{isSelf ? 'PRIVATE TO YOU' : 'PUBLISHED POLICY'}</span>
+                <h2 id="agent-panel-title">{isSelf ? 'Your Personal Agent' : `${profile.displayName}’s Personal Agent`}</h2>
               </div>
+              <span className="v2-lock-badge">⌁ {isSelf ? 'your controls' : 'public summary'}</span>
             </div>
-
-            <div style={{ minWidth: 0 }}>
-              <h1 className="h2">{profile.displayName}</h1>
-              <div className="row" style={{ gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
-                <span className="mono small dim">@{profile.handle}</span>
-                <AvailabilityPill value={profile.availability} />
-                <span className="pill">policy v{profile.policyVersion}</span>
-              </div>
-              <p className="small muted" style={{ marginTop: 12 }}>
-                Profile id #{profile.profileId} · registered {formatRelative(profile.createdAt)} ·{' '}
-                <span className="mono">{shortHash(profile.owner, 10, 8)}</span>
-              </p>
+            <p className="v2-agent-panel-lede">{isSelf ? 'It helps people understand how to approach you, while you stay in control of every introduction.' : 'This is the boundary this builder published so an incoming introduction can be evaluated with context.'}</p>
+            <div className="v2-agent-policy-grid">
+              <div><span className="v2-mini-label">Topics I’ll consider</span><div className="v2-chip-row">{(policy?.topics ?? []).map((topic) => <span className="v2-chip" key={topic}>{topic}</span>)}</div></div>
+              <div><span className="v2-mini-label">Desired next step</span><p>{policy?.desiredNextStep ?? 'A thoughtful conversation.'}</p></div>
+              <div><span className="v2-mini-label">{isSelf ? 'What my agent may use' : 'What this agent reads'}</span><ul className="v2-agent-list"><li>Public profile and stated interests</li><li>Context you explicitly disclose</li><li>Published availability and policy</li></ul></div>
+              <div><span className="v2-mini-label">What it cannot do</span><p>Accept, decline or speak for you without your confirmation.</p></div>
             </div>
-          </div>
-
-          <div className="section">
-            <div className="eyebrow">What they are building</div>
-            <p className="lede" style={{ marginTop: 10, fontSize: 17 }}>
-              {profile.building}
-            </p>
-          </div>
-
-          <div className="grid-2 section-tight">
-            <div className="card">
-              <div className="eyebrow">Who they want to meet</div>
-              <p style={{ marginTop: 10 }}>{profile.wantsToMeet}</p>
+            <div className="v2-agent-panel-footer">
+              <span>Policy hash <span className="mono">{shortHash(profile.policyHash, 8, 6)}</span> · expires unanswered in {policy ? formatRelative(0, -policy.timeoutSeconds).replace(/^in /, '') : 'a few days'}</span>
+              {isSelf ? <Link href="/builders" className="btn btn-ghost">Pick a recipient →</Link> : <Link href={`/introduce/${profile.handle}`} className="btn btn-accent">Start an introduction →</Link>}
             </div>
-            <div className="card">
-              <div className="eyebrow">What they can offer</div>
-              <p style={{ marginTop: 10 }}>{profile.canOffer}</p>
-            </div>
-          </div>
+          </section>
 
-          {policy ? (
-            <div className="section">
-              <div className="eyebrow">The gate policy their agent reads</div>
-              <h2 className="h3" style={{ marginTop: 10 }}>
-                Published, versioned, and hashed onchain.
-              </h2>
-              <p className="small muted" style={{ marginTop: 8, maxWidth: '62ch' }}>
-                This is not a filter you set for a stranger. It is the standard they agreed to hold
-                themselves to, and an evaluation receipt binds the verdict to this exact version — so if
-                they change it, past decisions stay explainable.
-              </p>
-
-              <div className="card section-tight">
-                <div className="stack-sm">
-                  <div className="label">
-                    <span>Topics they will consider</span>
-                    <span className="label-hint">{policy.topics.length} of 12</span>
-                  </div>
-                  <div className="row" style={{ flexWrap: 'wrap', gap: 8 }}>
-                    {policy.topics.map((topic) => (
-                      <span className="pill" key={topic}>
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <hr className="divider" style={{ margin: '20px 0' }} />
-
-                <dl className="kv">
-                  <dt>Availability</dt>
-                  <dd>
-                    <AvailabilityPill value={policy.availability} />
-                  </dd>
-                  <dt>The next step they want</dt>
-                  <dd>{policy.desiredNextStep}</dd>
-                  <dt>Base attention bond</dt>
-                  <dd className="mono">{formatMon(policy.baseBond)} MON</dd>
-                  <dt>Open introductions allowed per sender</dt>
-                  <dd>{policy.unresolvedLimit}</dd>
-                  <dt>Unanswered introductions expire after</dt>
-                  <dd>{formatRelative(0, -policy.timeoutSeconds).replace(' ago', '')} — bond refunded</dd>
-                </dl>
-
-                <hr className="divider" style={{ margin: '20px 0' }} />
-
-                <div className="tiny dim">
-                  Policy hash{' '}
-                  <span className="mono" style={{ wordBreak: 'break-all' }}>
-                    {profile.policyHash}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="stack">
-          <div className="card-raised">
-            <div className="eyebrow">Make contact</div>
-            {isSelf ? (
-              <>
-                <p className="small muted" style={{ marginTop: 12 }}>
-                  This is the demo sender identity. Open someone else’s profile to write an introduction
-                  from @{DEMO_SENDER_HANDLE}.
-                </p>
-                <Link href="/builders" className="btn btn-ghost btn-block" style={{ marginTop: 16 }}>
-                  Pick a recipient
-                </Link>
-              </>
-            ) : (
-              <>
-                <p className="small muted" style={{ marginTop: 12 }}>
-                  You will write four short answers, optionally disclose verified context, and see the exact
-                  fee and bond before anything is locked.
-                </p>
-                <Link
-                  href={`/introduce/${profile.handle}`}
-                  className="btn btn-block"
-                  style={{ marginTop: 16 }}
-                >
-                  Write an introduction
-                </Link>
-                <p className="tiny dim" style={{ marginTop: 12 }}>
-                  Sending as @{DEMO_SENDER_HANDLE}. Nothing is signed onchain in this build — the quote and
-                  the escrow split are computed by the same code the contract uses.
-                </p>
-              </>
-            )}
-          </div>
-
-          <div className="card-quiet">
-            <div className="eyebrow">What they will see</div>
-            <ul className="bullets" style={{ marginTop: 12 }}>
-              <li>A three-line summary of your card.</li>
-              <li>Why your request touches their published topics.</li>
-              <li>Any verified context you chose to disclose — explained, not scored.</li>
-              <li>A suggested opening question they can ignore.</li>
-            </ul>
-            <p className="tiny dim" style={{ marginTop: 14 }}>
-              They never see your agent’s notes, your private reasoning, or your wallet balance as a
-              measure of your worth.
-            </p>
-          </div>
+          <p className="v2-profile-footnote">Profile id #{profile.profileId} · registered {formatRelative(profile.createdAt)} · Base attention bond {policy ? formatMon(policy.baseBond) : '—'} MON. Nothing here is a reputation score.</p>
         </div>
       </div>
     </div>
