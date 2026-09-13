@@ -16,6 +16,7 @@ V3 继续保持首页原 Hero 的纸张拼贴、Alice/Bob 3D Persona、Introduct
 | `06-recipient-inbox.png` | Recipient inbox | 接收方 Agent 过滤和总结，接收方本人选择 Accept / Ask for context / Decline。 |
 
 配套的页面连接骨架见 [V3 流转图](./flow-v3.html) 和 [流转说明](./FLOW.md)。
+页面还原资产见 [资产切分说明](./ASSETS.md) 与 [资产总览](./assets/contact-sheet.png)。
 
 ## V3 主流程
 
