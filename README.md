@@ -35,6 +35,7 @@ In this repository:
 - [🗺️ Product Architecture Diagram](./docs/architecture/signalpass-product-architecture.html): interactive diagram with dark and light themes.
 - [🤖 Agent Surface](./docs/SIGNALPASS_AGENT_SURFACES.md): the Personal Agent model, provider-neutral skills, OpenClaw/Hermes adapter boundary and hackathon acceptance criteria.
 - [🎨 V2 Design Set](./design-explorations/signalpass-v2/DESIGN.md): the redesigned Builders, Profile, Composer, Inbox and Hero interaction references.
+- [✨ V3 Design Set](./design-explorations/signalpass-v3/DESIGN.md): profile source import, private matching, people discovery, Profile Widget and the broader introduction flow.
 
 Hackathon research notes — the official catalog and rules, the bounty analysis, and the participant directory — are kept outside this repository. They contain sponsor access credentials and other participants' contact details, so they are deliberately not published here.
 
