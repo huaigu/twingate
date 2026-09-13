@@ -8,6 +8,20 @@ SignalPass 把冷私信变成一次郑重的介绍：发起人说明“我是谁
 
 主赛道是 **03 Social, Attention & Culture**。产品的核心价值是让 Monad Builder 更容易发现和建立有意义的合作关系，而不是让第三方应用构建在一套公共 API 之上。
 
+### 1.1 未来形态：一人一私有 Agent，一张公开 Profile，可选 Persona
+
+SignalPass 的长期形态不是一个由公开数字分身组成的内容广场，而是一个由个人 Agent 协助发现、由人确认的高信号关系网络。
+
+- **Human** 是身份、注意力、授权和最终决定的拥有者。
+- **Profile** 是用户主动发布的公开意图：正在做什么、想认识谁、能提供什么、当前是否开放。
+- **Personal Agent** 是用户的私有 Concierge，了解用户的兴趣、边界、目标和沟通偏好。
+- **Persona** 是可选的 3D 数字门面，帮助别人记住这个人；它不是身份认证、信誉分或真人替身。
+- 同一个 Personal Agent 在发起介绍时扮演 **Intro Coach**，在接收介绍时扮演 **Gatekeeper**。
+
+Agent 可以发现候选人、解释推荐理由、整理上下文和提醒用户，但不能未经确认公开发帖、自动发送介绍、替用户接受关系或单独决定资金结果。
+
+OpenClaw、Hermes 等 Agent 宿主是未来的入口适配器，不是 SignalPass 的产品本体。用户可以通过它们使用同一套 SignalPass Agent 能力，但 Profile、Introduction、Gate Policy、评估和同意规则仍属于 SignalPass。
+
 ## 2. 社交体验，而不是表单加交易
 
 SignalPass 的交互单位是 Introduction，不是 Message。
@@ -19,6 +33,8 @@ SignalPass 的交互单位是 Introduction，不是 Message。
 5. 接收者选择接受、要求补充或婉拒；接受后才打开私密介绍空间。
 
 目标体验是“认真地认识一个人”，不是在收件箱里处理一串支付交易。
+
+当前黑客松 MVP 保留人工发现：用户先在 Builder 目录中选择一个具体对象。Agent 辅助发现属于下一步增强：Personal Agent 可以从公开 Profile 和用户自己的目标中生成候选列表，但每次发送 Introduction 之前仍需要用户确认。
 
 ## 3. 3D Agent Persona
 
@@ -55,6 +71,19 @@ Agent 间的原始对话、私有策略文本、Prompt、内部评分和未经�
 | --- | --- |
 | 发起人 | 是否进入 Review、需要补充什么、下一步可做什么。 |
 | 接收者 | 为什么值得看、对方提供什么、是否接受或追问。 |
+
+### 4.4 Personal Agent 与入口适配器
+
+用户不需要理解 Intro Coach 和 Gatekeeper 是两个独立的机器人。产品层面只有一个属于用户的 Personal Agent，它在不同场景承担不同职责：
+
+| 场景 | Personal Agent 的职责 | 人必须确认什么 |
+| --- | --- | --- |
+| 发现 | 根据 Profile、目标和边界推荐候选 Builder，并解释原因。 | 是否查看候选人、是否发起介绍。 |
+| 发起 | 把四个问题整理成 Introduction Card，指出缺失上下文。 | 卡片内容、披露信号、Evaluation Fee、Attention Bond 和发送动作。 |
+| 接收 | 把陌生请求映射到用户的 Gate Policy，生成摘要和建议。 | 接受、要求补充上下文或拒绝。 |
+| 后续 | 在双方同意后准备开场问题、约定下一步或整理回顾。 | 是否继续沟通、是否授权更多动作。 |
+
+Web、OpenClaw、Hermes 或其他宿主都只实现入口适配器。黑客松先提供一个 provider-neutral 的 Agent surface 和一个 Web 参考客户端，再为 OpenClaw/Hermes 提供可复用的 skills；不把任何一个宿主写成协议依赖。
 
 ## 5. 费用与公平边界
 
@@ -114,15 +143,46 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 
 原文、原始 Agent 对话、模型上下文、向量、内部评分和未经许可的 Nansen 数据都不直接上链。
 
-## 8. 黑客松 MVP
+### Agent-facing surface（黑客松目标）
 
-1. Alice 用 Dynamic 登录，获得嵌入式钱包，并创建自己的 Builder Profile。
-2. Alice 选择生成一个 3D Agent Persona；该资产在 Profile 中异步出现。
-3. Alice 找到 Bob 的 Profile，写一张 Introduction Card，并选择是否披露自己的 Verified Context。
-4. 应用展示 Introduction Evaluation Fee 与 Attention Bond；Alice 签名并在 Monad 锁定它们。
-5. Hunyuan 进行私人双侧评估：Alice 得到改进建议，Bob 得到匹配摘要和下一步。
-6. Envio 让 Bob 的受保护介绍队列和活动视图由真实合约事件实时更新。
-7. Bob 接受、要求补充或婉拒；接受时两人进入私密介绍空间，应用展示回执和资金状态。
+黑客松目标是先稳定能力边界，再接入具体宿主。建议提供以下 provider-neutral skills：
+
+1. `discover-builders`：只读地返回候选 Builder、匹配理由和公开 Profile 链接。
+2. `draft-introduction`：根据用户确认的对象和四个问题生成 Introduction 草稿。
+3. `quote-introduction`：展示 Evaluation Fee、Attention Bond、过期时间和影响报价的因素。
+4. `submit-introduction`：只有在用户明确确认卡片和报价后，才锁定请求。
+5. `review-introduction`：把 Gatekeeper 结果整理为共同点、缺失上下文和下一步建议。
+6. `manage-introductions`：查询自己的发送记录和接收队列，支持查看、撤回和决定。
+
+所有 skill 都必须返回结构化结果和来源范围，并明确区分 `suggested` 与 `confirmed`。`submit-introduction`、`accept`、`decline` 和任何涉及资金或关系状态的动作都必须有人的显式确认；Agent 不能通过宿主权限绕过这一层。
+
+## 8. 黑客松 MVP 与 Agent-first 目标
+
+### 8.1 必须交付的垂直闭环
+
+1. Alice 用 Web 参考客户端创建或读取自己的 Builder Profile。
+2. Alice 在 Builder 目录中手动选择 Bob；目录推荐不是本阶段的前置依赖。
+3. Alice 写一张四问 Introduction Card，并选择是否披露 Verified Context。
+4. 应用展示 Introduction Evaluation Fee 与 Attention Bond；Alice 明确确认后锁定请求。
+5. Intro Coach 与 Gatekeeper 运行一次受限的双侧评估；Alice 得到改进建议，Bob 得到共同点摘要。
+6. `ready_for_review` 请求进入 Bob 的受保护队列；Bob 接受、要求补充上下文或拒绝。
+7. 应用展示可复核的 Receipt、资金状态和下一步；接受后的私密介绍可以先是诚实标注的 handoff 页面，不能伪装成已完成的聊天网络。
+
+### 8.2 本次黑客松新增的 Agent-first 目标
+
+1. 提供一个官方的 Personal Agent 参考实现，包含上述 provider-neutral skills。
+2. 增加 `discover-builders`：Agent 读取公开 Profile，根据用户目标返回候选人和解释，不自动联系任何人。
+3. 允许用户通过一个 Web 聊天式面板，或一个宿主适配器，调用同一套 skills。
+4. 为 OpenClaw 和 Hermes 提供最小适配说明或示例 skill 包；适配器只调用 SignalPass surface，不复制状态机和资金规则。
+5. 在每次 Agent 动作旁显示“建议 / 待确认 / 已确认”，让用户知道什么时候只是推荐，什么时候会改变关系或资金状态。
+
+### 8.3 明确延期到生产阶段
+
+- 多宿主的稳定发布、权限模型和版本兼容。
+- 用户自己的长期 Agent memory、加密存储、删除和迁移。
+- Dynamic 登录、真实 Monad 结算、Envio 实时读模型和真实 Nansen 数据接入。
+- 接受后的长期私密沟通、日程协作和跨平台通知。
+- 大规模自动候选排序、公开社交 Feed 和 Agent 自主发帖。
 
 ## 9. 已选 Sponsor Bounties
 
@@ -139,8 +199,9 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 
 - 不做公开 Feed、交易式注意力市场或完整聊天平台。
 - 不要求用户安装浏览器插件、管理助记词或理解 Gas。
-- 不把 Agent SDK、MCP Server 或公共 A2A 协议作为黑客松 MVP 的交付目标。
+- 不把某个 Agent 宿主的 SDK、MCP Server 或公共 A2A 协议当成 SignalPass 的核心协议；黑客松只提供 provider-neutral surface 和最小适配器。
 - 不让 AI 或钱包余额单独决定人的价值、对话资格或资金罚没。
+- 不让 Personal Agent 代替用户公开行动；所有关系和资金动作都需要人的明确确认。
 
 ## 11. 研究来源
 

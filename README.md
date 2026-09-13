@@ -10,6 +10,8 @@
 
 **SignalPass** is a high-signal introduction network on **Monad**. It helps builders replace cold DMs with structured, context-rich introductions that only open when both people opt in.
 
+The long-term product shape is **one private Personal Agent per person, one public Builder Profile, and an optional 3D Persona**. The Agent can help discover compatible builders and prepare an introduction, but the human confirms every relationship or money action. The Web app is the current reference client; OpenClaw, Hermes and other Agent hosts are future adapters that call the same SignalPass skills and state machine.
+
 ### The Core Problem
 1. **Cold DMs lack context**: Builders cannot tell whether a stranger is a future collaborator or another generic pitch.
 2. **Compute inversion**: If a recipient uses an AI gatekeeper, the recipient should not pay to assess an unsolicited request.
@@ -31,6 +33,7 @@ In this repository:
 - [📒 Product Direction](./SIGNALPASS_PRODUCT_DIRECTION.md): the problem, the mechanism, the fee/bond split, the agent handshake, and an explicit list of what SignalPass does *not* do.
 - [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): the canonical name, one-liner and description used on the submission form.
 - [🗺️ Product Architecture Diagram](./docs/architecture/signalpass-product-architecture.html): interactive diagram with dark and light themes.
+- [🤖 Agent Surface](./docs/SIGNALPASS_AGENT_SURFACES.md): the Personal Agent model, provider-neutral skills, OpenClaw/Hermes adapter boundary and hackathon acceptance criteria.
 
 Hackathon research notes — the official catalog and rules, the bounty analysis, and the participant directory — are kept outside this repository. They contain sponsor access credentials and other participants' contact details, so they are deliberately not published here.
 
@@ -47,6 +50,7 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 - **Services (Node.js + Hono)**: `services/api` (read/write API), `services/evaluator` (bilateral evaluation + recommendation guardrail), `services/indexer` (Envio HyperIndex event handlers and aggregation).
 - **Frontend**: Next.js 15 App Router with a hand-written CSS design system (custom properties, no UI framework).
 - **AI Experience**: Tencent Hunyuan 3D agent persona, sender-facing Intro Coach, recipient-side Gatekeeper.
+- **Agent-first target**: agent-assisted Builder discovery with explicit human confirmation before an Introduction is sent or accepted. The current MVP keeps discovery manual so the vertical loop is easy to demo.
 - **Account Abstraction**: Dynamic embedded wallets — *not wired in this build; demo identities are used instead.*
 - **Verified Context**: opt-in onchain signals — *consent record is real and hashed into the payload; third-party verification is not wired.*
 
@@ -135,4 +139,3 @@ MIT License
 ## AI Coding Assistance
 
 AI coding tools are used during development. All generated changes are reviewed, integrated, and tested by the project team. Specifically: the contract, domain, service and UI code was drafted with AI assistance and then verified by the test suites above — the state machine, the pricing curve and the four contract invariants were each checked by executing them, not by inspection.
-

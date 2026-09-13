@@ -4,6 +4,8 @@
 
 生成方式：内置 ImageGen 最新默认模型路径。当前文件夹共有 9 张 PNG，均为桌面端 16:9 视觉稿，尺寸约为 1672×941。
 
+发现方式分成两层：当前 MVP 由用户在 Builders 目录中手动选择对象；黑客松目标允许 Personal Agent 根据公开 Profile 和用户目标给出少量、可解释的候选，但仍需用户确认后才能发起 Introduction。Personal Agent 的能力边界见 [Agent Surface](../../docs/SIGNALPASS_AGENT_SURFACES.md)。
+
 ## 页面主流程
 
 ```mermaid
@@ -101,4 +103,3 @@ flowchart LR
 | 点击 `Accept introduction` | 确认印章出现，signal bridge 展开 | 320–420ms |
 
 所有动作都应保留键盘焦点、清晰的状态文本和 reduced-motion 降级版本。Agent 的原始对话、Prompt、内部评分不进入这些前台状态。
-
