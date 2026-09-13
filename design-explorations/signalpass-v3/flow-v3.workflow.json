@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "SignalPass V3 — Profile to Introduction",
+    "animation": "none",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "profile-loop",
+        "label": "建立 Profile",
+        "focus": [
+          "onboard",
+          "profile_draft",
+          "profile_review",
+          "widget_snapshot"
+        ],
+        "note": "从社交登录和用户选择的资料来源开始，Agent 只生成草稿，用户批准后才公开。"
+      },
+      {
+        "id": "discovery-loop",
+        "label": "Agent 辅助发现",
+        "focus": [
+          "matching_opt_in",
+          "candidate_shortlist",
+          "user_select"
+        ],
+        "note": "Profile 是否公开和 Agent matching 独立；候选是建议，不是自动联系。"
+      },
+      {
+        "id": "introduction-loop",
+        "label": "一次 Introduction",
+        "focus": [
+          "user_select",
+          "intro_draft",
+          "consent_lock",
+          "recipient_review",
+          "recipient_decision",
+          "outcomes"
+        ],
+        "note": "用户确认草稿和报价后，双方 Agent 才交换受限上下文，接收者本人做最后决定。"
+      },
+      {
+        "id": "consent-boundary",
+        "label": "权限与同意",
+        "focus": [
+          "profile_review",
+          "matching_opt_in",
+          "consent_lock",
+          "recipient_decision",
+          "outcomes"
+        ],
+        "note": "查看、推荐、起草、发送和接受是不同权限；Agent 不代替用户改变关系或资金状态。"
+      }
+    ],
+    "output": "flow-v3.html"
+  },
+  "lanes": [
+    {
+      "id": "human",
+      "label": "用户动作"
+    },
+    {
+      "id": "profile",
+      "label": "Profile 与 Widget"
+    },
+    {
+      "id": "agent",
+      "label": "Personal Agent"
+    },
+    {
+      "id": "network",
+      "label": "SignalPass 网络"
+    },
+    {
+      "id": "recipient",
+      "label": "接收者"
+    },
+    {
+      "id": "recipient_human",
+      "label": "接收者本人"
+    },
+    {
+      "id": "outcomes",
+      "label": "结果分支",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "onboarding",
+      "label": "登录与资料",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "publish",
+      "label": "审核与发布",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "security"
+    },
+    {
+      "id": "discover",
+      "label": "私有匹配与选择",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "introduce",
+      "label": "起草与发送",
+      "fromCol": 4,
+      "toCol": 4,
+      "variant": "security"
+    },
+    {
+      "id": "decide",
+      "label": "接收者审核",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "groups": [
+    {
+      "id": "profile_group",
+      "label": "Public Profile / Private controls",
+      "lane": "profile",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "default"
+    },
+    {
+      "id": "matching_group",
+      "label": "Agent-assisted discovery",
+      "lane": "network",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "consent_group",
+      "label": "Human confirmation gates",
+      "lane": "network",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    },
+    {
+      "id": "recipient_group",
+      "label": "Recipient-owned decision",
+      "lane": "recipient_human",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "onboard",
+    "profile_draft",
+    "profile_review",
+    "matching_opt_in",
+    "candidate_shortlist",
+    "user_select",
+    "intro_draft",
+    "consent_lock",
+    "recipient_review",
+    "recipient_decision",
+    "outcomes"
+  ],
+  "nodes": [
+    {
+      "id": "onboard",
+      "lane": "human",
+      "col": 0,
+      "type": "frontend",
+      "label": "登录",
+      "sublabel": "链接 / Agent",
+      "tag": "source",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "profile_draft",
+      "lane": "agent",
+      "col": 1,
+      "type": "backend",
+      "label": "生成档案",
+      "sublabel": "字段 + 来源",
+      "tag": "suggested",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "profile_review",
+      "lane": "human",
+      "col": 2,
+      "type": "security",
+      "label": "审核发布",
+      "sublabel": "公开字段",
+      "tag": "human approval",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "widget_snapshot",
+      "lane": "profile",
+      "col": 1,
+      "type": "frontend",
+      "label": "生成名片",
+      "sublabel": "名片 snapshot",
+      "tag": "optional",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "matching_opt_in",
+      "lane": "network",
+      "col": 2,
+      "type": "security",
+      "label": "打开匹配",
+      "sublabel": "独立于公开",
+      "tag": "opt in",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "candidate_shortlist",
+      "lane": "network",
+      "col": 3,
+      "type": "backend",
+      "label": "候选建议",
+      "sublabel": "相似 + 互补",
+      "tag": "Agent",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "user_select",
+      "lane": "human",
+      "col": 3,
+      "type": "frontend",
+      "label": "用户选人",
+      "sublabel": "聊 / 做 / 学",
+      "tag": "nothing sent",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "intro_draft",
+      "lane": "agent",
+      "col": 4,
+      "type": "backend",
+      "label": "起草介绍",
+      "sublabel": "四问 + 可选",
+      "tag": "editable",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "consent_lock",
+      "lane": "network",
+      "col": 5,
+      "type": "security",
+      "label": "确认发送",
+      "sublabel": "Fee + Bond",
+      "tag": "explicit consent",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "recipient_review",
+      "lane": "recipient",
+      "col": 5,
+      "type": "backend",
+      "label": "Agent 摘要",
+      "sublabel": "共同点 + 建议",
+      "tag": "private result",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "recipient_decision",
+      "lane": "recipient_human",
+      "col": 5,
+      "type": "security",
+      "label": "本人决定",
+      "sublabel": "接受 / 追问 / 拒绝",
+      "tag": "human only",
+      "width": 80,
+      "height": 62
+    },
+    {
+      "id": "outcomes",
+      "lane": "outcomes",
+      "col": 5,
+      "type": "backend",
+      "label": "结果回执",
+      "sublabel": "交接 / 补充 / 退回",
+      "tag": "state + receipt",
+      "width": 80,
+      "height": 62
+    }
+  ],
+  "edges": [
+    {
+      "id": "onboard-to-draft",
+      "from": "onboard",
+      "to": "profile_draft",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "draft-to-review",
+      "from": "profile_draft",
+      "to": "profile_review",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "review-to-matching",
+      "from": "profile_review",
+      "to": "matching_opt_in",
+      "role": "main",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight"
+    },
+    {
+      "id": "matching-to-shortlist",
+      "from": "matching_opt_in",
+      "to": "candidate_shortlist",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "shortlist-to-select",
+      "from": "candidate_shortlist",
+      "to": "user_select",
+      "role": "main",
+      "variant": "default",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "route": "straight"
+    },
+    {
+      "id": "select-to-draft",
+      "from": "user_select",
+      "to": "intro_draft",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "draft-to-lock",
+      "from": "intro_draft",
+      "to": "consent_lock",
+      "role": "main",
+      "variant": "security"
+    },
+    {
+      "id": "lock-to-review",
+      "from": "consent_lock",
+      "to": "recipient_review",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "review-to-decision",
+      "from": "recipient_review",
+      "to": "recipient_decision",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "decision-to-outcomes",
+      "from": "recipient_decision",
+      "to": "outcomes",
+      "role": "main",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "V3 的核心承诺",
+      "items": [
+        "Profile visibility 与 Agent matching 独立",
+        "私有兴趣只在双方授权时比较",
+        "Agent 推荐和起草不等于已经发送",
+        "Widget 只展示已批准的公开名片"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "黑客松真实闭环",
+      "items": [
+        "社交登录 + GitHub / 公开链接导入",
+        "Profile Draft → 用户审核 → 发布",
+        "LangGraph workflow + 透明匹配理由",
+        "Introduction → Recipient 决定 → Receipt"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "权限边界",
+      "items": [
+        "来源默认 user-provided / not verified",
+        "不自动私信、发帖、点赞或接受关系",
+        "Evaluation Fee 与 refundable Bond 分开",
+        "私密 handoff、长期 memory 和深度宿主适配属于后续"
+      ]
+    }
+  ]
+}

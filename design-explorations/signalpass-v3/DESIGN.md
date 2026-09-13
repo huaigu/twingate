@@ -15,6 +15,8 @@ V3 继续保持首页原 Hero 的纸张拼贴、Alice/Bob 3D Persona、Introduct
 | `05-introduction-composer.png` | Broad Introduction composer | Agent 起草一次聊天、合作或学习的介绍，用户编辑并批准后发送。 |
 | `06-recipient-inbox.png` | Recipient inbox | 接收方 Agent 过滤和总结，接收方本人选择 Accept / Ask for context / Decline。 |
 
+配套的页面连接骨架见 [V3 流转图](./flow-v3.html) 和 [流转说明](./FLOW.md)。
+
 ## V3 主流程
 
 ```text
@@ -68,4 +70,3 @@ LangGraph（或同等 workflow）负责状态编排，匹配器使用兴趣相�
 - 不把未验证的 Twitter/GitHub 链接显示成身份或信誉证明。
 - 不要求钱包才能创建 Profile 或参与匹配。
 - 不把 OpenClaw / Hermes 的具体 SDK 当作 SignalPass 核心依赖；它们是可替换的 Agent 宿主。
-
