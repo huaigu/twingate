@@ -1,0 +1,1055 @@
+{
+  "schema_version": 1,
+  "source_viewport": [
+    1672,
+    941
+  ],
+  "assets": [
+    {
+      "file": "avatars/alex-profile.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        1076,
+        232,
+        138,
+        138
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        138,
+        138
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/alex-intro.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        1076,
+        232,
+        138,
+        138
+      ],
+      "role": "avatar-alias",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        138,
+        138
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/maya-card.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        492,
+        444,
+        132,
+        132
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        132,
+        132
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/rohan-card.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        789,
+        444,
+        132,
+        132
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        132,
+        132
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/leo-card.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        1104,
+        444,
+        132,
+        132
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        132,
+        132
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/alex-widget.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        195,
+        335,
+        145,
+        145
+      ],
+      "role": "selected-avatar-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        145,
+        145
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/rohan-widget.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        350,
+        335,
+        145,
+        145
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        145,
+        145
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/maya-widget.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        505,
+        335,
+        145,
+        145
+      ],
+      "role": "avatar",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        145,
+        145
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/alex-inbox.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        238,
+        345,
+        65,
+        65
+      ],
+      "role": "avatar-low-resolution",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        65,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/sam-inbox.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        238,
+        439,
+        65,
+        65
+      ],
+      "role": "avatar-low-resolution",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        65,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/jordan-inbox.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        238,
+        530,
+        65,
+        65
+      ],
+      "role": "avatar-low-resolution",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        65,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/taylor-inbox.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        238,
+        658,
+        65,
+        65
+      ],
+      "role": "avatar-low-resolution",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        65,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "avatars/priya-inbox.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        238,
+        785,
+        65,
+        65
+      ],
+      "role": "avatar-low-resolution",
+      "method": "source-pixel-crop",
+      "transform": "circle",
+      "size": [
+        65,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/paper-grain-reference.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        700,
+        20,
+        256,
+        80
+      ],
+      "role": "texture-swatch",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        256,
+        80
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/logo-reference.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        30,
+        15,
+        280,
+        75
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        280,
+        75
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/mountain-left-reference.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        0,
+        700,
+        350,
+        235
+      ],
+      "role": "placement-bound-collage",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        350,
+        235
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/mountain-right-reference.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        1360,
+        160,
+        312,
+        370
+      ],
+      "role": "placement-bound-collage",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        312,
+        370
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/plants-crates-reference.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        0,
+        570,
+        360,
+        350
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        360,
+        350
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/purple-tape-reference.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        1520,
+        500,
+        150,
+        220
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        150,
+        220
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/profile-source-import.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        610,
+        120,
+        420,
+        690
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        420,
+        690
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/profile-draft.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        1050,
+        120,
+        525,
+        690
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        525,
+        690
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/alex-seated-source.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        280,
+        270,
+        300,
+        315
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        300,
+        315
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "personas/alex-seated-source.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        265,
+        414,
+        205,
+        505
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        205,
+        505
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/public-profile-visibility.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        425,
+        225,
+        650,
+        300
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        650,
+        300
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/agent-matching.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        1080,
+        220,
+        460,
+        305
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        460,
+        305
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/interests-curiosities.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        425,
+        525,
+        650,
+        215
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        650,
+        215
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/allowed-data-sources.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        1080,
+        525,
+        470,
+        265
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        470,
+        265
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/alex-standing-source.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        105,
+        180,
+        300,
+        700
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        300,
+        700
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/discovery-query.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        450,
+        110,
+        900,
+        270
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        900,
+        270
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/discovery-results.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        470,
+        420,
+        920,
+        385
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        920,
+        385
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/rohan-standing-source.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        1380,
+        220,
+        280,
+        690
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        280,
+        690
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/widget-editor.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        165,
+        280,
+        650,
+        610
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        650,
+        610
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/widget-preview.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        855,
+        270,
+        690,
+        400
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        690,
+        400
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/widget-embed.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        855,
+        705,
+        690,
+        120
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        690,
+        120
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/introduction-agent-panel.png",
+      "source": "05-introduction-composer.png",
+      "crop_xywh": [
+        240,
+        225,
+        620,
+        690
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        620,
+        690
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/introduction-card.png",
+      "source": "05-introduction-composer.png",
+      "crop_xywh": [
+        870,
+        205,
+        560,
+        700
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        560,
+        700
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/alex-intro-source.png",
+      "source": "05-introduction-composer.png",
+      "crop_xywh": [
+        235,
+        275,
+        270,
+        320
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        270,
+        320
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/recipient-list.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        175,
+        270,
+        560,
+        650
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        560,
+        650
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/recipient-detail.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        755,
+        100,
+        670,
+        800
+      ],
+      "role": "reference-only",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        670,
+        800
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-review.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        840,
+        805,
+        285,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        285,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-secondary-manual.png",
+      "source": "01-profile-source-import.png",
+      "crop_xywh": [
+        1145,
+        805,
+        275,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        275,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-settings.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        1234,
+        792,
+        211,
+        61
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        211,
+        61
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-secondary-preview.png",
+      "source": "02-personal-agent-privacy.png",
+      "crop_xywh": [
+        1025,
+        790,
+        215,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        215,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-ask-agent.png",
+      "source": "03-people-discovery.png",
+      "crop_xywh": [
+        1050,
+        280,
+        255,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        255,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-copy-embed.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        865,
+        790,
+        315,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        315,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-secondary-preview-site.png",
+      "source": "04-profile-widget.png",
+      "crop_xywh": [
+        1185,
+        790,
+        315,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        315,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-approve-send.png",
+      "source": "05-introduction-composer.png",
+      "crop_xywh": [
+        950,
+        791,
+        430,
+        54
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        430,
+        54
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-primary-accept.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        785,
+        800,
+        220,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        220,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-secondary-ask-context.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        1005,
+        800,
+        210,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        210,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/components/button-danger-decline.png",
+      "source": "06-recipient-inbox.png",
+      "crop_xywh": [
+        1215,
+        800,
+        205,
+        65
+      ],
+      "role": "css-reference",
+      "method": "source-pixel-crop",
+      "transform": "none",
+      "size": [
+        205,
+        65
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "personas/alex-standing.png",
+      "source": "personas/alex-standing-imagegen.png",
+      "role": "reusable-raster",
+      "method": "built-in-imagegen-plus-alpha-speck-cleanup",
+      "trim_ltrb": [
+        185,
+        5,
+        750,
+        1523
+      ],
+      "fidelity": "style/identity reference reconstruction; not a pixel-preserving crop",
+      "size": [
+        565,
+        1518
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "personas/rohan-standing.png",
+      "source": "personas/rohan-standing-imagegen.png",
+      "role": "reusable-raster",
+      "method": "built-in-imagegen-plus-alpha-speck-cleanup",
+      "trim_ltrb": [
+        303,
+        41,
+        723,
+        1494
+      ],
+      "fidelity": "style/identity reference reconstruction; not a pixel-preserving crop",
+      "size": [
+        420,
+        1453
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "personas/alex-standing-imagegen.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        1024,
+        1536
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "personas/rohan-standing-imagegen.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        1024,
+        1536
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "references/icons/glow-lock-badge-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        145,
+        95
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "references/icons/glow-star-badge-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        120,
+        95
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "references/icons/step-doc-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        53,
+        55
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "references/icons/step-lock-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        53,
+        55
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "references/icons/step-star-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        53,
+        55
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "references/imagegen-experiments/alex-seated-green-key.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        1145,
+        1374
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/brush-orange-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        238,
+        32
+      ],
+      "has_alpha": true
+    },
+    {
+      "file": "textures/script-builders-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        175,
+        90
+      ],
+      "has_alpha": false
+    },
+    {
+      "file": "textures/script-signal-reference.png",
+      "role": "reference-only",
+      "method": "retained-reference",
+      "size": [
+        190,
+        100
+      ],
+      "has_alpha": false
+    }
+  ]
+}
