@@ -55,8 +55,8 @@ function Spark({ className }: { className?: string }) {
 
 const STEPS = [
   {
-    title: 'Find someone who gets it.',
-    text: 'Discover what people are building, what they can offer, and who they’d love to meet.',
+    title: 'Ask your agent to find a fit.',
+    text: 'Start with what you are building and who you hope to meet. Your agent surfaces public profiles with a reason.',
   },
   {
     title: 'Let your agents connect the dots.',
