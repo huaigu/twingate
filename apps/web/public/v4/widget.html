@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="#f3ece2" name="theme-color" />
+    <meta
+      content="SignalPass — thoughtful introductions. A local interactive HTML prototype reconstructed from the supplied designs."
+      name="description"
+    />
+    <title>Your profile widget · SignalPass</title>
+    <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="/v4/styles.css" rel="stylesheet" />
+    <script defer="" src="/v4/app.js"></script>
+    <link rel="stylesheet" href="/v4/v4.css" />
+    <script defer src="/v4/navigation.js"></script>
+  </head>
+  <body data-page="widget">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="viewport">
+      <div class="scene scene-widget">
+        <div aria-hidden="true" class="collage-base">
+          <span class="paper-top"></span><span class="tape tape-one"></span
+          ><span class="tape tape-two"></span><span class="paper-bottom"></span>
+        </div>
+        <header class="site-header v4-header">
+          <a class="v4-brand" href="/" aria-label="SignalPass home"
+            ><span class="v4-mark" aria-hidden="true"><i></i><b></b></span
+            ><span>SignalPass</span></a
+          ><span class="v4-motto">A MORE<br />THOUGHTFUL<br />INTERNET</span>
+          <nav
+            class="v4-menu"
+            id="site-navigation"
+            aria-label="Main navigation"
+          >
+            <a href="/profile/import">Your profile</a
+            ><a href="/agent">My agent</a><a href="/discover">Discover</a
+            ><a href="/inbox">Introductions</a
+            ><a href="/widget/create" aria-current="page">Your widget</a>
+          </nav>
+          <button
+            class="v4-menu-toggle"
+            aria-expanded="false"
+            aria-controls="site-navigation"
+            aria-label="Open navigation"
+            type="button"
+          >
+            <span></span><span></span>
+          </button>
+        </header>
+        <main id="main-content">
+          <img
+            alt=""
+            aria-hidden="true"
+            class="art bottom-paper"
+            draggable="false"
+            src="/v4/assets/bottom-paper.webp"
+            style="left: 179px; top: 861px; width: 1330px; height: 67px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-left-art"
+            draggable="false"
+            src="/v4/assets/widget-left-art.webp"
+            style="left: 0px; top: 543px; width: 182px; height: 385px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-note-left"
+            draggable="false"
+            src="/v4/assets/widget-note-left.webp"
+            style="left: 12px; top: 349px; width: 155px; height: 178px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-top-art"
+            draggable="false"
+            src="/v4/assets/widget-top-art.webp"
+            style="left: 1333px; top: 75px; width: 315px; height: 280px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-note-top"
+            draggable="false"
+            src="/v4/assets/widget-note-top.webp"
+            style="left: 1111px; top: 123px; width: 262px; height: 125px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-note-right"
+            draggable="false"
+            src="/v4/assets/widget-note-right.webp"
+            style="left: 1511px; top: 368px; width: 137px; height: 217px"
+          /><img
+            alt=""
+            aria-hidden="true"
+            class="art widget-purple"
+            draggable="false"
+            src="/v4/assets/widget-purple.webp"
+            style="left: 1506px; top: 716px; width: 142px; height: 212px"
+          />
+          <div class="widget-heading">
+            <h1 class="hero-title">Your Profile Widget</h1>
+            <span aria-hidden="true" class="brush"></span>
+            <p>A little card for your corner of the internet.</p>
+          </div>
+          <span aria-hidden="true" class="widget-divider"></span>
+          <p class="scene-footer">MORE BUILDERS   A MORE OPEN TOMORROW</p>
+          <div class="widget-workspace">
+            <div class="widget-editor-column">
+              <section class="paper widget-editor">
+                <form id="widget-form">
+                  <h2>Choose a Persona <small>(optional)</small></h2>
+                  <div class="persona-options">
+                    <button
+                      aria-label="Choose the first persona"
+                      aria-pressed="true"
+                      class="persona selected"
+                      data-persona="alex"
+                      type="button"
+                    >
+                      <img
+                        alt=""
+                        class="avatar"
+                        draggable="false"
+                        src="/v4/assets/avatar-alex.webp"
+                      /><span class="persona-check"
+                        ><svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m5 12 4 4L19 6"></path></svg
+                      ></span></button
+                    ><button
+                      aria-label="Choose the second persona"
+                      aria-pressed="false"
+                      class="persona"
+                      data-persona="rohan"
+                      type="button"
+                    >
+                      <img
+                        alt=""
+                        class="avatar"
+                        draggable="false"
+                        src="/v4/assets/avatar-rohan.webp"
+                      /><span class="persona-check"
+                        ><svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m5 12 4 4L19 6"></path></svg
+                      ></span></button
+                    ><button
+                      aria-label="Choose the third persona"
+                      aria-pressed="false"
+                      class="persona"
+                      data-persona="beanie"
+                      type="button"
+                    >
+                      <img
+                        alt=""
+                        class="avatar"
+                        draggable="false"
+                        src="/v4/assets/avatar-beanie.webp"
+                      /><span class="persona-check"
+                        ><svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m5 12 4 4L19 6"></path></svg
+                      ></span></button
+                    ><button
+                      aria-label="No persona"
+                      aria-pressed="false"
+                      class="persona"
+                      data-persona="none"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="icon"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.65"
+                        viewbox="0 0 24 24"
+                      >
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M4 21v-2a8 8 0 0 1 16 0v2Z"></path></svg
+                      ><span class="persona-check"
+                        ><svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m5 12 4 4L19 6"></path></svg></span
+                      ><small>No persona</small>
+                    </button>
+                  </div>
+                  <label for="widget-name">Name</label
+                  ><input
+                    autocomplete="off"
+                    id="widget-name"
+                    maxlength="45"
+                    name="name"
+                    spellcheck="false"
+                    type="text"
+                    value="Alex Chen"
+                  /><label for="widget-bio">One-line introduction</label
+                  ><input
+                    autocomplete="off"
+                    id="widget-bio"
+                    maxlength="110"
+                    name="bio"
+                    spellcheck="false"
+                    type="text"
+                    value="Building a more open internet with builders."
+                  />
+                  <div class="widget-interests-heading">
+                    <label>Public interests</label
+                    ><small>Add 3–5 interests</small>
+                  </div>
+                  <div class="widget-interests" data-widget-tags="">
+                    <span class="widget-tag blue"
+                      >Builders<button
+                        aria-label="Remove Builders"
+                        data-remove-widget-tag=""
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m6 6 12 12M6 18 18 6"></path>
+                        </svg></button></span
+                    ><span class="widget-tag lavender"
+                      >Open Source<button
+                        aria-label="Remove Open Source"
+                        data-remove-widget-tag=""
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m6 6 12 12M6 18 18 6"></path>
+                        </svg></button></span
+                    ><span class="widget-tag purple"
+                      >Monad<button
+                        aria-label="Remove Monad"
+                        data-remove-widget-tag=""
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m6 6 12 12M6 18 18 6"></path>
+                        </svg></button></span
+                    ><span class="widget-tag blue"
+                      >Product<button
+                        aria-label="Remove Product"
+                        data-remove-widget-tag=""
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m6 6 12 12M6 18 18 6"></path>
+                        </svg></button></span
+                    ><span class="widget-tag peach"
+                      >Community<button
+                        aria-label="Remove Community"
+                        data-remove-widget-tag=""
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.65"
+                          viewbox="0 0 24 24"
+                        >
+                          <path d="m6 6 12 12M6 18 18 6"></path>
+                        </svg></button></span
+                    ><button
+                      class="add-tag"
+                      data-add-widget-tag=""
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="icon"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.65"
+                        viewbox="0 0 24 24"
+                      >
+                        <path d="M12 5v14M5 12h14"></path></svg
+                      >Add interest
+                    </button>
+                  </div>
+                  <label for="widget-cta">Call to action</label>
+                  <div class="select-wrap">
+                    <select id="widget-cta" name="cta">
+                      <option>Meet me on SignalPass</option>
+                      <option>Let’s build something</option>
+                      <option>Start a conversation</option></select
+                    ><svg
+                      aria-hidden="true"
+                      class="icon"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.65"
+                      viewbox="0 0 24 24"
+                    >
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </div>
+                </form>
+                <p class="form-helper">
+                  Only the details on this card are public. You can change them
+                  anytime.
+                </p>
+              </section>
+            </div>
+            <div class="widget-preview-column">
+              <h2 class="live-preview-label">Live preview</h2>
+              <section class="paper live-widget">
+                <div class="widget-brand">
+                  <span class="logo small"
+                    ><span aria-hidden="true" class="logo-mark"
+                      ><i></i><b></b></span
+                    ><span>SignalPass</span></span
+                  ><span>PUBLIC SNAPSHOT</span>
+                </div>
+                <div class="widget-preview-body">
+                  <div class="widget-profile-image">
+                    <img
+                      alt="Selected illustrated persona"
+                      class="avatar"
+                      draggable="false"
+                      src="/v4/assets/avatar-widget.webp"
+                    /><span class="empty-persona" hidden=""
+                      ><svg
+                        aria-hidden="true"
+                        class="icon"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.65"
+                        viewbox="0 0 24 24"
+                      >
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M4 21v-2a8 8 0 0 1 16 0v2Z"></path></svg
+                    ></span>
+                  </div>
+                  <div class="widget-profile-content">
+                    <h2 data-live-name="">Alex Chen</h2>
+                    <p data-live-bio="">
+                      Building a more open internet<br />with builders.
+                    </p>
+                    <div class="live-tags" data-live-tags="">
+                      <span class="chip lavender">Builders</span
+                      ><span class="chip mint">Open Source</span
+                      ><span class="chip purple">Monad</span
+                      ><span class="chip blue">Product</span
+                      ><span class="chip peach">Community</span>
+                    </div>
+                    <a class="button primary" href="/introductions/new"
+                      ><span data-live-cta="">Meet me on SignalPass</span
+                      ><svg
+                        aria-hidden="true"
+                        class="icon"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.65"
+                        viewbox="0 0 24 24"
+                      >
+                        <path d="M4 12h15M13 5l7 7-7 7"></path></svg
+                    ></a>
+                  </div>
+                </div>
+              </section>
+              <section class="embed-section">
+                <h2>Embed on your site</h2>
+                <div class="embed-code-wrap">
+                  <pre><code id="embed-code"></code></pre>
+                  <button
+                    aria-label="Copy embed code"
+                    data-action="copy-embed"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="icon"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.65"
+                      viewbox="0 0 24 24"
+                    >
+                      <rect height="16" rx="2" width="12" x="8" y="6"></rect>
+                      <path d="M15 6V2H4v16h4"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="embed-actions">
+                  <button
+                    class="button primary"
+                    data-action="copy-embed"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="icon"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.65"
+                      viewbox="0 0 24 24"
+                    >
+                      <rect height="16" rx="2" width="12" x="8" y="6"></rect>
+                      <path d="M15 6V2H4v16h4"></path></svg
+                    >Copy embed</button
+                  ><a class="button outline" href="/widget/preview"
+                    ><svg
+                      aria-hidden="true"
+                      class="icon"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.65"
+                      viewbox="0 0 24 24"
+                    >
+                      <path d="M14 2h8v8M22 2 11 13M9 4H3v17h17v-7"></path></svg
+                    >Preview on my site</a
+                  >
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <dialog aria-labelledby="dialog-title" id="app-dialog">
+      <form method="dialog">
+        <button aria-label="Close dialog" class="dialog-close">
+          <svg
+            aria-hidden="true"
+            class="icon"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.65"
+            viewbox="0 0 24 24"
+          >
+            <path d="m6 6 12 12M6 18 18 6"></path>
+          </svg>
+        </button>
+      </form>
+      <div id="dialog-content"></div>
+    </dialog>
+    <div aria-live="polite" id="toast" role="status"></div>
+    <footer class="v4-footer">
+      <a href="/">SignalPass</a><span>More human. More possible.</span
+      ><small>Interactive demo · your changes stay on this device</small
+      ><a href="/#how-it-works">How it works ↗</a>
+    </footer>
+  </body>
+</html>

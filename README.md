@@ -1,5 +1,8 @@
 # SignalPass
 
+V4 website integration: run `pnpm v4:dev`, then open `http://localhost:3004/`.
+See [V4 pages, interactions and implementation notes](design-explorations/signalpass-v4/README.md).
+
 > **High-signal introductions for Monad builders**
 > Built for the **Monad Metropolis Global Hackathon 2026**  
 > Track: **Social, Attention & Culture**

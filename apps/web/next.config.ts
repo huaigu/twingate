@@ -19,6 +19,32 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@signalpass/core'],
   outputFileTracingRoot: repoRoot,
   typedRoutes: false,
+  // V4 is a native multi-page HTML site. Rewrites keep stable public URLs and
+  // leave the existing React/API implementation available outside these routes.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: '/', destination: '/v4/index.html' },
+        { source: '/profile/import', destination: '/v4/profile.html' },
+        { source: '/profile/review', destination: '/v4/profile.html?review=1' },
+        { source: '/agent', destination: '/v4/agent.html' },
+        { source: '/discover/settings', destination: '/v4/agent.html' },
+        { source: '/discover', destination: '/v4/discover.html' },
+        { source: '/discover/:candidateId', destination: '/v4/discover.html?person=:candidateId' },
+        { source: '/widget/create', destination: '/v4/widget.html' },
+        { source: '/widget/preview', destination: '/v4/widget-preview.html' },
+        { source: '/introductions/new', destination: '/v4/compose.html' },
+        { source: '/introductions/new/:candidateId', destination: '/v4/compose.html?person=:candidateId' },
+        { source: '/introductions/:id/confirm', destination: '/v4/compose.html?review=1' },
+        { source: '/introductions/:id/receipt', destination: '/v4/receipt.html' },
+        { source: '/inbox', destination: '/v4/inbox.html' },
+        { source: '/inbox/:id/decision', destination: '/v4/inbox.html' },
+        { source: '/inbox/:id', destination: '/v4/inbox.html' },
+      ],
+      afterFiles: [],
+      fallback: [],
+    }
+  },
 }
 
 export default nextConfig

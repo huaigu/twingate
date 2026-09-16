@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f5eee3" />
+    <title>Introduction receipt · SignalPass</title>
+    <link rel="icon" href="/v4/favicon.svg" />
+    <link rel="stylesheet" href="/v4/styles.css" />
+    <link rel="stylesheet" href="/v4/v4.css" />
+    <script defer src="/v4/receipt.js"></script>
+    <script defer src="/v4/navigation.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header
+      class="site-header v4-header"
+      style="position: relative; width: 100%"
+    >
+      <a class="v4-brand" href="/" aria-label="SignalPass home"
+        ><span class="v4-mark" aria-hidden="true"><i></i><b></b></span
+        ><span>SignalPass</span></a
+      ><span class="v4-motto">A MORE<br />THOUGHTFUL<br />INTERNET</span>
+      <nav class="v4-menu" id="site-navigation" aria-label="Main navigation">
+        <a href="/profile/import">Your profile</a><a href="/agent">My agent</a
+        ><a href="/discover">Discover</a
+        ><a href="/inbox" aria-current="page">Introductions</a
+        ><a href="/widget/create">Your widget</a>
+      </nav>
+      <button
+        class="v4-menu-toggle"
+        aria-expanded="false"
+        aria-controls="site-navigation"
+        aria-label="Open navigation"
+        type="button"
+      >
+        <span></span><span></span>
+      </button>
+    </header>
+    <main id="main-content" class="v4-summary-card" aria-live="polite">
+      <div class="v4-receipt-icon" aria-hidden="true">↗</div>
+      <p class="v4-receipt-label">YOUR INTRODUCTION</p>
+      <h1 id="receipt-title">A thoughtful beginning.</h1>
+      <p id="receipt-description">Loading your introduction…</p>
+      <div id="receipt-body" hidden>
+        <div class="v4-timeline">
+          <span>Drafted</span><span>Approved by you</span
+          ><span id="receipt-status">Awaiting a response</span>
+        </div>
+        <h2 id="receipt-people"></h2>
+        <div id="receipt-message" class="v4-result-message"></div>
+        <p id="receipt-context"></p>
+        <p id="receipt-question"></p>
+        <p id="receipt-date" class="v4-receipt-label"></p>
+      </div>
+      <div class="dialog-actions">
+        <a class="button outline" href="/discover">Keep exploring</a
+        ><a class="button primary" id="recipient-link" href="/inbox"
+          >View introductions →</a
+        >
+      </div>
+      <span class="v4-demo-chip"
+        >Local demo receipt · no external messages or payments</span
+      >
+    </main>
+    <footer class="v4-footer">
+      <a href="/">SignalPass</a><span>More human. More possible.</span
+      ><small>Interactive demo · your changes stay on this device</small
+      ><a href="/#how-it-works">How it works ↗</a>
+    </footer>
+  </body>
+</html>

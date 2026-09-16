@@ -1,0 +1,17 @@
+{
+  "board": "design-explorations/signalpass-v4/qa/hero-comparison.png",
+  "metrics": {
+    "full": {
+      "mean": 0.2436,
+      "rms": 5.3607
+    },
+    "Hero typography": {
+      "mean": 0.0808,
+      "rms": 0.2842
+    },
+    "Connection scene": {
+      "mean": 0.0478,
+      "rms": 0.221
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "pages": [
+    "index.html",
+    "agent.html",
+    "discover.html",
+    "widget.html",
+    "compose.html",
+    "inbox.html",
+    "widget-preview.html"
+  ],
+  "assets": [
+    "assets/header-paper.webp",
+    "assets/avatar-leo.webp",
+    "assets/widget-note-right.webp",
+    "assets/widget-purple.webp",
+    "assets/widget-card-panel.webp",
+    "assets/sources-purple.webp",
+    "assets/compose-left.webp",
+    "assets/agent-bottom-art.webp",
+    "assets/avatar-beanie.webp",
+    "assets/widget-note-top.webp",
+    "assets/sources-left.webp",
+    "assets/avatar-maya.webp",
+    "assets/agent-note-right.webp",
+    "assets/sources-note-top.webp",
+    "assets/discover-right.webp",
+    "assets/widget-note-left.webp",
+    "assets/discover-note-top.webp",
+    "assets/inbox-left.webp",
+    "assets/widget-top-art.webp",
+    "assets/privacy-panel.webp",
+    "assets/introduction-panel.webp",
+    "assets/compose-right-art.webp",
+    "assets/sources-panel.webp",
+    "assets/bottom-paper.webp",
+    "assets/paper-light.webp",
+    "assets/matching-panel.webp",
+    "assets/composer-panel.webp",
+    "assets/avatar-rohan.webp",
+    "assets/avatar-widget.webp",
+    "assets/source-tape-right.webp",
+    "assets/source-tape-left.webp",
+    "assets/interests-panel.webp",
+    "assets/orange-stroke.webp",
+    "assets/person-panel.webp",
+    "assets/private-panel.webp",
+    "assets/agent-left.webp",
+    "assets/avatar-alex-large.webp",
+    "assets/sources-note-bottom.webp",
+    "assets/avatar-sam.webp",
+    "assets/avatar-priya.webp",
+    "assets/inbox-list-panel.webp",
+    "assets/compose-note-top.webp",
+    "assets/avatar-alex.webp",
+    "assets/avatar-jordan.webp",
+    "assets/inbox-right.webp",
+    "assets/widget-left-art.webp",
+    "assets/allowed-panel.webp",
+    "assets/discover-note-left.webp",
+    "assets/avatar-taylor.webp",
+    "assets/agent-note-top.webp",
+    "assets/draft-panel.webp",
+    "assets/discover-left.webp",
+    "assets/agent-note-left.webp",
+    "assets/inbox-note-you.webp",
+    "assets/discover-tape.webp",
+    "assets/sources-note-right.webp",
+    "assets/paper-texture.webp",
+    "assets/inbox-note-alex.webp",
+    "assets/widget-editor-panel.webp",
+    "assets/query-panel.webp",
+    "assets/inbox-detail-panel.webp",
+    "assets/preview-panel.webp",
+    "favicon.svg"
+  ],
+  "hero": [
+    {
+      "file": "assets/hero-80475ba1fd72.svg",
+      "mime": "image/svg+xml",
+      "bytes": 256
+    },
+    {
+      "file": "assets/hero-3e4eba8a1caf.webp",
+      "mime": "image/webp",
+      "bytes": 18872
+    },
+    {
+      "file": "assets/hero-619d3aa1e96e.webp",
+      "mime": "image/webp",
+      "bytes": 10448
+    },
+    {
+      "file": "assets/hero-ee469f002b6a.webp",
+      "mime": "image/webp",
+      "bytes": 9016
+    },
+    {
+      "file": "assets/hero-cd9dd74657eb.webp",
+      "mime": "image/webp",
+      "bytes": 112832
+    },
+    {
+      "file": "assets/hero-417ab1dfcac3.webp",
+      "mime": "image/webp",
+      "bytes": 6954
+    },
+    {
+      "file": "assets/hero-12f59361b988.webp",
+      "mime": "image/webp",
+      "bytes": 6640
+    },
+    {
+      "file": "assets/hero-9b399aa3d8a1.webp",
+      "mime": "image/webp",
+      "bytes": 5676
+    },
+    {
+      "file": "assets/hero-3ea465295ace.webp",
+      "mime": "image/webp",
+      "bytes": 17782
+    },
+    {
+      "file": "assets/hero-2401e49404a7.webp",
+      "mime": "image/webp",
+      "bytes": 25590
+    },
+    {
+      "file": "assets/hero-3a0b138ab624.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 405894
+    }
+  ]
+}

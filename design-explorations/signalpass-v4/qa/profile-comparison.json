@@ -1,0 +1,17 @@
+{
+  "board": "design-explorations/signalpass-v4/qa/profile-comparison.png",
+  "metrics": {
+    "full": {
+      "mean": 0.97,
+      "rms": 11.1727
+    },
+    "Source panel": {
+      "mean": 0.0,
+      "rms": 0.0
+    },
+    "Profile draft": {
+      "mean": 0.0,
+      "rms": 0.0
+    }
+  }
+}

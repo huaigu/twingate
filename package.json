@@ -12,6 +12,8 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "e2e": "node scripts/e2e.mjs",
+    "v4:dev": "pnpm --filter @signalpass/web exec next dev -p 3004",
+    "v4:verify": "node scripts/v4-verify.mjs",
     "verify": "pnpm -r typecheck && pnpm -r test && pnpm contracts:test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
     "contracts:build": "pnpm --filter @signalpass/contracts build",
@@ -19,6 +21,7 @@
     "api:dev": "pnpm --filter @signalpass/api dev"
   },
   "devDependencies": {
+    "playwright": "1.59.1",
     "typescript": "5.7.2"
   }
 }
