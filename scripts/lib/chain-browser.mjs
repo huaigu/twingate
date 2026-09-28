@@ -12,7 +12,7 @@ export async function browserCheck({ chain, origin, base, users, processes }) {
   try {
     const pages = [];
     for (const user of [users[0], users[2]]) {
-      const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+      const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: process.env.CHAIN_TEST_MOTION === 'enabled' ? 'no-preference' : 'reduce' });
       await context.exposeBinding('testWalletRequest', async (_source, { method, params }) => {
         if (method === 'personal_sign') return user.account.signMessage({ message: viem.hexToString(params[0]) });
         if (method === 'eth_sendTransaction') {

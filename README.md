@@ -120,6 +120,8 @@ Individually:
 | `pnpm chain:verify` | Chain integration plus two-browser wallet flow, network switch, profile sync, cancel, accept, decline and expiry |
 | `pnpm chain:preflight <manifest>` | Read-only RPC/deployment/signer/network validation before enabling a chain |
 | `pnpm v4:verify` | Explicit sample-mode geometry and interaction regression; requires the web server |
+| `pnpm motion:verify` | Desktop motion lifecycle, keyboard/focus, reduced motion, draft meter and responsive checks; requires a running preview (default 3005) |
+| `pnpm motion:record` | The same checks plus a 1440px sample-mode desktop walkthrough video |
 
 The contracts expose four invariants that are each covered by a test that fails if broken:
 

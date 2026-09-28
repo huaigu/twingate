@@ -23,7 +23,9 @@
     "chain:test": "node scripts/chain-test.mjs",
     "chain:verify": "node scripts/chain-test.mjs --browser",
     "chain:preflight": "node scripts/chain-preflight.mjs",
-    "verify:all": "pnpm verify && pnpm chain:verify && pnpm build"
+    "verify:all": "pnpm verify && pnpm chain:verify && pnpm build",
+    "motion:verify": "node scripts/motion-verify.mjs",
+    "motion:record": "node scripts/motion-verify.mjs --record"
   },
   "devDependencies": {
     "playwright": "1.59.1",

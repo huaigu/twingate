@@ -5,11 +5,11 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width:540px)");
   const beats = [
-    ["context", 300, 1460, 1110, 1390, 1210, 10],
-    ["opportunities", 480, 920, 1070, 900, 790, 7],
-    ["people", 1350, 1430, 2240, 1400, 1260, 9],
-    ["ideas", 2030, 860, 2470, 840, 740, 6],
-    ["introductions", 2520, 1450, 3330, 1450, 1300, 8],
+    ["context", 120, 780, 500, 520, 320, 6],
+    ["opportunities", 260, 720, 620, 560, 360, 5],
+    ["people", 680, 880, 1160, 620, 380, 6],
+    ["ideas", 1040, 660, 1360, 520, 340, 4],
+    ["introductions", 1320, 940, 1850, 620, 400, 6],
   ];
   for (const [
     id,
@@ -52,11 +52,22 @@
   paths();
   mobile.addEventListener("change", paths);
   let played = false;
-  const reveal = () => {
-    if (played || reduce.matches) return;
+  let replayFrame = 0;
+  if (!reduce.matches) scene.classList.add('motion-preparing');
+  const reveal = (replay = false) => {
+    if ((played && !replay) || reduce.matches) return;
     played = true;
-    scene.classList.add("is-animated");
+    cancelAnimationFrame(replayFrame);
+    if (replay) {
+      scene.classList.add('motion-preparing'); scene.classList.remove('is-animated');
+      replayFrame = requestAnimationFrame(() => {
+        replayFrame = requestAnimationFrame(() => { scene.classList.remove('motion-preparing'); scene.classList.add('is-animated'); replayFrame = 0; });
+      });
+    } else { scene.classList.remove('motion-preparing'); scene.classList.add('is-animated'); }
   };
+  const replay = document.createElement('button'); replay.type = 'button'; replay.className = 'sp-hero-replay';
+  replay.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 1 7M3 4v6h6"/></svg><span>Replay the connections</span>';
+  replay.onclick = () => reveal(true); scene.after(replay);
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -70,8 +81,9 @@
     observer.observe(scene);
   } else reveal();
   reduce.addEventListener("change", () => {
-    if (reduce.matches) scene.classList.remove("is-animated");
+    if (reduce.matches) { cancelAnimationFrame(replayFrame); scene.classList.remove('is-animated', 'motion-preparing'); }
   });
+  window.addEventListener('pagehide', () => { cancelAnimationFrame(replayFrame); scene.classList.remove('motion-preparing'); });
   document.addEventListener("visibilitychange", () => {
     scene.getAnimations({ subtree: true }).forEach((animation) => {
       if (animation.playState === "finished") return;

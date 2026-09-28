@@ -118,6 +118,7 @@ try {
   set('receipt-title', title); set('receipt-status', status);
   set('receipt-description', record.settlement === 'onchain' ? 'Only confirmed chain events change your payment status. Additional context is shared offchain and does not change the original signed message.' : 'Only you and the other participant can read this introduction. No payment has been requested or transferred.');
   set('receipt-people', record.sender + ' → ' + record.recipient);
+  document.querySelector('.v4-timeline span:nth-child(2)').textContent = record.role === 'recipient' ? 'Approved by sender' : 'Approved by you';
   set('receipt-message', record.fields.join('\n\n'));
   set('receipt-context', record.sharedContext ? 'Shared: the approved message, profile summary and interests.' : 'Shared: the approved introduction message only.');
   set('receipt-question', record.question ? 'Requested context: ' + record.question : '');
