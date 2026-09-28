@@ -1,0 +1,21 @@
+{
+  "authenticationSent": false,
+  "isolatedLocalTestPort": 8817,
+  "id": "0x3f7dd381a4d54cb503a091a63d7099a3552eace4679c44e92bb87c935b187adb",
+  "anonymousSubmission": {
+    "status": 201,
+    "state": "locked",
+    "transactionSubmitted": false
+  },
+  "anonymousReadStatus": 200,
+  "evaluateStatus": 200,
+  "provider": "mock-local",
+  "anonymousQueue": {
+    "status": 200,
+    "containsIntroduction": true
+  },
+  "spoofedRecipientDecision": {
+    "status": 200,
+    "state": "accepted"
+  }
+}

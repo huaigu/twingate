@@ -14,6 +14,7 @@ import {IntroductionReceipt} from "../src/IntroductionReceipt.sol";
 ///      The simulation path is what CI and judges can reproduce.
 contract Deploy is Script {
     function run() external {
+        require(block.chainid == 10143 || block.chainid == 31337, "SignalPass: test networks only");
         uint256 pk = vm.envOr("DEPLOYER_PRIVATE_KEY", uint256(0));
 
         if (pk == 0) {
@@ -23,6 +24,9 @@ contract Deploy is Script {
         }
 
         address deployer = pk == 0 ? msg.sender : vm.addr(pk);
+        address treasury = vm.envOr("TREASURY_ADDRESS", deployer);
+        address signer = vm.envOr("QUOTE_SIGNER_ADDRESS", deployer);
+        require(treasury != address(0) && signer != address(0), "SignalPass: zero role address");
 
         if (pk == 0) {
             vm.startBroadcast();
@@ -32,7 +36,7 @@ contract Deploy is Script {
 
         ProfileRegistry registry = new ProfileRegistry();
         IntroductionReceipt receipt = new IntroductionReceipt(deployer);
-        IntroductionEscrow escrow = new IntroductionEscrow(address(registry), deployer, deployer);
+        IntroductionEscrow escrow = new IntroductionEscrow(address(registry), treasury, signer);
 
         vm.stopBroadcast();
 
@@ -40,5 +44,7 @@ contract Deploy is Script {
         console.log("IntroductionEscrow   ", address(escrow));
         console.log("IntroductionReceipt  ", address(receipt));
         console.log("Deployer             ", deployer);
+        console.log("Treasury             ", treasury);
+        console.log("Quote signer         ", signer);
     }
 }

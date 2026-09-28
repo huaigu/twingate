@@ -1,364 +1,149 @@
 #!/usr/bin/env node
-/**
- * End-to-end integration test for the SignalPass loop.
- *
- * It boots the real evaluator service and the real API service as child
- * processes, then drives the full path a human would take: read a policy,
- * get a quote, lock an introduction, let both agents read it, find it in the
- * recipient's private queue, and decide.
- *
- * It also asserts the negative cases that matter — an agent cannot approve
- * access, a second evaluation is rejected, a stranger's handle is a clean 404.
- *
- * Run: pnpm e2e
- */
-
-import { spawn } from 'node:child_process'
-import { setTimeout as delay } from 'node:timers/promises'
-
-const API_PORT = Number(process.env.E2E_API_PORT ?? 8797)
-const EVALUATOR_PORT = Number(process.env.E2E_EVALUATOR_PORT ?? 8798)
-const API = `http://127.0.0.1:${API_PORT}`
-const EVALUATOR = `http://127.0.0.1:${EVALUATOR_PORT}`
-
-let passed = 0
-let failed = 0
-
-function ok(name, detail = '') {
-  passed += 1
-  console.log(`  \u001b[32mPASS\u001b[0m  ${name}${detail ? `  ${detail}` : ''}`)
+/** Real HTTP + V4 + SQLite. Wallet keys below are deterministic TEST identities only. */
+import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { mkdtempSync, mkdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import assert from 'node:assert/strict';
+const require = createRequire(import.meta.url);
+const apiRequire = createRequire(new URL('../services/api/package.json', import.meta.url));
+const { chromium } = require('playwright');
+const { privateKeyToAccount } = apiRequire('viem/accounts');
+const { hexToString } = apiRequire('viem');
+const API_PORT = Number(process.env.E2E_API_PORT || 8797);
+const WEB_PORT = Number(process.env.E2E_WEB_PORT || 3094);
+const origin = 'http://localhost:' + WEB_PORT;
+const dir = mkdtempSync(join(tmpdir(), 'signalpass-live-e2e-'));
+const screenshots = process.env.E2E_SCREENSHOTS || '.run/live-e2e';
+mkdirSync(screenshots, { recursive: true });
+const processes = [];
+const errors = [];
+let browser;
+function boot(args, env) {
+  const child = spawn('pnpm', args, { env: { ...process.env, ...env }, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe'] });
+  child.logs = '';
+  child.stdout.on('data', (s) => { child.logs += s; }); child.stderr.on('data', (s) => { child.logs += s; });
+  processes.push(child); return child;
 }
-
-function bad(name, detail) {
-  failed += 1
-  console.log(`  \u001b[31mFAIL\u001b[0m  ${name}\n        ${detail}`)
+async function stop(child) {
+  if (!child || child.exitCode !== null) return;
+  try { process.platform === 'win32' ? child.kill('SIGTERM') : process.kill(-child.pid, 'SIGTERM'); } catch {}
+  for (let i = 0; i < 40 && child.exitCode === null; i++) await delay(100);
 }
-
-/** Assertions here compare BigInt amounts, which JSON.stringify refuses. */
-function show(value) {
-  return typeof value === 'bigint' ? `${value}n` : JSON.stringify(value)
-}
-
-function check(name, condition, detail = '') {
-  if (condition) ok(name, detail)
-  else bad(name, detail || 'assertion failed')
-  return condition
-}
-
-function equal(name, actual, expected) {
-  return check(name, actual === expected, `expected ${show(expected)}, got ${show(actual)}`)
-}
-
-async function call(base, path, init) {
-  const response = await fetch(`${base}${path}`, {
-    ...init,
-    headers: { 'content-type': 'application/json', ...(init?.headers ?? {}) },
-  })
-  const text = await response.text()
-  return { status: response.status, body: text.length > 0 ? JSON.parse(text) : null }
-}
-
-/* ------------------------------------------------------------------ boot */
-
-const children = []
-
-function boot(filter, env) {
-  const child = spawn('pnpm', ['--filter', filter, 'start'], {
-    env: { ...process.env, ...env },
-    stdio: ['ignore', 'pipe', 'pipe'],
-  })
-  const logs = []
-  child.stdout.on('data', (chunk) => logs.push(String(chunk)))
-  child.stderr.on('data', (chunk) => logs.push(String(chunk)))
-  child.on('exit', (code) => {
-    if (code !== 0 && code !== null) {
-      console.error(`[${filter}] exited with ${code}\n${logs.join('')}`)
-    }
-  })
-  children.push(child)
-  return logs
-}
-
-async function waitForHealth(base, label, timeoutMs = 45_000) {
-  const deadline = Date.now() + timeoutMs
-  while (Date.now() < deadline) {
-    try {
-      const { status } = await call(base, '/health')
-      if (status === 200) return true
-    } catch {
-      /* not up yet */
-    }
-    await delay(300)
+async function health(url, child) {
+  for (let i = 0; i < 100; i++) {
+    try { if ((await fetch(url)).ok) return; } catch {}
+    if (child.exitCode !== null) throw new Error(child.logs);
+    await delay(300);
   }
-  throw new Error(`${label} did not become healthy at ${base} within ${timeoutMs}ms`)
+  throw new Error('Server did not start: ' + child.logs);
 }
-
-function shutdown() {
-  for (const child of children) {
-    try {
-      child.kill('SIGTERM')
-    } catch {
-      /* already gone */
-    }
-  }
-}
-
-/* ------------------------------------------------------------- test data */
-
-const SENDER = '0x1111111111111111111111111111111111111111'
-
-const INTENT = {
-  whoAmI:
-    'I build a deterministic simulation harness for Monad contracts; three teams use it to reproduce edge cases before mainnet.',
-  whyYou:
-    'You shipped the event pipeline design I keep rereading, specifically how you handled backpressure without dropping consumer events under sustained load, and I want to understand how you decided that trade-off.',
-  whatIOffer: 'Simulation tooling, and honest feedback on developer tooling design.',
-  nextStep: 'A 20-minute call, or a written exchange if async is easier.',
-}
-
-/* ------------------------------------------------------------------ main */
-
-async function main() {
-  console.log('\nSignalPass end-to-end test\n')
-
-  boot('@signalpass/evaluator', {
-    EVALUATOR_MODE: 'mock',
-    EVALUATOR_PORT: String(EVALUATOR_PORT),
-  })
-  boot('@signalpass/api', {
-    API_PORT: String(API_PORT),
-    EVALUATOR_URL: EVALUATOR,
-    EVALUATOR_MODE: 'mock',
-  })
-
-  await waitForHealth(EVALUATOR, 'evaluator')
-  await waitForHealth(API, 'api')
-
-  console.log('\n1. Both services are up and report what they run')
-
-  const evaluatorHealth = await call(EVALUATOR, '/health')
-  equal('evaluator health is 200', evaluatorHealth.status, 200)
-  equal('evaluator uses the mock provider', evaluatorHealth.body?.evaluator, 'mock')
-  check(
-    'evaluator persona slot is available',
-    typeof evaluatorHealth.body?.persona === 'string' && evaluatorHealth.body.persona.length > 0,
-    `persona = ${JSON.stringify(evaluatorHealth.body?.persona)}`,
-  )
-
-  const apiHealth = await call(API, '/health')
-  equal('api health is 200', apiHealth.status, 200)
-  check('api seeded the demo builders', apiHealth.body?.profiles === 2, `profiles = ${apiHealth.body?.profiles}`)
-
-  console.log('\n2. The directory and the published policy')
-
-  const profiles = await call(API, '/profiles')
-  equal('listing profiles succeeds', profiles.status, 200)
-  const handles = (profiles.body?.profiles ?? []).map((p) => p.handle).sort()
-  check(
-    'both demo builders are listed',
-    handles.join(',') === 'alice,bob',
-    `handles = ${handles.join(',')}`,
-  )
-
-  const bob = await call(API, '/profiles/bob')
-  equal('reading a profile succeeds', bob.status, 200)
-  check(
-    'the profile carries a versioned gate policy',
-    bob.body?.policy?.version >= 1 && Array.isArray(bob.body?.policy?.topics),
-    `version = ${bob.body?.policy?.version}`,
-  )
-
-  const missing = await call(API, '/profiles/nobody')
-  equal('an unknown handle is a clean 404', missing.status, 404)
-
-  console.log('\n3. The quote is split into a spent fee and a refundable bond')
-
-  const quoteRequest = {
-    sender: SENDER,
-    recipientHandle: 'bob',
-    contextChars: Object.values(INTENT).join(' ').length,
-    attachmentCount: 0,
-  }
-  const quote = await call(API, '/quote', { method: 'POST', body: JSON.stringify(quoteRequest) })
-  equal('quoting succeeds', quote.status, 200)
-  const fee = BigInt(quote.body?.quote?.evaluationFee ?? '0')
-  const bond = BigInt(quote.body?.quote?.attentionBond ?? '0')
-  check('the evaluation fee is non-zero', fee > 0n, `fee = ${fee}`)
-  check('the attention bond is non-zero', bond > 0n, `bond = ${bond}`)
-  check(
-    'the quote explains every line item',
-    Array.isArray(quote.body?.quote?.lines) && quote.body.quote.lines.length >= 5,
-    `lines = ${quote.body?.quote?.lines?.length}`,
-  )
-
-  const expensive = await call(API, '/quote', {
-    method: 'POST',
-    body: JSON.stringify({ ...quoteRequest, attachmentCount: 3 }),
-  })
-  const attachmentBond = BigInt(expensive.body?.quote?.attentionBond ?? '0')
-  const attachmentFee = BigInt(expensive.body?.quote?.evaluationFee ?? '0')
-  check('attachments raise the fee', attachmentFee > fee, `${fee} -> ${attachmentFee}`)
-  equal('attachments do not touch the refundable bond', attachmentBond, bond)
-
-  console.log('\n4. Locking an introduction, then both agents read it')
-
-  const created = await call(API, '/introductions', {
-    method: 'POST',
-    body: JSON.stringify({
-      sender: SENDER,
-      recipientHandle: 'bob',
-      intent: INTENT,
-      disclosedSignals: [
-        {
-          kind: 'deployed_contract',
-          label: 'A contract I deployed',
-          evidenceUrl: null,
-          consentedAt: Math.floor(Date.now() / 1000),
-        },
-      ],
-      attachmentCount: 0,
-    }),
-  })
-  equal('locking returns 201', created.status, 201)
-  const id = created.body?.introduction?.id
-  check('the introduction has an onchain-shaped id', typeof id === 'string' && id.startsWith('0x'), `id = ${id}`)
-  equal('it starts locked', created.body?.introduction?.state, 'locked')
-  check(
-    'the payload is hashed at lock time',
-    typeof created.body?.introduction?.payloadHash === 'string',
-    `payloadHash = ${created.body?.introduction?.payloadHash?.slice(0, 12)}…`,
-  )
-
-  const evaluated = await call(API, `/introductions/${id}/evaluate`, { method: 'POST' })
-  equal('evaluation succeeds', evaluated.status, 200)
-  equal('the evaluator service did the work', evaluated.body?.provider, 'mock')
-  check(
-    'the recommendation is one of the three allowed values',
-    ['review', 'ask_for_context', 'not_now'].includes(evaluated.body?.outcome?.recommendation),
-    `recommendation = ${evaluated.body?.outcome?.recommendation}`,
-  )
-  check(
-    'a full card with a specific reason is recommended for review',
-    evaluated.body?.outcome?.recommendation === 'review',
-    `recommendation = ${evaluated.body?.outcome?.recommendation}`,
-  )
-  equal('it moves into the review queue', evaluated.body?.introduction?.state, 'ready_for_review')
-  check(
-    'an evaluation receipt is anchored',
-    typeof evaluated.body?.introduction?.evaluationReceiptHash === 'string',
-    `receipt = ${evaluated.body?.introduction?.evaluationReceiptHash?.slice(0, 12)}…`,
-  )
-  check(
-    'the sender-facing half exists',
-    Array.isArray(evaluated.body?.outcome?.coachNotes) && evaluated.body.outcome.coachNotes.length > 0,
-  )
-  check(
-    'the recipient-facing half exists',
-    Array.isArray(evaluated.body?.outcome?.recipientSummary) &&
-      evaluated.body.outcome.recipientSummary.length > 0,
-  )
-
-  const reEvaluate = await call(API, `/introductions/${id}/evaluate`, { method: 'POST' })
-  equal('evaluating twice is refused', reEvaluate.status, 409)
-
-  console.log('\n5. Only the recipient can decide')
-
-  const asEvaluator = await call(API, `/introductions/${id}/transition`, {
-    method: 'POST',
-    body: JSON.stringify({ actor: 'evaluator', to: 'accepted' }),
-  })
-  equal('an agent cannot approve access', asEvaluator.status, 403)
-
-  const asSender = await call(API, `/introductions/${id}/transition`, {
-    method: 'POST',
-    body: JSON.stringify({ actor: 'sender', to: 'accepted' }),
-  })
-  equal('the sender cannot accept on their own behalf', asSender.status, 403)
-
-  const queue = await call(API, '/queue/bob')
-  equal('the recipient can read their queue', queue.status, 200)
-  equal('the queue has exactly one item', queue.body?.queue?.length, 1)
-  equal('the queue item is the one we just sent', queue.body?.queue?.[0]?.id, id)
-  equal('the recipient sees it before deciding', queue.body?.queue?.[0]?.state, 'ready_for_review')
-
-  const decided = await call(API, `/introductions/${id}/transition`, {
-    method: 'POST',
-    body: JSON.stringify({ actor: 'recipient', to: 'accepted' }),
-  })
-  equal('the recipient can accept', decided.status, 200)
-  equal('the introduction is now accepted', decided.body?.introduction?.state, 'accepted')
-
-  const afterQueue = await call(API, '/queue/bob')
-  equal('accepting drains the queue', afterQueue.body?.queue?.length, 0)
-
-  const acceptance = await call(API, `/introductions/${id}/transition`, {
-    method: 'POST',
-    body: JSON.stringify({ actor: 'recipient', to: 'declined' }),
-  })
-  equal('a decided introduction cannot be re-decided', acceptance.status, 409)
-
-  console.log('\n6. The receipt survives a reload')
-
-  const reread = await call(API, `/introductions/${id}`)
-  equal('reading the introduction succeeds', reread.status, 200)
-  equal('the state persisted', reread.body?.introduction?.state, 'accepted')
-  check(
-    'the evaluation outcome persisted with it',
-    reread.body?.introduction?.evaluationOutcome !== null,
-    'the persisted outcome is what the detail page renders after a refresh',
-  )
-  equal(
-    'the persisted outcome is the one that was returned',
-    reread.body?.introduction?.evaluationOutcome?.recommendation,
-    evaluated.body?.outcome?.recommendation,
-  )
-
-  console.log('\n7. Unknown handles fail loudly, never silently')
-
-  const strangerQueue = await call(API, '/queue/nobody')
-  equal('an unknown queue is a clean 404', strangerQueue.status, 404)
-
-  const selfIntro = await call(API, '/introductions', {
-    method: 'POST',
-    body: JSON.stringify({
-      sender: SENDER,
-      recipientHandle: 'nobody',
-      intent: INTENT,
-      disclosedSignals: [],
-      attachmentCount: 0,
-    }),
-  })
-  equal('sending to an unknown handle is a clean 404', selfIntro.status, 404)
-
-  const rejectedIntent = await call(API, '/introductions', {
-    method: 'POST',
-    body: JSON.stringify({
-      sender: SENDER,
-      recipientHandle: 'bob',
-      intent: { whoAmI: '', whyYou: '', whatIOffer: '', nextStep: '' },
-      disclosedSignals: [],
-      attachmentCount: 0,
-    }),
-  })
-  equal('an empty introduction card is rejected', rejectedIntent.status, 400)
-
-  console.log(`\n${'-'.repeat(56)}`)
-  console.log(`  ${passed} passed, ${failed} failed`)
-
-  return failed === 0
-}
-
-let exitCode = 1
+const apiEnv = { API_PORT: String(API_PORT), APP_ORIGIN: origin, SIGNALPASS_DB_PATH: join(dir, 'app.sqlite'), EVALUATOR_URL: '' };
+const createProfile = (handle) => ({ handle, profile: { name: handle === 'bob' ? 'Bob Builder' : 'Eve Builder', bio: 'Building tools for Monad communities.', interests: 'Monad, developer tooling', offer: 'Infrastructure and contract testing.', meet: 'Builders working on useful tools.' }, agent: { visibility: 'public', matching: true, sources: [], interests: ['Monad', 'developer tooling'] }, sourceLinks: {}, avatar: 'rohan' });
 try {
-  const success = await main()
-  exitCode = success ? 0 : 1
+  let api = boot(['--filter', '@signalpass/api', 'start'], apiEnv);
+  await health('http://127.0.0.1:' + API_PORT + '/health', api);
+  const web = boot(['--filter', '@signalpass/web', 'exec', 'next', 'dev', '-p', String(WEB_PORT)], { SIGNALPASS_API_ORIGIN: 'http://127.0.0.1:' + API_PORT });
+  await health(origin + '/api/health', web);
+  browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const pages = [];
+  for (let i = 1; i <= 3; i++) {
+    const account = privateKeyToAccount('0x' + i.toString(16).padStart(64, '0'));
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+    await context.exposeBinding('signTestLogin', async (_source, message) => account.signMessage({ message: hexToString(message) }));
+    // Only the test browser has this EIP-1193 provider. The API still verifies real signatures.
+    await context.addInitScript(({ address }) => {
+      window.ethereum = { request: async ({ method, params }) => {
+        if (method === 'eth_requestAccounts') return [address];
+        if (method === 'eth_chainId') return '0x279f';
+        if (method === 'personal_sign') return window.signTestLogin(params[0]);
+        throw new Error('Unsupported test wallet method');
+      }, on() {} };
+    }, { address: account.address });
+    const page = await context.newPage(); page.setDefaultTimeout(15000);
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto(origin + '/profile/import', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Connect wallet', exact: true }).click();
+    await page.getByRole('button', { name: 'Sign out', exact: true }).waitFor();
+    assert(!(await page.evaluate(() => document.cookie)).includes('signalpass_session'));
+    pages.push(page);
+  }
+  const [a, b, c] = pages;
+  for (const [page, handle] of [[b, 'bob'], [c, 'eve']]) await page.evaluate(async (input) => { await window.SignalPass.ready; await window.SignalPass.request('/me/profile', input); }, createProfile(handle));
+  console.log('PASS: three independent wallet signatures and HttpOnly sessions');
+  for (const [section, fields] of [['profile', { name: 'Alice Builder', bio: 'Building Monad simulation tools.' }], ['interests', { interests: 'Monad, developer tooling' }], ['offer', { offer: 'Simulation tools and product feedback.' }], ['meet', { meet: 'Protocol and community builders.' }]]) {
+    await a.locator('[data-edit=' + section + ']').click();
+    for (const [key, value] of Object.entries(fields)) await a.locator('#edit-' + key).fill(value);
+    await a.getByRole('button', { name: 'Save changes', exact: true }).click();
+  }
+  await a.locator('[data-action=review-draft]').click(); await a.locator('[data-action=approve-profile]').click();
+  await a.locator('#account-handle').fill('alice'); await a.getByRole('button', { name: 'Save profile', exact: true }).click();
+  await a.waitForURL('**/agent');
+  await a.locator('[name=visibility][value=public]').check(); await a.locator('[data-action=save-agent]').click();
+  await a.getByRole('link', { name: 'Discover people →', exact: true }).click();
+  await a.waitForURL('**/discover'); await a.locator('[data-person=bob]').click();
+  await a.getByRole('link', { name: 'Draft an introduction', exact: false }).click();
+  await a.waitForURL('**/introductions/new/bob');
+  await a.locator('#intro-field-1').fill('I build a simulation harness for Monad builders.');
+  await a.locator('[data-action=approve-introduction]').click(); await a.locator('#dialog-confirm').click();
+  await a.waitForURL('**/receipt'); await a.locator('#receipt-body').waitFor();
+  const receipt = a.url(); const id = new URL(receipt).pathname.split('/')[2];
+  assert.equal(await a.locator('#receipt-status').innerText(), 'Awaiting a response');
+  console.log('PASS: profile approval and live introduction from the default V4 route');
+  await b.goto(origin + '/inbox/' + id, { waitUntil: 'networkidle' });
+  assert((await b.locator('.v4-result-message').innerText()).includes('simulation harness'));
+  await c.goto(receipt, { waitUntil: 'networkidle' });
+  assert.equal(await c.locator('#receipt-body').isVisible(), false);
+  assert((await c.locator('#receipt-title').innerText()).includes('not available'));
+  const forged = await a.evaluate(async (id) => { try { await window.SignalPass.request('/introductions/' + id + '/transition', { actor: 'recipient', to: 'accepted', revision: 1 }); return 200; } catch (e) { return e.status; } }, id);
+  assert.equal(forged, 403);
+  console.log('PASS: delivery across browsers; stranger read and sender impersonation blocked');
+  await b.locator('[data-action=ask-context]').click(); await b.locator('#context-question').fill('What could we build together?');
+  await b.getByRole('button', { name: 'Save context request', exact: true }).click();
+  await b.waitForFunction(() => window.SignalPass?.inbox?.some((i) => i.status === 'context_requested'));
+  await a.reload({ waitUntil: 'networkidle' }); await a.locator('#reply-context').fill('An open-source simulation harness for community contracts.');
+  await a.getByRole('button', { name: 'Approve and add context', exact: true }).click();
+  await a.waitForFunction(() => document.querySelector('#receipt-status')?.textContent === 'Awaiting a response');
+  await b.reload({ waitUntil: 'networkidle' }); await b.locator('[data-action=accept-introduction]').click(); await b.locator('#dialog-confirm').click();
+  await b.waitForFunction(() => window.SignalPass?.inbox?.some((i) => i.status === 'accepted'));
+  await a.reload({ waitUntil: 'networkidle' }); assert.equal(await a.locator('#receipt-status').innerText(), 'Accepted');
+  assert(await b.locator('[data-action=decline-introduction]').isDisabled());
+  console.log('PASS: authorized context request, sender reply, recipient acceptance and terminal state');
+  await stop(api); api = boot(['--filter', '@signalpass/api', 'start'], apiEnv); await health('http://127.0.0.1:' + API_PORT + '/health', api);
+  await a.reload({ waitUntil: 'networkidle' }); assert.equal(await a.locator('#receipt-status').innerText(), 'Accepted');
+  await b.reload({ waitUntil: 'networkidle' }); assert((await b.locator('.v4-result-message').innerText()).includes('community contracts'));
+  console.log('PASS: complete API process restart preserves sessions, delivery and approved context');
+  for (const width of [1440, 390]) {
+    await a.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    for (const [name, route] of [['profile','/profile/import'],['discover','/discover'],['compose','/introductions/new/bob'],['receipt', new URL(receipt).pathname]]) {
+      await a.goto(origin + route, { waitUntil: 'networkidle' });
+      assert(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Overflow: ' + route + ' at ' + width);
+      assert.deepEqual(await a.evaluate(() => [...document.images].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.src)), []);
+      await a.screenshot({ path: join(screenshots, name + '-' + width + '.png'), fullPage: true });
+    }
+  }
+  assert.deepEqual(errors, []);
+  await a.goto(origin + '/inbox', { waitUntil: 'networkidle' });
+  assert(await a.getByRole('link', { name: 'To Bob Builder · accepted', exact: true }).isVisible());
+  await a.goto(origin + '/widget/create', { waitUntil: 'networkidle' });
+  assert((await a.locator('#embed-code').innerText()).includes('alice'));
+  await a.goto(origin + '/widget/preview', { waitUntil: 'networkidle' });
+  assert.equal(await a.locator('#signalpass-widget h2').innerText(), 'Alice Builder');
+  assert((await a.locator('#signalpass-widget a').getAttribute('href')).endsWith('/introductions/new/alice'));
+  console.log('PASS: live sent history and profile-specific widget link');
+  console.log('PASS: default live V4, desktop/mobile layouts and browser runtime errors');
+  const demo = spawn(process.execPath, ['scripts/v4-verify.mjs'], { env: { ...process.env, V4_BASE_URL: origin, V4_QA_DIR: join(screenshots, 'demo') }, stdio: ['ignore', 'pipe', 'pipe'] });
+  let demoLog = ''; demo.stdout.on('data', s => { demoLog += s; }); demo.stderr.on('data', s => { demoLog += s; });
+  const demoCode = await new Promise(resolve => demo.on('exit', resolve));
+  assert.equal(demoCode, 0, demoLog);
+  console.log('PASS: explicit demo-mode interaction and responsive regression');
 } catch (error) {
-  console.error(`\n\u001b[31mSuite aborted:\u001b[0m ${error instanceof Error ? error.message : error}`)
-  exitCode = 1
+  console.error(error);
+  for (const process of processes) if (process.exitCode && process.exitCode !== 143) console.error(process.logs.slice(-2000));
+  process.exitCode = 1;
 } finally {
-  shutdown()
+  await browser?.close(); for (const process of processes.reverse()) await stop(process);
+  rmSync(dir, { recursive: true, force: true });
 }
-
-// Give the children a moment to die before the process exits.
-await delay(300)
-process.exit(exitCode)

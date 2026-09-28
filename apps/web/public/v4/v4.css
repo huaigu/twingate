@@ -486,3 +486,43 @@ button:disabled {
     scroll-behavior: auto !important;
   }
 }
+
+/* Account controls share the paper/ink palette and existing button primitives. */
+.v4-session-bar { display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1440px;margin:8px auto;padding:8px 24px;font:14px/1.5 Arial,sans-serif;color:#303044;position:relative;z-index:10; }
+.v4-session-bar .button { min-height:44px;white-space:nowrap; }
+.v4-account-dialog { width:min(480px,calc(100vw - 32px));padding:28px;border:1px solid #d9d5cd;border-radius:16px;background:#faf8f1;color:#303044; }
+.v4-account-dialog::backdrop { background:rgba(30,26,40,.3); }
+.v4-account-dialog p { font:16px/1.5 Arial,sans-serif; }
+.v4-account-dialog input { width:100%;box-sizing:border-box; }
+.v4-live-empty { padding:24px;font:16px/1.5 Arial,sans-serif; }
+@media(max-width:600px) {
+ .v4-session-bar { padding:8px 16px;flex-wrap:wrap;font-size:14px; }
+ .verified-context-inner>p,.verified-context-inner button,.fee-explain button,.compose-fees button,[data-fee],[data-inbox-tab] { font-size:14px!important;line-height:1.5!important; }
+ [data-fee],[data-inbox-tab],[data-action=toggle-context] { min-height:44px; }
+}
+.person-card, .person-header, .connection-person, .v4-result-message, .draft-message, [data-profile] { overflow-wrap:anywhere; }
+/* Wallet review surfaces use the same paper, ink and violet as the V4 product. */
+.v4-chain-card { margin: 24px 0; padding: 24px; text-align: left; color: #302a42; background: #fcfaf6; border: 1px solid #d6cfdf; border-radius: 18px; box-shadow: 0 4px 0 rgba(67, 46, 87, .04); }
+.v4-chain-card h2 { margin: 6px 0 14px; font-size: 24px; line-height: 1.25; }
+.v4-chain-card p { font-size: 14px; line-height: 1.6; }
+.v4-chain-eyebrow { color: #725490; font-size: 11px !important; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.v4-chain-card dl { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; padding: 16px 0; margin: 0; border-top: 1px solid #e5deeb; border-bottom: 1px solid #e5deeb; font-size: 14px; }
+.v4-chain-card dt { color: #766c80; }
+.v4-chain-card dd { margin: 0; text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+.v4-chain-proof { overflow-wrap: anywhere; }
+.v4-chain-proof code, .v4-chain-proof a { font-size: 12px; }
+.v4-chain-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.v4-chain-actions .button, #confirm-profile-sync { min-height: 44px; white-space: normal; }
+.v4-chain-settings { grid-column: 1 / -1; max-width: 1056px; margin: 20px 0; width: 100%; box-sizing: border-box; }
+.v4-settlement-options { border: 1px solid #d6cfdf; border-radius: 12px; padding: 14px; margin: 18px 0; text-align: left; }
+.v4-settlement-options legend { font-weight: 600; padding: 0 5px; }
+.v4-settlement-options label { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14px; }
+.v4-settlement-options p { font-size: 13px; color: #766c80; line-height: 1.5; }
+#chain-feedback { min-height: 1em; color: #654485; }
+@media (max-width: 600px) {
+  .v4-chain-card { padding: 18px; border-radius: 14px; }
+  .v4-chain-settings { width: 100%; }
+  .v4-chain-card h2 { font-size: 21px; }
+  .v4-chain-card dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .v4-chain-actions .button { width: 100%; }
+}

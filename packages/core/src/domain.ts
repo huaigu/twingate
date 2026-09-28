@@ -73,6 +73,7 @@ export interface DisclosedSignal {
 export const INTRODUCTION_STATES = [
   'draft',
   'quoted',
+  'submitted',
   'locked',
   'evaluating',
   'needs_context',
@@ -96,10 +97,11 @@ export type IntroductionState = (typeof INTRODUCTION_STATES)[number]
 const TRANSITIONS: Readonly<Record<IntroductionState, readonly IntroductionState[]>> = {
   draft: ['quoted', 'withdrawn'],
   quoted: ['locked', 'withdrawn', 'expired'],
+  submitted: ['locked', 'evaluating', 'needs_context', 'accepted', 'declined', 'withdrawn'],
   locked: ['evaluating', 'withdrawn'],
   evaluating: ['needs_context', 'ready_for_review'],
-  needs_context: ['evaluating', 'withdrawn'],
-  ready_for_review: ['accepted', 'declined', 'expired'],
+  needs_context: ['submitted', 'evaluating', 'declined', 'withdrawn'],
+  ready_for_review: ['needs_context', 'accepted', 'declined', 'expired'],
   accepted: [],
   declined: [],
   expired: [],
@@ -152,6 +154,7 @@ export type Actor = 'sender' | 'recipient' | 'evaluator' | 'system'
 const TRANSITION_ACTOR: Readonly<Record<IntroductionState, Actor>> = {
   draft: 'sender',
   quoted: 'sender',
+  submitted: 'sender',
   locked: 'sender',
   evaluating: 'evaluator',
   needs_context: 'evaluator',

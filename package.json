@@ -2,23 +2,28 @@
   "name": "signalpass",
   "private": true,
   "version": "0.1.0",
-  "description": "SignalPass — high-signal introductions for Monad builders",
+  "description": "SignalPass \u2014 high-signal introductions for Monad builders",
   "packageManager": "pnpm@10.32.1",
   "engines": {
-    "node": ">=22.11"
+    "node": ">=22.13"
   },
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "e2e": "node scripts/e2e.mjs",
-    "v4:dev": "pnpm --filter @signalpass/web exec next dev -p 3004",
+    "v4:dev": "pnpm dev",
     "v4:verify": "node scripts/v4-verify.mjs",
-    "verify": "pnpm -r typecheck && pnpm -r test && pnpm contracts:test && pnpm e2e",
+    "verify": "pnpm -r typecheck && pnpm -r test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
     "contracts:build": "pnpm --filter @signalpass/contracts build",
     "contracts:test": "pnpm --filter @signalpass/contracts test",
-    "api:dev": "pnpm --filter @signalpass/api dev"
+    "api:dev": "pnpm --filter @signalpass/api dev",
+    "chain:dev": "node scripts/chain-dev.mjs",
+    "chain:test": "node scripts/chain-test.mjs",
+    "chain:verify": "node scripts/chain-test.mjs --browser",
+    "chain:preflight": "node scripts/chain-preflight.mjs",
+    "verify:all": "pnpm verify && pnpm chain:verify && pnpm build"
   },
   "devDependencies": {
     "playwright": "1.59.1",

@@ -13,6 +13,8 @@ dist/
 build/
 out/
 .next/
+.next-chain/
+.next-chain-test/
 .turbo/
 *.tsbuildinfo
 cache/
@@ -31,6 +33,10 @@ next-env.d.ts
 
 # Local run artifacts (dev server logs, screenshots)
 .run/
+.data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 apps/web/.impeccable/review/
 graphify-out/
 *.blend1

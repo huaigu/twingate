@@ -15,7 +15,8 @@ contract IntroductionEscrowTest is Test {
     address internal sender = address(0xA11CE);
     address internal otherSender = address(0xCAFE);
     address internal recipient = address(0xB0B);
-    address internal evaluator = address(0xE0A);
+    uint256 internal constant OPERATOR_PK = 0xE0A;
+    address internal evaluator;
     address internal treasury = address(0x7EA);
 
     uint256 internal constant PROFILE_ID = 1;
@@ -27,6 +28,7 @@ contract IntroductionEscrowTest is Test {
     bytes32 internal policyHash;
 
     function setUp() public {
+        evaluator = vm.addr(OPERATOR_PK);
         registry = new ProfileRegistry();
         escrow = new IntroductionEscrow(address(registry), treasury, evaluator);
 
@@ -38,11 +40,21 @@ contract IntroductionEscrowTest is Test {
         vm.deal(otherSender, 100 ether);
     }
 
+    function _quote(address payer, address to, uint256 profileId, bytes32 policy, uint32 version, bytes32 payload, uint64 ttl, uint128 fee, uint256 total)
+        internal view returns (IntroductionEscrow.LockQuote memory q, bytes memory signature)
+    {
+        q = IntroductionEscrow.LockQuote({ sender: payer, recipient: to, recipientProfileId: profileId,
+            policyHash: policy, policyVersion: version, payloadHash: payload, evaluationFee: fee,
+            attentionBond: total > fee ? total - fee : 0, ttl: ttl, quoteExpiresAt: block.timestamp + 900,
+            nonce: escrow.nonces(payer) });
+        (uint8 v, bytes32 r, bytes32 sigS) = vm.sign(OPERATOR_PK, escrow.hashQuote(q));
+        signature = abi.encodePacked(r, sigS, v);
+    }
+
     function _lock() internal returns (bytes32 id) {
+        (IntroductionEscrow.LockQuote memory q0, bytes memory sig0) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
         vm.prank(sender);
-        id = escrow.lockIntroduction{value: FEE + BOND}(
-            recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE
-        );
+        id = escrow.lockIntroduction{value: FEE + BOND}(q0, sig0);
     }
 
     function _lockAndReview() internal returns (bytes32 id) {
@@ -70,35 +82,67 @@ contract IntroductionEscrowTest is Test {
     }
 
     function test_RevertWhenPolicyHashMismatch() public {
+        (IntroductionEscrow.LockQuote memory q1, bytes memory sig1) = _quote(sender, recipient, PROFILE_ID, keccak256("stale-policy"), POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
         vm.prank(sender);
         vm.expectRevert(IntroductionEscrow.ProfilePolicyMismatch.selector);
-        escrow.lockIntroduction{value: FEE + BOND}(
-            recipient, PROFILE_ID, keccak256("stale-policy"), POLICY_VERSION, keccak256("payload"), TTL, FEE
-        );
+        escrow.lockIntroduction{value: FEE + BOND}(q1, sig1);
+    }
+
+    function test_RevertWhenRecipientDoesNotOwnProfile() public {
+        (IntroductionEscrow.LockQuote memory q2, bytes memory sig2) = _quote(sender, otherSender, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender);
+        vm.expectRevert(IntroductionEscrow.NotRecipient.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q2, sig2);
+    }
+
+    function test_RevertWhenRecipientClosed() public {
+        vm.prank(recipient);
+        registry.setAcceptsIntroductions(PROFILE_ID, false);
+        (IntroductionEscrow.LockQuote memory q3, bytes memory sig3) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender);
+        vm.expectRevert(IntroductionEscrow.RecipientClosed.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q3, sig3);
+    }
+
+    function test_RevertWhenPolicyVersionIsStaleEvenWithSameHash() public {
+        vm.prank(recipient);
+        registry.updatePolicy(PROFILE_ID, policyHash);
+        (IntroductionEscrow.LockQuote memory q4, bytes memory sig4) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender);
+        vm.expectRevert(IntroductionEscrow.ProfilePolicyMismatch.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q4, sig4);
+    }
+
+    function test_ClosingProfileDoesNotBlockExistingSettlement() public {
+        bytes32 id = _lockAndReview();
+        vm.prank(recipient);
+        registry.setAcceptsIntroductions(PROFILE_ID, false);
+        uint256 beforeRefund = sender.balance;
+        vm.prank(recipient);
+        escrow.accept(id);
+        assertEq(sender.balance, beforeRefund + BOND);
+        assertEq(uint256(escrow.getIntroduction(id).state), uint256(IntroductionEscrow.State.Accepted));
     }
 
     function test_RevertWhenFeeConsumesWholePayment() public {
+        (IntroductionEscrow.LockQuote memory q5, bytes memory sig5) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE);
         vm.prank(sender);
         vm.expectRevert(IntroductionEscrow.IncorrectValue.selector);
-        escrow.lockIntroduction{value: FEE}(
-            recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE
-        );
+        escrow.lockIntroduction{value: FEE}(q5, sig5);
     }
 
     function test_RevertWhenLockingToSelf() public {
+        (IntroductionEscrow.LockQuote memory q6, bytes memory sig6) = _quote(sender, sender, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
         vm.prank(sender);
         vm.expectRevert(IntroductionEscrow.NotRecipient.selector);
-        escrow.lockIntroduction{value: FEE + BOND}(
-            sender, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE
-        );
+        escrow.lockIntroduction{value: FEE + BOND}(q6, sig6);
     }
 
     function test_RevertWhenTtlTooLong() public {
+        (IntroductionEscrow.LockQuote memory q7, bytes memory sig7) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), 31 days, FEE, FEE + BOND);
         vm.prank(sender);
         vm.expectRevert(IntroductionEscrow.TtlTooLong.selector);
-        escrow.lockIntroduction{value: FEE + BOND}(
-            recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), 31 days, FEE
-        );
+        escrow.lockIntroduction{value: FEE + BOND}(q7, sig7);
     }
 
     function test_RevertWhenSenderHitsUnresolvedLimit() public {
@@ -108,11 +152,10 @@ contract IntroductionEscrowTest is Test {
 
         assertEq(escrow.unresolvedCount(sender, recipient), 3);
 
+        (IntroductionEscrow.LockQuote memory q8, bytes memory sig8) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload-4"), TTL, FEE, FEE + BOND);
         vm.prank(sender);
         vm.expectRevert(IntroductionEscrow.SenderLimitReached.selector);
-        escrow.lockIntroduction{value: FEE + BOND}(
-            recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload-4"), TTL, FEE
-        );
+        escrow.lockIntroduction{value: FEE + BOND}(q8, sig8);
     }
 
     function test_UnresolvedLimitIsPerSender() public {
@@ -120,10 +163,9 @@ contract IntroductionEscrowTest is Test {
         _lock();
         _lock();
 
+        (IntroductionEscrow.LockQuote memory q9, bytes memory sig9) = _quote(otherSender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("other"), TTL, FEE, FEE + BOND);
         vm.prank(otherSender);
-        bytes32 id = escrow.lockIntroduction{value: FEE + BOND}(
-            recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("other"), TTL, FEE
-        );
+        bytes32 id = escrow.lockIntroduction{value: FEE + BOND}(q9, sig9);
 
         assertTrue(id != bytes32(0));
         assertEq(escrow.unresolvedCount(sender, recipient), 3);
@@ -359,4 +401,59 @@ contract IntroductionEscrowTest is Test {
         escrow.withdraw(a);
         assertEq(escrow.lockedDepth(), 1);
     }
+    function test_QuoteCannotChangeAmount() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        q.evaluationFee += 1;
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.InvalidQuoteSignature.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_QuoteCannotChangePayload() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        q.payloadHash = keccak256("changed after approval");
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.InvalidQuoteSignature.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_ExpiredQuoteCannotLock() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.warp(q.quoteExpiresAt + 1);
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.QuoteExpired.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_QuoteCannotReplay() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender); escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.InvalidNonce.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_QuoteBoundToContract() public {
+        IntroductionEscrow other = new IntroductionEscrow(address(registry), treasury, evaluator);
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.InvalidQuoteSignature.selector);
+        other.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_QuoteBoundToChain() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.chainId(block.chainid + 1);
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.InvalidQuoteSignature.selector);
+        escrow.lockIntroduction{value: FEE + BOND}(q, sig);
+    }
+    function test_SignedAmountMustMatchPayment() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("payload"), TTL, FEE, FEE + BOND);
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.IncorrectValue.selector);
+        escrow.lockIntroduction{value: FEE + BOND + 1}(q, sig);
+    }
+    function test_ManualReviewHasZeroFeeAndFullBondRefund() public {
+        (IntroductionEscrow.LockQuote memory q, bytes memory sig) = _quote(sender, recipient, PROFILE_ID, policyHash, POLICY_VERSION, keccak256("manual"), TTL, 0, BOND);
+        uint256 beforeLock = sender.balance;
+        vm.prank(sender); bytes32 id = escrow.lockIntroduction{value: BOND}(q, sig);
+        assertEq(uint256(escrow.getIntroduction(id).state), uint256(IntroductionEscrow.State.ReadyForReview));
+        vm.prank(recipient); escrow.accept(id);
+        assertEq(sender.balance, beforeLock);
+        assertEq(treasury.balance, 0);
+    }
+    function test_QuoteSignerCannotBeChangedByStranger() public {
+        vm.prank(sender); vm.expectRevert(IntroductionEscrow.NotAuthorized.selector);
+        escrow.setQuoteSigner(sender);
+    }
+
 }

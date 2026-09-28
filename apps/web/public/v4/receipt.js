@@ -1,3 +1,7 @@
+(async () => {
+const api = window.SignalPass;
+await api.ready;
+if (api.demo) {
 (() => {
   let state = {};
   try {
@@ -98,4 +102,47 @@
     p.textContent = `Additional context: ${record.reply}`;
     document.getElementById("receipt-body").append(p);
   }
+})();
+
+return;
+}
+const set = (id, text) => { document.getElementById(id).textContent = text; };
+const id = location.pathname.split('/')[2];
+try {
+  if (api.error) throw api.error;
+  const record = api.toRecord((await api.request('/introductions/' + encodeURIComponent(id))).introduction);
+  const labels = { quoted: ['Your hello is awaiting its bond.', 'Awaiting wallet payment'], expired: ['The response window has closed.', 'Expired · bond returned'], pending: ['Your hello has arrived.', 'Awaiting a response'], accepted: ['A connection, made.', 'Accepted'], declined: ['Not this time.', 'Declined'], context_requested: ['A little more context.', 'Context requested'], withdrawn: ['Introduction withdrawn.', 'Withdrawn'], evaluating: ['Your introduction is being reviewed.', 'Evaluating'] };
+  const [title, status] = labels[record.status] || ['Your introduction.', record.status];
+  set('receipt-title', title); set('receipt-status', status);
+  set('receipt-description', record.settlement === 'onchain' ? 'Only confirmed chain events change your payment status. Additional context is shared offchain and does not change the original signed message.' : 'Only you and the other participant can read this introduction. No payment has been requested or transferred.');
+  set('receipt-people', record.sender + ' → ' + record.recipient);
+  set('receipt-message', record.fields.join('\n\n'));
+  set('receipt-context', record.sharedContext ? 'Shared: the approved message, profile summary and interests.' : 'Shared: the approved introduction message only.');
+  set('receipt-question', record.question ? 'Requested context: ' + record.question : '');
+  set('receipt-date', 'Created ' + new Date(record.createdAt).toLocaleString());
+  document.getElementById('receipt-body').hidden = false;
+  const link = document.getElementById('recipient-link');
+  link.href = record.role === 'recipient' ? '/inbox/' + encodeURIComponent(id) : '/inbox';
+  link.textContent = record.role === 'recipient' ? 'Review in my inbox →' : 'My introductions →';
+  if (record.reply) { const p = document.createElement('p'); p.className = 'v4-result-message'; p.textContent = 'Additional context: ' + record.reply; document.getElementById('receipt-body').append(p); }
+  if (record.status === 'accepted') { const p = document.createElement('p'); p.className = 'v4-result-message'; p.textContent = 'Agreed starting point: ' + record.fields[3]; document.getElementById('receipt-body').append(p); }
+  if (record.status === 'context_requested' && record.role === 'sender') {
+    const form = document.createElement('form'); form.id = 'reply-form';
+    form.innerHTML = '<label class="dialog-field" for="reply-context">Add the context they asked for</label><textarea class="dialog-input" id="reply-context" required maxlength="1000" rows="4"></textarea><p id="reply-error" role="alert"></p><div class="dialog-actions"><button class="button primary" type="submit">Approve and add context</button></div>';
+    document.getElementById('receipt-body').append(form);
+    form.onsubmit = async (event) => { event.preventDefault(); const button = form.querySelector('button'); button.disabled = true; try { await api.request('/introductions/' + id + '/reply', { text: form.querySelector('textarea').value.trim(), revision: record.revision }); location.reload(); } catch (error) { form.querySelector('#reply-error').textContent = error.message; button.disabled = false; } };
+  }
+  await api.chainReceipt?.(record);
+  const timer = setInterval(async () => {
+    if (document.hidden || api.walletBusy || document.activeElement?.closest('#reply-form')) return;
+    try { const latest = await api.request('/introductions/' + id); if (latest.introduction.revision !== record.revision) location.reload(); }
+    catch (error) { if ([401, 404].includes(error.status)) { clearInterval(timer); document.getElementById('receipt-body').hidden = true; } set('receipt-description', error.message + ' Last confirmed information is preserved.'); }
+  }, 5000);
+  window.addEventListener('pagehide', () => clearInterval(timer));
+} catch (error) {
+  set('receipt-title', error.status === 401 ? 'Sign in to read your introduction.' : 'This introduction is not available to this account.');
+  set('receipt-description', error.message || 'Reconnect and try again.');
+  document.getElementById('receipt-body').hidden = true;
+  document.getElementById('recipient-link').textContent = 'My inbox →';
+}
 })();

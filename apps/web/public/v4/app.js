@@ -1,6 +1,10 @@
 /* SignalPass V4 • Native controls and a persistent, local demonstration flow.
    No external identity, model, messaging or payment service is impersonated. */
-(() => {
+(async () => {
+  const api = window.SignalPass;
+  await api.ready;
+  if (api.error) return;
+
   "use strict";
   const $ = (q, root = document) => root.querySelector(q);
   const $$ = (q, root = document) => [...root.querySelectorAll(q)];
@@ -10,7 +14,7 @@
     $$('img[src^="assets/"]', root).forEach((img) => {
       img.src = asset(img.getAttribute("src"));
     });
-  const storageKey = "signalpass-v4";
+  const storageKey = api.demo ? "signalpass-v4" : "signalpass-v4-draft-" + (api.me?.session.address || "guest");
   const memoryStore = (window.SignalPassMemoryStore ||= {});
   const store = {
     getItem(key) {
@@ -72,6 +76,11 @@
     sharedContext: true,
     profileApproved: false,
   };
+  if (api.live) {
+    defaults.profile = { name: "", bio: "", interests: "", offer: "", meet: "" };
+    defaults.sources = []; defaults.agent.interests = [];
+    defaults.widget.name = ""; defaults.widget.bio = ""; defaults.widget.tags = [];
+  }
   let saved = {};
   try {
     saved = JSON.parse(store.getItem(storageKey) || "{}");
@@ -79,6 +88,16 @@
     /* Private/file mode can disallow storage. */
   }
   if (!saved || typeof saved !== "object" || Array.isArray(saved)) saved = {};
+  if (api.live) {
+    const settings = api.me?.settings;
+    if (settings) {
+      if (!saved.profile || saved.profileApproved !== false) saved.profile = settings.profile;
+      saved.agent = settings.agent; saved.sourceLinks = settings.sourceLinks; saved.sources = Object.keys(settings.sourceLinks);
+      saved.profileApproved = saved.profileApproved !== false;
+      saved.widget = { ...defaults.widget, name: settings.profile.name, bio: settings.profile.bio, tags: settings.agent.interests.slice(0, 5), ...saved.widget };
+    }
+    saved.introductions = api.inbox; saved.inbox = {};
+  }
   const initial = JSON.parse(JSON.stringify(defaults));
   const state = {
     ...initial,
@@ -110,7 +129,8 @@
     state.sourceLinks = {};
   const save = () => {
     try {
-      store.setItem(storageKey, JSON.stringify(state));
+      const { introductions, inbox, ...draft } = state;
+      store.setItem(storageKey, JSON.stringify(api.demo ? state : draft));
     } catch (_) {
       /* The UI still works without persistent storage. */
     }
@@ -206,7 +226,7 @@
   const updateProfile = () => {
     $$("[data-profile]").forEach((el) => {
       const v = state.profile[el.dataset.profile];
-      if (v) el.textContent = v;
+      if (v || api.live) el.textContent = v || ({ name: "Your name", bio: "Add a short introduction", interests: "Add your interests", offer: "What can you offer?", meet: "Who would you like to meet?" }[el.dataset.profile] || "");
     });
   };
   const editProfile = (field) => {
@@ -248,7 +268,7 @@
     );
   };
   if (page === "sources") {
-    if (saved.profile) updateProfile();
+    if (api.live || saved.profile) updateProfile();
     const setSourceButton = (el) => {
       const selected = state.sources.includes(el.dataset.source);
       el.classList.toggle("selected", selected);
@@ -482,7 +502,7 @@
   }
 
   // 03 — A small deterministic example directory. No model or API is called.
-  const directory = [
+  const directory = api.live ? api.directory : [
     {
       name: "Maya",
       avatar: "maya",
@@ -513,14 +533,20 @@
     if (!p) return;
     openDialog(
       `Meet ${p.name}`,
-      `<img class="avatar dialog-avatar" src="assets/avatar-${p.avatar}.webp" alt="${p.name} illustrated avatar"><p class="dialog-copy">${p.role}</p><div class="dialog-tags">${p.tags.map((t) => `<span class="chip">${t}</span>`).join("")}</div><p class="dialog-copy">${p.description}</p>${notice("An example suggestion, not a ranking. No one has been contacted.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep exploring</button><a class="button primary" href="/introductions/new/${p.name.toLowerCase()}">Draft an introduction ${icon("arrow")}</a></div>`,
+      `<img class="avatar dialog-avatar" src="assets/avatar-${p.avatar}.webp" alt="${p.name} illustrated avatar"><p class="dialog-copy">${escapeHTML(p.role)}</p><div class="dialog-tags">${p.tags.map((t) => `<span class="chip">${escapeHTML(t)}</span>`).join("")}</div><p class="dialog-copy">${escapeHTML(p.description)}</p>${notice(api.demo ? "An example suggestion, not a ranking. No one has been contacted." : "This profile was approved by its owner. Sources are not independently verified. No introduction has been sent.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep exploring</button><a class="button primary" href="/introductions/new/${p.name.toLowerCase()}">Draft an introduction ${icon("arrow")}</a></div>`,
     );
   };
   if (page === "discover") {
+    if (api.live) {
+      $(".discovery-results h2").textContent = "Builders open to introductions";
+      $("#discovery-form [type=submit]").textContent = "Find shared interests";
+      $(".search-result-note").textContent = "Approved public profiles · keyword search, not AI ranking.";
+      $(".people-grid").innerHTML = directory.length ? directory.map((p) => '<article class="paper person-card" role="button" tabindex="0" data-person="' + escapeHTML(p.name) + '"><div class="person-header"><img class="avatar" src="/v4/assets/avatar-' + p.avatar + '.webp" alt=""><div><h3>' + escapeHTML(p.displayName || p.name) + '</h3><p>' + escapeHTML(p.role) + '</p><div class="person-tags">' + p.tags.map(t => '<span class="chip mint">' + escapeHTML(t) + '</span>').join('') + '</div></div></div><h4>In their own words</h4><p>' + escapeHTML(p.description) + '</p></article>').join('') : '<div class="v4-live-empty"><h3>The first connections start with you.</h3><p>There are no other public profiles yet. Save your profile, choose public visibility and invite another builder.</p><a class="button outline" href="/profile/import">Create my profile</a></div>';
+    }
     if (!state.agent.matching) {
       $(".discovery-private h3").textContent = "Private matching is paused";
       $(".discovery-private p").textContent =
-        "You can still browse example profiles";
+        api.demo ? "You can still browse example profiles" : "You can still browse approved public profiles";
     }
     let goal = state.discoveryGoal || "";
     $("#curiosity").value = state.discoveryQuery || "";
@@ -572,10 +598,10 @@
       const scores = directory
         .map((p) => {
           const text =
-            `${p.name} ${p.role} ${p.tags.join(" ")} ${p.description}`.toLowerCase();
+            `${p.name} ${escapeHTML(p.role)} ${p.tags.join(" ")} ${escapeHTML(p.description)}`.toLowerCase();
           let score = words.reduce((s, w) => s + Number(text.includes(w)), 0);
-          if (goal === "learn" && p.name === "Rohan") score += 2;
-          if (goal === "collaborate" && p.name === "Maya") score++;
+          if (api.demo && goal === "learn" && p.name === "Rohan") score += 2;
+          if (api.demo && goal === "collaborate" && p.name === "Maya") score++;
           return { name: p.name, score };
         })
         .sort((a, b) => b.score - a.score);
@@ -600,6 +626,7 @@
         : query || goal
           ? `Suggestions based on shared interests${goal ? ` · ${goal}` : ""}. Sample community; no one has been contacted.`
           : "A few people to be curious about. Choose a goal or explore at your own pace.";
+      if (api.live) $(".search-result-note").textContent = noMatch ? "No matches in the current public directory." : "Approved public profiles · keyword search, not AI ranking.";
       submit.disabled = false;
       submit.innerHTML = label;
       $(".people-grid").setAttribute("aria-busy", "false");
@@ -650,7 +677,8 @@
     if (avatar) img.src = asset(`assets/avatar-${avatar}.webp`);
     $("[data-live-name]").style.fontSize =
       w.name.length > 24 ? (innerWidth <= 1180 ? "25px" : "36px") : "";
-    const attrs = `data-profile='${JSON.stringify(w).replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}'`;
+    const publicWidget = api.live && api.me?.profile && api.me.settings.agent.visibility !== "private" ? { ...w, handle: api.me.profile.handle } : w;
+    const attrs = `data-profile='${JSON.stringify(publicWidget).replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}'`;
     $("#embed-code").textContent =
       `<div id="signalpass-widget" ${attrs}></div>\n<script src="${location.origin}/v4/embed/widget.js" defer><\/script>`;
     save();
@@ -770,7 +798,7 @@
       (p) => p.name.toLowerCase() === requestedPerson.toLowerCase(),
     ) ||
     directory.find((p) => p.name === saved.draft?.person) ||
-    directory[1];
+    directory[api.demo ? 1 : 0] || { name: "", avatar: "alex", role: "", tags: ["Builder", "Collaboration"] };
   const persistDraft = () => {
     const previous =
       state.draft?.person === candidate.name && state.draft.status !== "sent"
@@ -788,6 +816,10 @@
     save();
   };
   if (page === "compose") {
+    if (api.live && (!candidate.handle || (requestedPerson && candidate.handle !== requestedPerson))) {
+      $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary" href="/discover">Discover builders</a></div>';
+      return;
+    }
     $("#intro-form").addEventListener("submit", (e) => e.preventDefault());
     const setStep = (n) =>
       $$(".compose-steps li").forEach((el, i) =>
@@ -893,11 +925,20 @@
     );
     openDialog(
       `Introduce yourself to ${candidate.name}`,
-      `<p class="dialog-copy">Your goal: <strong>${escapeHTML(goal)}</strong>. Review what the other person will see.</p><div class="draft-message">${escapeHTML(fields.join("\n\n"))}</div><p class="dialog-copy">Shared context: ${state.sharedContext ? "your approved profile and selected interests" : "introduction message only"}.</p>${notice("Demo delivery: creates a record on this device and lets you try the recipient’s response. No external message or payment.")} ${buttons("Confirm introduction")}`,
+      `<p class="dialog-copy">Your goal: <strong>${escapeHTML(goal)}</strong>. Review what the other person will see.</p><div class="draft-message">${escapeHTML(fields.join("\n\n"))}</div><p class="dialog-copy">Shared context: ${state.sharedContext ? "your approved profile and selected interests" : "introduction message only"}.</p>${notice(api.demo ? "Demo delivery: creates a record on this device and lets you try the recipient’s response. No external message or payment." : (api.chain?.enabled ? "Choose your delivery option below. For a wallet bond, review the exact amount and network on the next page before approving payment." : "This sends the approved introduction to this builder’s private inbox. No payment is requested."))} ${api.live && api.chain?.enabled ? '<fieldset class="v4-settlement-options"><legend>How would you like to send?</legend><label><input type="radio" name="settlement" value="onchain" checked> Refundable wallet bond · review amount next</label><label><input type="radio" name="settlement" value="offchain"> Send without a bond · no payment</label><p>Wallet bonds are delivered after chain confirmation. Manual review, AI fee 0; gas is separate.</p></fieldset>' : ""} ${buttons("Confirm introduction")}`,
       (root) =>
-        $("#dialog-confirm", root).addEventListener("click", () => {
+        $("#dialog-confirm", root).addEventListener("click", async () => {
           $("#dialog-confirm", root).disabled = true;
           const id = oldId || crypto.randomUUID();
+          if (api.live) {
+            state.draft.id = id; state.draft.settlement = root.querySelector("[name=settlement]:checked")?.value || "offchain"; save();
+            try {
+              const record = await api.send(candidate, state, fields, id, state.draft.settlement);
+              state.draft = { ...state.draft, id: record.id, status: "sent" }; save();
+              location.href = "/introductions/" + record.id + "/receipt";
+            } catch (error) { toast(error.message); $("#dialog-confirm", root).disabled = false; }
+            return;
+          }
           const existing = state.introductions.find((item) => item.id === id);
           const record = existing || {
             id,
@@ -968,6 +1009,7 @@
         "Priya brings governance experience; you bring a complementary product lens.",
     },
   };
+  if (api.live) Object.keys(contacts).forEach((key) => delete contacts[key]);
   let selectedContact = "Alex";
   const selectContact = (name) => {
     const c = contacts[name];
@@ -991,10 +1033,10 @@
     const status = state.inbox[name]?.status;
     const statusEl = $(".inbox-action-status");
     statusEl.hidden = !status;
-    if (status) statusEl.textContent = `${status} · saved on this device`;
+    if (status) statusEl.textContent = `${status} · ${api.demo ? "saved on this device" : "saved to your shared introduction"}`;
     $("[data-action=accept-introduction]").textContent =
       status === "Accepted" ? "Accepted ✓" : "Accept introduction";
-    const terminal = ["Accepted", "Declined"].includes(status);
+    const terminal = ["Accepted", "Declined", "Withdrawn", "Expired"].includes(status);
     $$(
       "[data-action=accept-introduction],[data-action=decline-introduction],[data-action=ask-context]",
     ).forEach((button) => (button.disabled = terminal));
@@ -1003,18 +1045,14 @@
     $(".avatar", recipient).src = asset(
       `assets/avatar-${c.record?.recipientAvatar || "alex"}.webp`,
     );
-    $("p", recipient).textContent = c.record
-      ? "Recipient preview"
-      : "You decide";
-    $("p:last-child", recipient).textContent = c.record
-      ? "Try the other side of your introduction"
-      : state.agent.interests.slice(0, 2).join(" · ");
+    $("p", recipient).textContent = api.live ? "You decide" : c.record ? "Recipient preview" : "You decide";
+    $("p:last-child", recipient).textContent = api.demo && c.record ? "Try the other side of your introduction" : state.agent.interests.slice(0, 2).join(" · ");
     $(".v4-result-message")?.remove();
     if (c.record) {
       const message = document.createElement("div");
       message.className = "v4-result-message";
       const title = document.createElement("strong");
-      title.textContent = "The introduction you approved";
+      title.textContent = api.demo ? "The introduction you approved" : c.record.settlement === "onchain" ? (c.record.payment?.status === "refunded" ? "Bond refunded · " : "Bond locked · ") + api.money(c.record.payment.attentionBond) : "The approved introduction";
       const copy = document.createElement("p");
       copy.textContent = c.record.fields.join("\n\n");
       const link = document.createElement("a");
@@ -1038,6 +1076,11 @@
     }
   };
   if (page === "inbox") {
+    if (api.live) {
+      $(".inbox-rows").replaceChildren();
+      $(".inbox-note-alex").hidden = true;
+      const savedTab = $("[data-inbox-tab=saved]"); if (savedTab) savedTab.hidden = true;
+    }
     const items = state.introductions.filter(
       (r) =>
         r &&
@@ -1050,7 +1093,7 @@
       contacts[key] = {
         name: record.sender,
         avatar: "alex",
-        role: "Your introduction",
+        role: api.demo ? "Your introduction" : "Approved introduction",
         topic: `To ${record.recipient} · ${record.goal}`,
         curiosity: record.sharedContext
           ? record.interests.join(", ")
@@ -1064,7 +1107,7 @@
           status: {
             accepted: "Accepted",
             declined: "Declined",
-            context_requested: "Context requested",
+            context_requested: "Context requested", withdrawn: "Withdrawn", expired: "Expired", evaluating: "Evaluating",
           }[record.status],
         };
       else delete state.inbox[key];
@@ -1079,8 +1122,17 @@
       row.innerHTML = `<img class="avatar" src="${asset("assets/avatar-alex.webp")}" alt=""><span class="inbox-person-info"><strong>${escapeHTML(record.sender)}</strong><span>To ${escapeHTML(record.recipient)} · ${escapeHTML(record.goal)}</span></span><time>Just now</time>${icon("arrow")}`;
       $(".inbox-rows").prepend(row);
     });
+    if (api.live && api.outbox?.length) {
+      const heading = document.createElement("h3"); heading.className = "inbox-group-title"; heading.textContent = "Sent by you"; heading.dataset.group = "sent"; $(".inbox-rows").append(heading);
+      for (const record of api.outbox) {
+        const link = document.createElement("a"); link.className = "inbox-row"; link.dataset.group = "sent";
+        link.href = "/introductions/" + record.id + "/receipt";
+        link.textContent = "To " + record.recipient + " · " + record.status.replaceAll("_", " ");
+        $(".inbox-rows").append(link);
+      }
+    }
     const all = $("[data-inbox-tab=needs] span");
-    if (all) all.textContent = String($$("[data-contact]").length);
+    if (all) all.textContent = String($$(".inbox-rows .inbox-row").length);
     const waiting = $("[data-inbox-tab=waiting] span");
     if (waiting)
       waiting.textContent = String($$(".inbox-row[data-group=waiting]").length);
@@ -1121,9 +1173,27 @@
     const routeId =
       location.pathname.split("/")[2] ||
       new URLSearchParams(location.search).get("intro");
-    selectContact(contacts["sent-" + routeId] ? "sent-" + routeId : "Alex");
+    if (api.live && routeId && !contacts["sent-" + routeId]) {
+      $("#introduction-detail").hidden = true;
+      $(".inbox-empty").hidden = false; $(".inbox-empty").textContent = "This introduction is not in your inbox. Sign in with its recipient wallet.";
+    } else if (api.live && !state.introductions.length) {
+      $("#introduction-detail").hidden = true; $(".inbox-empty").hidden = false;
+      $(".inbox-empty").textContent = api.me ? "Your inbox is empty. Share your public handle with another builder." : "Connect your wallet to see your private inbox.";
+    } else selectContact(contacts["sent-" + routeId] ? "sent-" + routeId : api.live ? Object.keys(contacts)[0] : "Alex");
+    if (api.live && api.me) {
+      const stamp = JSON.stringify([...api.inbox, ...(api.outbox || [])].map(r => [r.id, r.revision]));
+      const timer = setInterval(async () => {
+        if (document.hidden || dialog.open || api.walletBusy) return;
+        try { const rows = await Promise.all([api.request("/introductions?box=inbox"), api.request("/introductions?box=outbox")]); if (JSON.stringify(rows.flatMap(box => box.introductions).map(r => [r.id, r.revision])) !== stamp) location.reload(); } catch (_) {}
+      }, 5000);
+      window.addEventListener("pagehide", () => clearInterval(timer));
+    }
   }
-  const saveInboxStatus = (status, extra = {}) => {
+  const saveInboxStatus = async (status, extra = {}) => {
+    if (api.live) {
+      try { await api.decide(contacts[selectedContact].record, status, extra.question); location.reload(); } catch (error) { toast(error.message); }
+      return;
+    }
     if (["Accepted", "Declined"].includes(state.inbox[selectedContact]?.status))
       return;
     state.inbox[selectedContact] = {
@@ -1151,7 +1221,7 @@
     selectContact(selectedContact);
   };
 
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", async (e) => {
     const action = e.target.closest("[data-action]")?.dataset.action;
     if (!action) {
       const fee = e.target.closest("[data-fee]");
@@ -1160,7 +1230,7 @@
           fee.dataset.fee === "bond"
             ? "Refundable attention bond"
             : "Evaluation fee",
-          `<p class="dialog-copy">This label is part of the supplied concept design. The prototype has no payment integration, fee schedule, wallet connection, or refund mechanism.</p>${notice("No money can be charged or transferred by this local prototype.")}<div class="dialog-actions"><button type="button" class="button primary" data-close-dialog>Understood</button></div>`,
+          `<p class="dialog-copy">${api.chain?.enabled ? "The wallet-bond option requests a refundable attention bond. AI evaluation costs 0 with manual review. The full bond returns on acceptance, decline, or a claim after expiry; gas is separate." : "Payment and refund settlement are not enabled. Wallet sign-in verifies ownership only."}</p>${notice(api.chain?.enabled ? "Review the exact amount on your receipt before approving a wallet transaction." : "No money is charged or transferred by this introduction flow.")}<div class="dialog-actions"><button type="button" class="button primary" data-close-dialog>Understood</button></div>`,
         );
       return;
     }
@@ -1178,10 +1248,15 @@
         .filter(Boolean)
         .slice(0, 12);
       save();
+      if (api.live) {
+        closeDialog();
+        try { await api.saveProfile(state); } catch (error) { state.profileApproved = false; save(); toast(error.message); return; }
+      }
       location.href = "/agent";
       return;
     }
     if (action === "save-agent") {
+      if (api.live) { try { await api.saveProfile(state); } catch (error) { toast(error.message); return; } }
       save();
       return openDialog(
         "Your agent is ready",
@@ -1201,7 +1276,7 @@
     if (action === "browse-people")
       return openDialog(
         "People worth knowing",
-        `<p class="dialog-copy">Three example profiles from the supplied designs.</p>${directory.map((p) => `<button class="directory-entry" type="button" data-directory-person="${p.name}" style="width:100%;text-align:left"><img class="avatar" src="assets/avatar-${p.avatar}.webp" alt=""><span><strong>${p.name}</strong><p>${p.role}</p></span>${icon("arrow")}</button>`).join("")}`,
+        `<p class="dialog-copy">Three example profiles from the supplied designs.</p>${directory.map((p) => `<button class="directory-entry" type="button" data-directory-person="${p.name}" style="width:100%;text-align:left"><img class="avatar" src="assets/avatar-${p.avatar}.webp" alt=""><span><strong>${p.name}</strong><p>${escapeHTML(p.role)}</p></span>${icon("arrow")}</button>`).join("")}`,
         (root) =>
           $$("[data-directory-person]", root).forEach((el) =>
             el.addEventListener("click", () =>
@@ -1234,18 +1309,18 @@
     if (action === "accept-introduction")
       return openDialog(
         `Accept ${contacts[selectedContact]?.name || selectedContact}’s introduction?`,
-        `<p class="dialog-copy">A good conversation starts with mutual curiosity. You decide whether to take the next step.</p>${notice("Demo only: accepting records a local status. It does not contact the other person.")} ${buttons("Accept in this demo")}`,
+        `<p class="dialog-copy">A good conversation starts with mutual curiosity. You decide whether to take the next step.</p>${notice(api.demo ? "Demo only: this records a local status without contacting anyone." : (contacts[selectedContact]?.record?.settlement === "onchain" ? "Confirm acceptance in your wallet. The contract returns the full bond to the sender; you pay network gas." : "Accepting updates the shared introduction. No money is transferred."))} ${buttons("Accept introduction")}`,
         (root) =>
           $("#dialog-confirm", root).addEventListener("click", () => {
             saveInboxStatus("Accepted");
             closeDialog();
-            toast("Introduction accepted locally. No one has been contacted.");
+            if (api.demo) toast("Introduction accepted in the local demo.");
           }),
       );
     if (action === "ask-context")
       return openDialog(
         `Ask ${contacts[selectedContact]?.name || selectedContact} for context`,
-        `<form id="context-request-form"><label class="dialog-field" for="context-question">What would help you decide?</label><textarea class="dialog-input" id="context-question" maxlength="500" required autofocus placeholder="Could you share more about what you’d like to explore together?"></textarea>${notice("This saves a local draft only. It will not send a message.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Cancel</button><button class="button primary" type="submit">Save context request</button></div></form>`,
+        `<form id="context-request-form"><label class="dialog-field" for="context-question">What would help you decide?</label><textarea class="dialog-input" id="context-question" maxlength="500" required autofocus placeholder="Could you share more about what you’d like to explore together?"></textarea>${notice(api.demo ? "This saves a local example only; nothing is sent." : "Your question will be visible to the sender after you confirm.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Cancel</button><button class="button primary" type="submit">Save context request</button></div></form>`,
         (root) =>
           $("#context-request-form", root).addEventListener(
             "submit",
@@ -1255,19 +1330,19 @@
               if (!question) return;
               saveInboxStatus("Context requested", { question });
               closeDialog();
-              toast("Context request saved locally, not sent.");
+              if (api.demo) toast("Context request saved locally, not sent.");
             },
           ),
       );
     if (action === "decline-introduction")
       return openDialog(
         `Decline ${contacts[selectedContact]?.name || selectedContact}’s introduction?`,
-        `<p class="dialog-copy">You do not need to meet everyone. The choice is always yours.</p>${notice("This changes the example’s local status only. The sender will not be notified.")} ${buttons("Decline in this demo")}`,
+        `<p class="dialog-copy">You do not need to meet everyone. The choice is always yours.</p>${notice(api.demo ? "This changes the local example only; nobody is notified." : (contacts[selectedContact]?.record?.settlement === "onchain" ? "Confirm the decline in your wallet. The contract returns the full bond to the sender; you pay network gas." : "The sender will see that you declined. No money is transferred."))} ${buttons("Decline introduction")}`,
         (root) =>
           $("#dialog-confirm", root).addEventListener("click", () => {
             saveInboxStatus("Declined");
             closeDialog();
-            toast("Introduction declined in this local demo.");
+            if (api.demo) toast("Introduction declined in this local demo.");
           }),
       );
   });
@@ -1325,5 +1400,5 @@
         '<p class="dialog-copy">This draft is not saved on this device. Pick someone to start a new introduction.</p><div class="dialog-actions"><a class="button primary" href="/discover">Discover people →</a></div>',
       );
   }
-  window.SignalPassDemo = Object.freeze({ version: "4.0.0", page });
+  window.SignalPassView = Object.freeze({ version: "4.1.0", page, mode: api.demo ? "demo" : "live" });
 })();

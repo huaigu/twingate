@@ -1,6 +1,7 @@
 # SignalPass
 
-V4 website integration: run `pnpm v4:dev`, then open `http://localhost:3004/`.
+V4 live product: run `pnpm dev`, then open `http://localhost:3004/`. This starts the API and web app. Sign in with an injected Ethereum wallet; the signature authorizes a session, never a payment. The explicitly labelled offline sample is available at `/?demo=1`; `/?demo=0` returns to live mode.
+For the wallet-bond flow with Hunyuan disabled, run `pnpm chain:dev` and open `http://localhost:3005/`. It uses a real local EVM, explicitly labelled DEV. See [wallet bonds and deployment](docs/WALLET_BONDS.md).
 See [V4 pages, interactions and implementation notes](design-explorations/signalpass-v4/README.md).
 
 > **High-signal introductions for Monad builders**
@@ -46,7 +47,7 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 
 ## 🏗️ Architecture Stack
 
-- **L1 Blockchain**: Monad Testnet (chain `10143`) / Mainnet — parallel EVM, 800ms finality
+- **Settlement networks**: local EVM (`31337`) and Monad Testnet (`10143`) only. The current verified deployment is local; public testnet deployment is pending.
 - **Smart Contracts**: Solidity 0.8.24 (Foundry)
   - `ProfileRegistry.sol`: builder profile, availability, and versioned gate-policy hashes.
   - `IntroductionEscrow.sol`: evaluation fee, attention bond, unresolved limits, timeouts, resolution.
@@ -56,7 +57,7 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 - **Frontend**: Next.js 15 App Router with a hand-written CSS design system (custom properties, no UI framework).
 - **AI Experience**: Tencent Hunyuan 3D agent persona, sender-facing Intro Coach, recipient-side Gatekeeper.
 - **Agent-first target**: agent-assisted Builder discovery with explicit human confirmation before an Introduction is sent or accepted. The current MVP keeps discovery manual so the vertical loop is easy to demo.
-- **Account Abstraction**: Dynamic embedded wallets — *not wired in this build; demo identities are used instead.*
+- **Account Abstraction**: Dynamic embedded wallets — *not wired yet. Default V4 uses server-verified SIWE signatures from injected EOA wallets and HttpOnly sessions.*
 - **Verified Context**: opt-in onchain signals — *consent record is real and hashed into the payload; third-party verification is not wired.*
 
 ---
@@ -79,13 +80,10 @@ scripts/e2e.mjs      boots both services and drives the whole loop
 
 ```bash
 git submodule update --init --recursive   # pulls packages/contracts/lib/forge-std
-pnpm install
+pnpm install --frozen-lockfile
 
-# terminal 1 — API (falls back to an in-process mock evaluator)
-pnpm api:dev
-
-# terminal 2 — the UI
-pnpm --filter @signalpass/web dev        # http://localhost:3000
+# API + default V4 UI, http://localhost:3004
+pnpm dev
 ```
 
 To run the real evaluator as a separate process, start it and point the API at it:
@@ -95,8 +93,11 @@ EVALUATOR_MODE=mock pnpm --filter @signalpass/evaluator start   # :8788
 EVALUATOR_URL=http://localhost:8788 pnpm api:dev
 ```
 
-The web app reads `NEXT_PUBLIC_API_URL` (default `http://localhost:8787`). See `.env.example` for
-the full list, including the Hunyuan, Nansen and Dynamic keys.
+Default V4 uses same-origin `/api/*`, proxied to `SIGNALPASS_API_ORIGIN` (default `http://127.0.0.1:8789`). Set `APP_ORIGIN` on the API to the exact browser origin. Export API variables when launching it; the API does not automatically load `.env`. The older React pages retain `NEXT_PUBLIC_API_URL`. See `.env.example` for all settings.
+
+Node.js >=22.13 is required for built-in SQLite (experimental in Node 22). One API process uses WAL-backed storage at `.data/signalpass.sqlite`. Keep it on persistent disk, back it up, and exclude it from Git. Private records are access-controlled, not application-level encrypted at rest. Multiple API processes require an explicit database/concurrency design.
+
+The live flow supports approved profiles, visibility, actual cross-account delivery, participant-only receipts, context requests/replies, recipient decisions, idempotent sends, and session/data recovery after restart. Its initial state is `submitted`, not `locked`. Without a chain manifest, this is the no-payment flow. With `SIGNALPASS_CHAIN_CONFIG`, V4 also supports a signed, refundable wallet bond: `quoted` → verified lock → recipient decision or expiry → confirmed refund. Manual review charges zero AI evaluation fee. Hunyuan, automatic AI matching and source verification remain unconfigured. Local chain verification is not public Monad deployment evidence. Evaluation without `EVALUATOR_URL` is labelled `mock-local`; a configured evaluator failure returns an error rather than silently falling back. There is no production test-login bypass.
 
 ---
 
@@ -110,10 +111,15 @@ Individually:
 
 | Command | What it proves |
 | --- | --- |
-| `pnpm -r typecheck` | 6 of 6 projects compile under `strict` |
-| `pnpm contracts:test` | 34 Foundry tests, incl. a 257-run fuzz over every terminal path |
+| `pnpm -r typecheck` | 5 configured TypeScript projects compile under `strict` (generated Envio handlers remain excluded) |
+| `pnpm contracts:test` | 47 Foundry tests, incl. a 256-run fuzz over terminal paths |
 | `pnpm --filter @signalpass/indexer test` | 8 aggregation tests (queue health, standing, pressure index) |
-| `pnpm e2e` | 46 assertions over the live loop: quote → lock → evaluate → queue → decide, plus the negative cases |
+| `pnpm --filter @signalpass/api test` | Signed sessions, replay, object permissions, consent, idempotency and database reopen |
+| `pnpm e2e` | Real API + Next servers and 3 browser sessions: sign in → approve profile → send/receive → request/reply → accept → API restart |
+| `pnpm chain:test` | Real Anvil contracts, EIP-712 signature compatibility, funding verification, authorization, refunds, interrupted-callback recovery and restart |
+| `pnpm chain:verify` | Chain integration plus two-browser wallet flow, network switch, profile sync, cancel, accept, decline and expiry |
+| `pnpm chain:preflight <manifest>` | Read-only RPC/deployment/signer/network validation before enabling a chain |
+| `pnpm v4:verify` | Explicit sample-mode geometry and interaction regression; requires the web server |
 
 The contracts expose four invariants that are each covered by a test that fails if broken:
 
@@ -133,8 +139,7 @@ forge script script/Deploy.s.sol --rpc-url monad_testnet --sender 0xYourAddress
 DEPLOYER_PRIVATE_KEY=0x... forge script script/Deploy.s.sol --rpc-url monad_testnet --broadcast
 ```
 
-The dry run has been executed against the live Monad testnet RPC: three contracts, ~3.54M gas,
-~0.72 MON at the gas price observed at the time. Broadcasting needs a funded key.
+The earlier unsigned-lock deployment has been superseded. Deploy the current signed-quote contracts and set `QUOTE_SIGNER_ADDRESS` to the API signer address; `TREASURY_ADDRESS` optionally separates administration. The script rejects networks other than 31337 and 10143. No public deployment is claimed for this revision. Follow [the deployment checklist](docs/WALLET_BONDS.md); broadcasting needs a funded testnet wallet.
 
 ---
 

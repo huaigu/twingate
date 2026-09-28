@@ -15,15 +15,25 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../
  * evaluator, the indexer and this UI.
  */
 const nextConfig: NextConfig = {
+  distDir: process.env.SIGNALPASS_NEXT_DIST || '.next',
   reactStrictMode: true,
   transpilePackages: ['@signalpass/core'],
   outputFileTracingRoot: repoRoot,
   typedRoutes: false,
   // V4 is a native multi-page HTML site. Rewrites keep stable public URLs and
   // leave the existing React/API implementation available outside these routes.
+  async redirects() {
+    return [
+      { source: '/builders', destination: '/discover', permanent: false },
+      { source: '/builders/:handle', destination: '/discover/:handle', permanent: false },
+      { source: '/introduce/:handle', destination: '/introductions/new/:handle', permanent: false },
+      { source: '/introductions/:id(0x[0-9a-fA-F]{64})', destination: '/introductions/:id/receipt', permanent: false },
+    ]
+  },
   async rewrites() {
     return {
       beforeFiles: [
+        { source: '/api/:path*', destination: (process.env.SIGNALPASS_API_ORIGIN ?? 'http://127.0.0.1:8789') + '/:path*' },
         { source: '/', destination: '/v4/index.html' },
         { source: '/profile/import', destination: '/v4/profile.html' },
         { source: '/profile/review', destination: '/v4/profile.html?review=1' },

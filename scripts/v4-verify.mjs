@@ -14,6 +14,7 @@ try {
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
   });
+  await context.addInitScript(() => sessionStorage.setItem('signalpass-demo', '1'));
   const page = await context.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("response", (r) => {

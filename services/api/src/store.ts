@@ -6,8 +6,28 @@ import type {
   Quote,
 } from '@signalpass/core'
 import { keccak256, toHex, type Address, type Hex } from 'viem'
+import { openDatabase, collection, type Collection } from './database.js'
+import type { DatabaseSync } from 'node:sqlite'
+import type { ChainAttachment } from './chain.js'
+
+export interface ProfileSettings {
+  profile: { name: string; bio: string; interests: string; offer: string; meet: string }
+  agent: { visibility: 'private' | 'limited' | 'public'; matching: boolean; sources: string[]; interests: string[] }
+  sourceLinks: Record<string, string>
+  avatar: string
+  version: string
+}
 
 export interface StoredIntroduction extends Introduction {
+  readonly revision: number
+  readonly settlement: 'offchain' | 'onchain'
+  readonly chain?: ChainAttachment
+  readonly senderName: string
+  readonly recipientName: string
+  readonly recipientHandle: string
+  readonly sharedProfile: { bio: string; interests: string[] } | null
+  readonly question: string | null
+  readonly reply: string | null
   readonly quote: Quote
   readonly payloadHash: Hex
   readonly evaluationReceiptHash: Hex | null
@@ -22,16 +42,18 @@ export interface StoredIntroduction extends Introduction {
 }
 
 /**
- * In-memory read model for the MVP. The authoritative record is the chain; this
- * is what the demo UI reads from so the flow works without an indexer running.
- * Swapping this for the Envio-backed reader is a single interface change.
+ * Durable, single-process application store. Offchain introductions are not
+ * evidence of funding. Chain-backed settlement will require verified events;
+ * it must not infer locked funds from an application status.
  */
 export interface Store {
-  readonly profiles: Map<string, BuilderProfile>
-  readonly policies: Map<string, GatePolicy>
-  readonly introductions: Map<Hex, StoredIntroduction>
+  readonly db: DatabaseSync
+  readonly profiles: Collection<BuilderProfile>
+  readonly policies: Collection<GatePolicy>
+  readonly introductions: Collection<StoredIntroduction>
+  readonly settings: Collection<ProfileSettings>
   /** `${sender}:${recipient}` -> declines inside the lookback window. */
-  readonly declines: Map<string, number>
+  readonly declines: Collection<number>
 }
 
 /** Deterministic document hash. BigInt amounts are stringified so anything
@@ -46,12 +68,15 @@ export function declineKey(sender: Address, recipient: Address): string {
   return `${sender.toLowerCase()}:${recipient.toLowerCase()}`
 }
 
-export function createStore(): Store {
+export function createStore(databasePath = ':memory:'): Store {
+  const db = openDatabase(databasePath)
   return {
-    profiles: new Map(),
-    policies: new Map(),
-    introductions: new Map(),
-    declines: new Map(),
+    db,
+    profiles: collection(db, 'profiles'),
+    policies: collection(db, 'policies'),
+    introductions: collection(db, 'introductions'),
+    settings: collection(db, 'settings'),
+    declines: collection(db, 'declines'),
   }
 }
 
@@ -84,6 +109,7 @@ export function unresolvedCountFor(store: Store, sender: Address, recipient: Add
   for (const intro of store.introductions.values()) {
     if (intro.sender.toLowerCase() !== s || intro.recipient.toLowerCase() !== r) continue
     if (
+      intro.state === 'submitted' ||
       intro.state === 'locked' ||
       intro.state === 'evaluating' ||
       intro.state === 'needs_context' ||

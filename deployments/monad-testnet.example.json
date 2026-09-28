@@ -1,0 +1,10 @@
+{
+  "chainId": 10143,
+  "name": "Monad Testnet",
+  "rpcUrl": "https://testnet-rpc.monad.xyz",
+  "walletRpcUrl": "https://testnet-rpc.monad.xyz",
+  "registry": "0x0000000000000000000000000000000000000000",
+  "escrow": "0x0000000000000000000000000000000000000000",
+  "receipt": "0x0000000000000000000000000000000000000000",
+  "confirmations": 2
+}

@@ -18,20 +18,25 @@
     tags: ["Builders", "Open Source", "Monad", "Product", "Community"],
     cta: "Meet me on SignalPass",
   };
-  const initialize = () => {
+  const initialize = async () => {
+    if (window.SignalPass?.ready) await window.SignalPass.ready;
     const host = document.getElementById("signalpass-widget");
     if (!host || host.shadowRoot) return;
     let data = {};
     try {
       if (host.dataset.profile) data = JSON.parse(host.dataset.profile);
       else {
-        let stored = window.SignalPassMemoryStore?.["signalpass-v4"];
+        const api = window.SignalPass;
+        const storageKey = api?.live ? "signalpass-v4-draft-" + (api.me?.session.address || "guest") : "signalpass-v4";
+        let stored = window.SignalPassMemoryStore?.[storageKey];
         if (!stored && location.pathname === "/widget/preview") {
           try {
-            stored = localStorage.getItem("signalpass-v4");
+            stored = localStorage.getItem(storageKey);
           } catch (_) {}
         }
         data = JSON.parse(stored || "{}").widget || {};
+        if (api?.live && !data.name) data = { name: api.me?.settings?.profile.name || "Your name", bio: api.me?.settings?.profile.bio || "Add your profile to preview your card.", tags: api.me?.settings?.agent.interests || [], persona: "none" };
+        if (api?.live && api.me?.profile && api.me.settings.agent.visibility !== 'private') data.handle = api.me.profile.handle;
       }
     } catch (_) {
       /* Malformed data falls back to a safe example. */
@@ -70,7 +75,7 @@
       root.querySelector(".tags").append(span);
     });
     const link = root.querySelector("a");
-    link.href = targetURL;
+    link.href = typeof profile.handle === 'string' && /^[a-z0-9_-]{3,32}$/.test(profile.handle) ? new URL('/introductions/new/' + profile.handle, script.src).href : targetURL;
     link.addEventListener("click", (event) => {
       if (window.SignalPassNavigate) {
         event.preventDefault();

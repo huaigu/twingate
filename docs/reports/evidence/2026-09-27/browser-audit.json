@@ -1,0 +1,7 @@
+{
+  "receipt": "http://localhost:3016/introductions/e93c0075-f8a1-4940-99cd-e1b79200ffad/receipt",
+  "senderStatus": "Awaiting a response",
+  "otherBrowserTitle": "This introduction isn’t here yet.",
+  "otherBrowserReceiptVisible": false,
+  "fetchOrXhrRequests": []
+}

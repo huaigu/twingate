@@ -23,9 +23,11 @@ export const LOCK_INTRODUCTION_TYPES = {
     { name: 'recipient', type: 'address' },
     { name: 'recipientProfileId', type: 'uint256' },
     { name: 'policyHash', type: 'bytes32' },
+    { name: 'policyVersion', type: 'uint256' },
     { name: 'payloadHash', type: 'bytes32' },
     { name: 'evaluationFee', type: 'uint256' },
     { name: 'attentionBond', type: 'uint256' },
+    { name: 'ttl', type: 'uint256' },
     { name: 'quoteExpiresAt', type: 'uint256' },
     { name: 'nonce', type: 'uint256' },
   ],
@@ -36,9 +38,11 @@ export interface LockIntroductionMessage {
   readonly recipient: Address
   readonly recipientProfileId: bigint
   readonly policyHash: Hex
+  readonly policyVersion: bigint
   readonly payloadHash: Hex
   readonly evaluationFee: bigint
   readonly attentionBond: bigint
+  readonly ttl: bigint
   readonly quoteExpiresAt: bigint
   readonly nonce: bigint
 }

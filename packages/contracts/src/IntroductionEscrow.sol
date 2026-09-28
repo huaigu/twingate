@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-interface IProfileRegistry {
-    function currentPolicyHash(uint256 profileId) external view returns (bytes32);
-}
+import {ProfileRegistry} from "./ProfileRegistry.sol";
 
 /// @title IntroductionEscrow
 /// @notice Holds the sender's evaluation fee and attention bond for the life of
@@ -32,6 +30,28 @@ contract IntroductionEscrow {
         Withdrawn
     }
 
+    struct LockQuote {
+        address sender;
+        address recipient;
+        uint256 recipientProfileId;
+        bytes32 policyHash;
+        uint256 policyVersion;
+        bytes32 payloadHash;
+        uint256 evaluationFee;
+        uint256 attentionBond;
+        uint256 ttl;
+        uint256 quoteExpiresAt;
+        uint256 nonce;
+    }
+
+    bytes32 public constant LOCK_TYPEHASH = keccak256(
+        "LockIntroduction(address sender,address recipient,uint256 recipientProfileId,bytes32 policyHash,uint256 policyVersion,bytes32 payloadHash,uint256 evaluationFee,uint256 attentionBond,uint256 ttl,uint256 quoteExpiresAt,uint256 nonce)"
+    );
+    bytes32 private constant DOMAIN_TYPEHASH = keccak256(
+        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+    );
+    address public quoteSigner;
+
     struct Introduction {
         address sender;
         address recipient;
@@ -46,7 +66,7 @@ contract IntroductionEscrow {
         State state;
     }
 
-    IProfileRegistry public immutable registry;
+    ProfileRegistry public immutable registry;
     address public treasury;
     address public evaluator;
 
@@ -78,6 +98,10 @@ contract IntroductionEscrow {
     event EvaluatorChanged(address indexed evaluator);
     event TreasuryChanged(address indexed treasury);
 
+    error InvalidQuoteSignature();
+    error QuoteExpired();
+    error InvalidNonce();
+    error ZeroAddress();
     error NotSender();
     error NotRecipient();
     error NotEvaluator();
@@ -101,12 +125,46 @@ contract IntroductionEscrow {
     }
 
     constructor(address registry_, address treasury_, address evaluator_) {
-        registry = IProfileRegistry(registry_);
+        if (registry_ == address(0) || treasury_ == address(0) || evaluator_ == address(0)) revert ZeroAddress();
+        quoteSigner = evaluator_;
+        registry = ProfileRegistry(registry_);
         treasury = treasury_;
         evaluator = evaluator_;
     }
 
     // ---------------------------------------------------------------- admin
+
+    function setQuoteSigner(address signer_) external {
+        if (msg.sender != treasury) revert NotAuthorized();
+        if (signer_ == address(0)) revert ZeroAddress();
+        quoteSigner = signer_;
+    }
+
+    function hashQuote(LockQuote calldata quote) public view returns (bytes32) {
+        bytes32 domain = keccak256(abi.encode(
+            DOMAIN_TYPEHASH, keccak256("SignalPass"), keccak256("1"), block.chainid, address(this)
+        ));
+        return keccak256(abi.encodePacked(hex"1901", domain, keccak256(abi.encode(LOCK_TYPEHASH, quote))));
+    }
+
+    function _validateSignature(LockQuote calldata quote, bytes calldata signature) private view {
+        if (quote.sender != msg.sender) revert NotSender();
+        if (block.timestamp > quote.quoteExpiresAt) revert QuoteExpired();
+        if (quote.nonce != nonces[msg.sender]) revert InvalidNonce();
+        if (signature.length != 65) revert InvalidQuoteSignature();
+        bytes32 r;
+        bytes32 sigS;
+        uint8 v;
+        assembly {
+            r := calldataload(signature.offset)
+            sigS := calldataload(add(signature.offset, 32))
+            v := byte(0, calldataload(add(signature.offset, 64)))
+        }
+        if (uint256(sigS) > 0x7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0 || (v != 27 && v != 28)) {
+            revert InvalidQuoteSignature();
+        }
+        if (ecrecover(hashQuote(quote), v, r, sigS) != quoteSigner) revert InvalidQuoteSignature();
+    }
 
     function setEvaluator(address evaluator_) external {
         if (msg.sender != evaluator && msg.sender != treasury) revert NotAuthorized();
@@ -144,59 +202,36 @@ contract IntroductionEscrow {
     /// @dev The caller is the sender. `policyHash` must match the recipient's
     ///      current published policy so a receipt can prove what it was judged
     ///      against.
-    function lockIntroduction(
-        address recipient,
-        uint256 recipientProfileId,
-        bytes32 policyHash,
-        uint32 policyVersion,
-        bytes32 payloadHash,
-        uint64 ttl,
-        uint128 evaluationFee
-    ) external payable nonReentrant returns (bytes32 id) {
-        if (recipient == address(0) || recipient == msg.sender) revert NotRecipient();
-        if (ttl == 0 || ttl > MAX_TTL) revert TtlTooLong();
-
-        if (policyHash != registry.currentPolicyHash(recipientProfileId)) revert ProfilePolicyMismatch();
-
-        if (unresolvedCount[msg.sender][recipient] >= unresolvedLimitFor(recipient)) revert SenderLimitReached();
-
-        // The bond must be a real stake, so the fee cannot consume the whole payment.
-        if (msg.value <= uint256(evaluationFee)) revert IncorrectValue();
-        if (msg.value > type(uint128).max) revert IncorrectValue();
-
+    function lockIntroduction(LockQuote calldata quote, bytes calldata signature)
+        external payable nonReentrant returns (bytes32 id)
+    {
+        _validateSignature(quote, signature);
+        if (quote.recipient == address(0) || quote.recipient == msg.sender) revert NotRecipient();
+        if (quote.ttl == 0 || quote.ttl > MAX_TTL) revert TtlTooLong();
+        ProfileRegistry.Profile memory profile = registry.getProfile(quote.recipientProfileId);
+        if (profile.owner != quote.recipient) revert NotRecipient();
+        if (!profile.acceptsIntroductions) revert RecipientClosed();
+        if (quote.policyHash != profile.policyHash || quote.policyVersion != profile.policyVersion) {
+            revert ProfilePolicyMismatch();
+        }
+        if (unresolvedCount[msg.sender][quote.recipient] >= unresolvedLimitFor(quote.recipient)) revert SenderLimitReached();
+        if (quote.attentionBond == 0 || quote.evaluationFee > type(uint128).max || quote.attentionBond > type(uint128).max) revert IncorrectValue();
+        if (msg.value != quote.evaluationFee + quote.attentionBond || msg.value > type(uint128).max) revert IncorrectValue();
         uint256 nonce = nonces[msg.sender]++;
-        id = keccak256(abi.encodePacked(msg.sender, recipient, recipientProfileId, nonce, block.chainid));
-
-        uint128 bond = uint128(msg.value) - evaluationFee;
-
+        id = keccak256(abi.encodePacked(msg.sender, quote.recipient, quote.recipientProfileId, nonce, block.chainid));
+        // No AI service means no evaluation charge: zero-fee quotes enter human review directly.
+        State initialState = quote.evaluationFee == 0 ? State.ReadyForReview : State.Locked;
         _introductions[id] = Introduction({
-            sender: msg.sender,
-            recipient: recipient,
-            recipientProfileId: recipientProfileId,
-            policyHash: policyHash,
-            policyVersion: policyVersion,
-            payloadHash: payloadHash,
-            evaluationFee: evaluationFee,
-            attentionBond: bond,
-            lockedAt: uint64(block.timestamp),
-            expiresAt: uint64(block.timestamp) + ttl,
-            state: State.Locked
+            sender: msg.sender, recipient: quote.recipient, recipientProfileId: quote.recipientProfileId,
+            policyHash: quote.policyHash, policyVersion: uint32(quote.policyVersion), payloadHash: quote.payloadHash,
+            evaluationFee: uint128(quote.evaluationFee), attentionBond: uint128(quote.attentionBond),
+            lockedAt: uint64(block.timestamp), expiresAt: uint64(block.timestamp + quote.ttl), state: initialState
         });
-
-        unresolvedCount[msg.sender][recipient] += 1;
+        unresolvedCount[msg.sender][quote.recipient] += 1;
         _openIds.push(id);
         _lockedDepth += 1;
-
-        emit IntroductionLocked(
-            id,
-            msg.sender,
-            recipient,
-            recipientProfileId,
-            uint256(evaluationFee),
-            uint256(bond),
-            uint64(block.timestamp) + ttl
-        );
-        emit IntroductionStateChanged(id, State.Locked);
+        emit IntroductionLocked(id, msg.sender, quote.recipient, quote.recipientProfileId, quote.evaluationFee, quote.attentionBond, uint64(block.timestamp + quote.ttl));
+        emit IntroductionStateChanged(id, initialState);
     }
 
     /// @notice Sender withdraws before the introduction reaches review. Both the

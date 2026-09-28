@@ -1,0 +1,33 @@
+{
+  "reviewDate": "2026-09-27",
+  "timezone": "America/Los_Angeles",
+  "baseCommit": "08247a6",
+  "sourceOfOfficialSchedule": "https://www.monad.xyz/metropolis",
+  "checks": {
+    "verifyExitCode": 0,
+    "buildExitCode": 0,
+    "v4VerifyExitCode": 0,
+    "foundryUniqueTests": 34,
+    "fuzzRuns": 256,
+    "indexerTests": 8,
+    "apiMockAssertions": 46,
+    "typecheckProjects": 5
+  },
+  "limitations": [
+    "No authenticated submission-platform rules retrieved.",
+    "No public deployment or real model execution verified.",
+    "Screenshots generated; pixel visual inspection unavailable in this session.",
+    "Working tree includes pre-existing uncommitted changes."
+  ],
+  "files": {
+    "api-audit.json": "2ad5c3731acf64a0fe1d8d3636bf28a3c3f8b20277875068053c7f30fe9e692d",
+    "browser-audit.json": "9ecc3bfecfd78d783b9a655821c39588d25bcb79d0fb445cd2828e9cd69f569e",
+    "dom-audit.json": "6e7b39d8f3d7071d5e2019f1dd01d7c9c76d90ada2a2edecb3a3fdfdcd51fd5b",
+    "verify.log": "18987f4e2b355bcc13094e517af940fe607915f8b95486f1bcc35ad7f7758443",
+    "build.log": "a0c1c99f6e4e3df9de88a369fa4352e7b042aa55f2481a7a95ab8646556b0615",
+    "v4.log": "f84fc7e17d5219fcb96e29123d15cc88581beab30bed1bc61ebc2cc1a5f3a142",
+    "desktop-review.jpg": "20d3e876451dbeb9b85e8cfac3a1b6767e51ce8df95d2519968bbbc5a1ee405e",
+    "mobile-review.jpg": "25547bae0ccabb796121f93d1eb6d29d422253c5d134d146664f6f93bf4ba9d7",
+    "cross-user-empty.png": "008cb5f33ea1c4a3dc384a40ba4d89df95a6939d54e2397a3355b9c76691f08a"
+  }
+}

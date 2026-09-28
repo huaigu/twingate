@@ -1,5 +1,12 @@
 # SignalPass V4
 
+## Live integration (2026-09-28)
+
+Default routes use `client.js` and same-origin `/api` calls. Wallet signatures establish HttpOnly sessions; the API stores profiles, private introductions and sessions in SQLite. Profile approval, visibility, approved-profile discovery, send, recipient decisions, context replies and receipts work across accounts. No payment is charged, and AI matching is not connected. Use `pnpm dev` to start both services.
+
+The original sample is explicitly available at `/?demo=1`; `/?demo=0` exits it. The map below describes the UI; references to sample people and local records apply to demo mode. `pnpm e2e` tests live mode and `pnpm v4:verify` tests demo mode.
+
+
 V4 combines the supplied `SignalPass-hero-natural-v3.html` landing page with the six screens in `SignalPass-refined-v2 (1).html`. The files in `reference/` preserve the extracted source designs. The maintained website lives in `apps/web/public/v4/`.
 
 Base: local `main` at `03db06b`. Integration branch: `codex/signalpass-v4`.
@@ -25,7 +32,7 @@ Preview: `http://localhost:3004/`. `V4_BASE_URL` overrides the origin used by th
 - Landing sections explaining the profile → discovery → introduction journey and linking to the profile widget.
 - A new introduction receipt screen, including the follow-up-context loop.
 
-V4 uses native multi-page HTML. Next.js `beforeFiles` rewrites serve these pages at the public routes below; it does not render a full-site screenshot, iframe wrapper or imported JavaScript string. Page reloads and browser back/forward work normally. Existing React, API and contract code remains in the repository; the new V4 flow currently uses its own local demo state.
+V4 uses native multi-page HTML. Next.js `beforeFiles` rewrites serve these pages at the public routes below; it does not render a full-site screenshot, iframe wrapper or imported JavaScript string. Page reloads and browser back/forward work normally. Existing React, API and contract code remains in the repository; default V4 uses the authenticated API; explicit demo mode retains local sample state.
 
 ## Page and action map
 
@@ -59,7 +66,7 @@ V4 uses native multi-page HTML. Next.js `beforeFiles` rewrites serve these pages
 6. A request for context appears on the receipt. The sender can approve a reply; the same record returns to pending and the recipient sees the extra context before deciding.
 7. Widget embed code contains only its displayed public fields and an absolute script URL for the current host. External embeds do not read the visitor's private app state. The CTA leads to SignalPass onboarding; the public-profile/contact service is not yet integrated.
 
-This is a functioning frontend demo. Social login, ownership verification, public-source retrieval, real model inference, cross-user delivery, publicly hosted profiles, payments and on-chain receipts are not connected. There is no claim of encrypted server-side matching. The footer and confirmation screens distinguish local demo actions from external operations.
+Explicit demo mode performs no identity or external delivery. Live mode verifies wallet ownership and delivers introductions through the authenticated backend. Social-provider login, public-source retrieval, real model inference, payments and on-chain receipts are not connected. There is no claim of encrypted server-side matching. The footer and confirmation screens distinguish local demo actions from external operations.
 
 ## Visual direction and implementation choices
 

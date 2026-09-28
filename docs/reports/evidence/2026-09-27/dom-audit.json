@@ -1,0 +1,264 @@
+[
+  {
+    "route": "/",
+    "title": "SignalPass — People worth knowing, with context.",
+    "headings": [
+      {
+        "text": "People worthknowing,with context.",
+        "size": "49px"
+      },
+      {
+        "text": "A little context changesthe whole conversation.",
+        "size": "38px"
+      }
+    ],
+    "smallText": [],
+    "smallControls": [
+      {
+        "text": "SignalPassA MORETHOUGHTFULINTERNET",
+        "w": 169,
+        "h": 36
+      },
+      {
+        "text": "SignalPass",
+        "w": 99,
+        "h": 24
+      },
+      {
+        "text": "How it works ↗",
+        "w": 83,
+        "h": 18
+      }
+    ],
+    "overflow": 0
+  },
+  {
+    "route": "/profile/import",
+    "title": "Your profile · SignalPass",
+    "headings": [
+      {
+        "text": "Build your profile",
+        "size": "58px"
+      },
+      {
+        "text": "Add sources",
+        "size": "28px"
+      },
+      {
+        "text": "Profile draft",
+        "size": "28px"
+      }
+    ],
+    "smallText": [
+      {
+        "text": "Edit",
+        "size": "11px"
+      },
+      {
+        "text": "Edit",
+        "size": "0px"
+      },
+      {
+        "text": "Edit",
+        "size": "0px"
+      },
+      {
+        "text": "Edit",
+        "size": "0px"
+      }
+    ],
+    "smallControls": [
+      {
+        "text": "Edit",
+        "w": 57,
+        "h": 27
+      },
+      {
+        "text": "Edit",
+        "w": 31,
+        "h": 32
+      },
+      {
+        "text": "Edit",
+        "w": 31,
+        "h": 32
+      },
+      {
+        "text": "Edit",
+        "w": 31,
+        "h": 32
+      },
+      {
+        "text": "SignalPass",
+        "w": 99,
+        "h": 24
+      },
+      {
+        "text": "How it works ↗",
+        "w": 83,
+        "h": 18
+      }
+    ],
+    "overflow": 0
+  },
+  {
+    "route": "/introductions/new/maya",
+    "title": "A better first hello · SignalPass",
+    "headings": [
+      {
+        "text": "A better first hello",
+        "size": "59px"
+      },
+      {
+        "text": "My Personal Agent",
+        "size": "23px"
+      },
+      {
+        "text": "Two curious people.A thoughtful starting point.",
+        "size": "25px"
+      }
+    ],
+    "smallText": [
+      {
+        "text": "Alex Chen",
+        "size": "11px"
+      },
+      {
+        "text": "Design & Communities",
+        "size": "9px"
+      },
+      {
+        "text": "Product designer & community builder",
+        "size": "11px"
+      },
+      {
+        "text": "Include your approved profile and the public interests shown on t",
+        "size": "10px"
+      },
+      {
+        "text": "Review context",
+        "size": "9px"
+      },
+      {
+        "text": "Evaluation fee",
+        "size": "8px"
+      },
+      {
+        "text": "Refundable attention bond",
+        "size": "8px"
+      }
+    ],
+    "smallControls": [
+      {
+        "text": "Review context",
+        "w": 81,
+        "h": 27
+      },
+      {
+        "text": "Evaluation fee",
+        "w": 89,
+        "h": 16
+      },
+      {
+        "text": "Refundable attention bond",
+        "w": 143,
+        "h": 16
+      },
+      {
+        "text": "SignalPass",
+        "w": 99,
+        "h": 24
+      },
+      {
+        "text": "How it works ↗",
+        "w": 83,
+        "h": 18
+      }
+    ],
+    "overflow": 0
+  },
+  {
+    "route": "/inbox",
+    "title": "Your introductions · SignalPass",
+    "headings": [
+      {
+        "text": "Your introductions",
+        "size": "58px"
+      },
+      {
+        "text": "Alex",
+        "size": "30px"
+      },
+      {
+        "text": "Alex Chen",
+        "size": "30px"
+      },
+      {
+        "text": "Why this might fit",
+        "size": "29px"
+      }
+    ],
+    "smallText": [
+      {
+        "text": "All introductions 5",
+        "size": "8px"
+      },
+      {
+        "text": "Waiting for sender1",
+        "size": "8px"
+      },
+      {
+        "text": "Saved for later1",
+        "size": "8px"
+      },
+      {
+        "text": "Product builder",
+        "size": "11px"
+      },
+      {
+        "text": "Curious about distributed teams",
+        "size": "10px"
+      },
+      {
+        "text": "You decide",
+        "size": "11px"
+      },
+      {
+        "text": "Open source · Developer tools",
+        "size": "10px"
+      },
+      {
+        "text": "Your agent uses publicly available profiles and context\n         ",
+        "size": "11px"
+      }
+    ],
+    "smallControls": [
+      {
+        "text": "All introductions 5",
+        "w": 103,
+        "h": 35
+      },
+      {
+        "text": "Waiting for sender1",
+        "w": 103,
+        "h": 35
+      },
+      {
+        "text": "Saved for later1",
+        "w": 103,
+        "h": 35
+      },
+      {
+        "text": "SignalPass",
+        "w": 99,
+        "h": 24
+      },
+      {
+        "text": "How it works ↗",
+        "w": 83,
+        "h": 18
+      }
+    ],
+    "overflow": 0
+  }
+]
