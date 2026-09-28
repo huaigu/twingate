@@ -1,0 +1,14 @@
+{
+  "skill": "supertoken-gpt-image-2",
+  "model": "gpt-image-2.5-sunburst",
+  "quality": "high",
+  "size": "1024x1024",
+  "source_url": "https://img.supertoken.cc/images/2026/09/28/e3d5414d-0ea3-477d-828d-75772f808a6c.png",
+  "created": 1790565524,
+  "source_file": "connection-paper.png",
+  "shipped_asset": "apps/web/public/v4/assets/connection-paper.webp",
+  "webp_quality": 86,
+  "bytes": 32456,
+  "sha256": "21bd2275cc7b91e05acc56b3dcc3e8156cf73a17f7c4ddabe14fa8f46fecc849",
+  "direction": "Editorial correspondence: ivory paper envelope, blank cards, matte violet arch, lavender ribbon, sage leaf. No text or UI baked into the illustration."
+}

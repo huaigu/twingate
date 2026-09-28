@@ -542,6 +542,7 @@
       $("#discovery-form [type=submit]").textContent = "Find shared interests";
       $(".search-result-note").textContent = "Approved public profiles · keyword search, not AI ranking.";
       $(".people-grid").innerHTML = directory.length ? directory.map((p) => '<article class="paper person-card" role="button" tabindex="0" data-person="' + escapeHTML(p.name) + '"><div class="person-header"><img class="avatar" src="/v4/assets/avatar-' + p.avatar + '.webp" alt=""><div><h3>' + escapeHTML(p.displayName || p.name) + '</h3><p>' + escapeHTML(p.role) + '</p><div class="person-tags">' + p.tags.map(t => '<span class="chip mint">' + escapeHTML(t) + '</span>').join('') + '</div></div></div><h4>In their own words</h4><p>' + escapeHTML(p.description) + '</p></article>').join('') : '<div class="v4-live-empty"><h3>The first connections start with you.</h3><p>There are no other public profiles yet. Save your profile, choose public visibility and invite another builder.</p><a class="button outline" href="/profile/import">Create my profile</a></div>';
+      if (!directory.length) api.emptyState($(".v4-live-empty"), { title: "Good people start with a hello.", description: "There are no other public profiles here yet. Add yours, share what you are building, and invite someone you would like to know.", action: "Create my profile", href: "/profile/import", eyebrow: "Your circle starts here" });
     }
     if (!state.agent.matching) {
       $(".discovery-private h3").textContent = "Private matching is paused";
@@ -818,6 +819,7 @@
   if (page === "compose") {
     if (api.live && (!candidate.handle || (requestedPerson && candidate.handle !== requestedPerson))) {
       $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary" href="/discover">Discover builders</a></div>';
+      api.emptyState($(".compose-workspace .v4-live-empty"), { title: "Who would you like to meet?", description: "Choose an available profile before writing your introduction. Your message has not been sent.", action: "Discover builders", href: "/discover" });
       return;
     }
     $("#intro-form").addEventListener("submit", (e) => e.preventDefault());
@@ -1014,6 +1016,7 @@
   const selectContact = (name) => {
     const c = contacts[name];
     if (!c) return;
+    $("#introduction-detail").hidden = false;
     selectedContact = name;
     $$("[data-contact]").forEach((el) => {
       const selected = el.dataset.contact === name;
@@ -1151,7 +1154,8 @@
         });
         const first = $(".inbox-row:not([hidden])");
         $(".inbox-empty").hidden = Boolean(first);
-        if (first) selectContact(first.dataset.contact);
+        if (first?.dataset.contact) selectContact(first.dataset.contact);
+        else $("#introduction-detail").hidden = true;
       }),
     );
 
@@ -1175,10 +1179,10 @@
       new URLSearchParams(location.search).get("intro");
     if (api.live && routeId && !contacts["sent-" + routeId]) {
       $("#introduction-detail").hidden = true;
-      $(".inbox-empty").hidden = false; $(".inbox-empty").textContent = "This introduction is not in your inbox. Sign in with its recipient wallet.";
+      $(".inbox-empty").hidden = false; api.emptyState($(".inbox-empty"), { title: "This hello belongs elsewhere.", description: "This introduction is not available to this account. Switch to its recipient wallet to review it.", action: "Back to my inbox", href: "/inbox" });
     } else if (api.live && !state.introductions.length) {
       $("#introduction-detail").hidden = true; $(".inbox-empty").hidden = false;
-      $(".inbox-empty").textContent = api.me ? "Your inbox is empty. Share your public handle with another builder." : "Connect your wallet to see your private inbox.";
+      api.emptyState($(".inbox-empty"), { title: api.me ? "Room for a good conversation." : "Your introductions, just for you.", description: api.me ? "A thoughtful hello could be the start of something. Discover a builder or share your profile to receive your first introduction." : "Sign in with your wallet to read and respond to your private introductions. Signing in does not move any funds.", action: api.me ? "Find someone to meet" : "Sign in to view inbox", ...(api.me ? { href: "/discover" } : { onAction: () => document.getElementById("session-action").click() }), eyebrow: "Your private inbox" });
     } else selectContact(contacts["sent-" + routeId] ? "sent-" + routeId : api.live ? Object.keys(contacts)[0] : "Alex");
     if (api.live && api.me) {
       const stamp = JSON.stringify([...api.inbox, ...(api.outbox || [])].map(r => [r.id, r.revision]));

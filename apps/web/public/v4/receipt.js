@@ -48,6 +48,7 @@ if (api.demo) {
   };
   const [title, status, description] =
     statuses[record.status] || statuses.pending;
+  document.body.dataset.receiptState = record.status;
   set("receipt-title", title);
   set("receipt-status", status);
   set("receipt-description", description);
@@ -113,6 +114,7 @@ try {
   const record = api.toRecord((await api.request('/introductions/' + encodeURIComponent(id))).introduction);
   const labels = { quoted: ['Your hello is awaiting its bond.', 'Awaiting wallet payment'], expired: ['The response window has closed.', 'Expired · bond returned'], pending: ['Your hello has arrived.', 'Awaiting a response'], accepted: ['A connection, made.', 'Accepted'], declined: ['Not this time.', 'Declined'], context_requested: ['A little more context.', 'Context requested'], withdrawn: ['Introduction withdrawn.', 'Withdrawn'], evaluating: ['Your introduction is being reviewed.', 'Evaluating'] };
   const [title, status] = labels[record.status] || ['Your introduction.', record.status];
+  document.body.dataset.receiptState = record.status;
   set('receipt-title', title); set('receipt-status', status);
   set('receipt-description', record.settlement === 'onchain' ? 'Only confirmed chain events change your payment status. Additional context is shared offchain and does not change the original signed message.' : 'Only you and the other participant can read this introduction. No payment has been requested or transferred.');
   set('receipt-people', record.sender + ' → ' + record.recipient);

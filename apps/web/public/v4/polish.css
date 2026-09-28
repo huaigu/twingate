@@ -1,0 +1,110 @@
+/* SignalPass: correspondence-paper details. Native controls remain interactive. */
+:root {
+  --sp-ink: #202238;
+  --sp-muted: #626578;
+  --sp-paper: #fbf7f0;
+  --sp-canvas: #f5eee3;
+  --sp-violet: #5140cd;
+  --sp-violet-hover: #4031b0;
+  --sp-lilac: #efebfb;
+  --sp-border: rgba(66, 48, 85, .14);
+  --sp-success: #3e6050;
+  --sp-sage: #e5ecdf;
+  --sp-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --sp-serif: Georgia, "Times New Roman", serif;
+  --sp-ease: cubic-bezier(.23, 1, .32, 1);
+}
+/* Account status belongs outside the scaled, absolutely positioned art canvas. */
+#session-slot { min-height: 72px; background: var(--sp-paper); border-bottom: 1px solid var(--sp-border); }
+.session-loading { display: flex; align-items: center; min-height: 72px; max-width: 1440px; margin: auto; padding: 0 32px; font: 14px/1.5 var(--sp-sans); color: var(--sp-muted); }
+.v4-session-bar { box-sizing: border-box; max-width: 1440px; min-height: 72px; margin: 0 auto; padding: 12px 32px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; color: var(--sp-ink); }
+.v4-session-copy { display: grid; gap: 3px; min-width: 0; padding-left: 16px; border-left: 2px solid #b7a6d2; }
+.v4-session-copy strong { font: 600 14px/1.35 var(--sp-sans); }
+.v4-session-copy small { font: 12px/1.45 var(--sp-sans); color: var(--sp-muted); }
+[data-session-state="connected"] .v4-session-copy { border-left-color: var(--sp-success); }
+body > .v4-header { position: relative; inset: auto; width: 100%; }
+.v4-header.site-header { z-index: 30; }
+/* One family and one interaction rhythm for actions across every surface. */
+:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button {
+  font-family: var(--sp-sans); font-size: 14px; font-weight: 600; line-height: 1.35;
+  letter-spacing: 0; min-height: 48px; padding: 12px 20px; border-radius: 12px;
+  transition: background-color 160ms var(--sp-ease), border-color 160ms var(--sp-ease), box-shadow 160ms var(--sp-ease), transform 160ms var(--sp-ease);
+}
+:is(.scene, .hero-page, .v4-summary-card, dialog) .button.primary { background: var(--sp-violet); border-color: var(--sp-violet); color: #fff; box-shadow: 0 2px 3px #3121690b; }
+:is(.scene, .hero-page, .v4-summary-card, dialog) .button.primary:hover { background: var(--sp-violet-hover); border-color: var(--sp-violet-hover); box-shadow: 0 4px 10px #31216916; }
+:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button:is(.outline, .secondary) { border-color: var(--sp-border); color: var(--sp-ink); background: #fffaf580; }
+:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button:is(.outline, .secondary):hover { border-color: #9e8bbb; background: var(--sp-lilac); }
+.button:active:not(:disabled) { transform: scale(.98); }
+.button:disabled { opacity: .55; box-shadow: none; transform: none; }
+:is(button, a, input, textarea, select):focus-visible { outline: 3px solid #8978d5; outline-offset: 4px; }
+.v4-menu a { min-height: 44px; display: flex; align-items: center; font-size: 14px; border-radius: 10px; }
+.v4-menu a[aria-current="page"] { background: var(--sp-lilac); color: var(--sp-violet); }
+dialog { box-shadow: 0 24px 72px #30223824; }
+dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
+.dialog-copy { font-family: var(--sp-sans); line-height: 1.65; }
+.dialog-input { border-radius: 10px; background: #f5f0e9; border: 1px solid var(--sp-border); font-family: var(--sp-sans); }
+.dialog-input:focus { border-color: var(--sp-violet); background: #fffdf9; box-shadow: 0 0 0 3px #5140cd10; }
+/* The generated illustration is a quiet supporting detail; the next action leads. */
+.v4-empty-state { display: grid; grid-template-columns: 176px minmax(0, 1fr); align-items: center; gap: 28px; padding: 32px; grid-column: 1 / -1; width: 100%; min-height: 264px; border: 1px solid var(--sp-border); border-radius: 18px; background: var(--sp-paper); }
+.v4-empty-art { width: 176px; height: 176px; object-fit: cover; border-radius: 50%; mix-blend-mode: multiply; }
+.v4-empty-copy { min-width: 0; }
+.v4-empty-eyebrow { display: block; color: #7b6a8b; font: 600 11px/1.5 var(--sp-sans); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 8px; }
+.v4-empty-state h2 { color: var(--sp-ink); font: 28px/1.2 var(--sp-serif); letter-spacing: -.5px; margin: 0 0 12px; }
+.v4-empty-state p { color: var(--sp-muted); font: 14px/1.65 var(--sp-sans); margin: 0 0 20px; max-width: 42ch; }
+.inbox-empty.v4-empty-state { display: flex; flex-direction: column; gap: 8px; padding: 24px 20px; border: 0; background: transparent; text-align: center; }
+.inbox-empty.v4-empty-state .v4-empty-art { width: 144px; height: 144px; }
+.inbox-empty.v4-empty-state h2 { font-size: 24px; }
+.inbox-empty.v4-empty-state p { margin-left: auto; margin-right: auto; }
+.v4-live-empty:not(.v4-empty-state) { border-radius: 18px; }
+/* A readable letter and an auditable receipt share a restrained paper surface. */
+.v4-summary-card { border-color: #fff9f0; margin-top: 36px; box-shadow: 0 12px 36px #4834200d; }
+.v4-summary-card > h1 { line-height: 1.08; }
+.v4-summary-card > p { font: 15px/1.65 var(--sp-sans); }
+.v4-receipt-icon { background: var(--sp-lilac); color: var(--sp-violet); }
+.v4-timeline { flex-wrap: wrap; gap: 8px; }
+.v4-timeline span { font: 12px/1.4 var(--sp-sans); background: #f0ece5; color: var(--sp-muted); border-radius: 8px; padding: 8px 10px; }
+.v4-timeline #receipt-status { color: var(--sp-violet); background: var(--sp-lilac); font-weight: 600; }
+[data-receipt-state="accepted"] :is(.v4-receipt-icon, #receipt-status) { color: var(--sp-success); background: var(--sp-sage); }
+.v4-result-message { color: var(--sp-ink); background: #f3edf7; padding: 20px; font: 14px/1.7 var(--sp-sans); border-radius: 12px; }
+.v4-result-message > strong { display: block; font-size: 12px; margin-bottom: 10px; color: #746582; }
+.v4-result-message > p + p { margin-top: 14px; }
+.v4-chain-card { border-color: var(--sp-border); background: #faf7f2; box-shadow: none; }
+.v4-chain-card dl { row-gap: 14px; }
+.v4-chain-card dd { font-variant-numeric: tabular-nums; }
+.v4-chain-card dd:first-of-type { font-size: 22px; line-height: 1.2; color: var(--sp-ink); }
+.v4-chain-proof p { padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--sp-border); }
+.v4-chain-proof code, .v4-chain-proof a { display: block; margin-top: 4px; font-size: 12px; line-height: 1.55; color: #6d6180; }
+.v4-footer { line-height: 1.65; }
+@media (min-width: 1181px) {
+  .scene .button {
+    min-height: calc(48px / var(--scale, 1)); font-size: calc(14px / var(--scale, 1));
+    padding: calc(12px / var(--scale, 1)) calc(16px / var(--scale, 1)); white-space: normal;
+  }
+  .scene .v4-menu a { min-height: calc(44px / var(--scale, 1)); font-size: calc(14px / var(--scale, 1)); }
+}
+@media (max-width: 600px) {
+  #session-slot { min-height: 80px; }
+  .session-loading { min-height: 80px; padding: 0 16px; }
+  .v4-session-bar { min-height: 80px; padding: 12px 16px; gap: 12px; }
+  .v4-session-copy { padding-left: 10px; }
+  .v4-session-copy strong { font-size: 13px; }
+  .v4-session-copy small { font-size: 11px; line-height: 1.4; }
+  .v4-session-bar .button { min-height: 44px; padding: 10px 13px; font-size: 13px; }
+  .agent-actions .button { font-size: 14px; padding: 12px; white-space: normal; }
+  .source-actions .button { font-family: var(--sp-sans); font-size: 14px; }
+  .dialog-input, .intro-field textarea, .widget-fields input { font-size: 16px; }
+  .v4-empty-state { display: flex; flex-direction: column; text-align: center; padding: 24px 20px; gap: 12px; }
+  .v4-empty-art { width: 152px; height: 152px; }
+  .v4-empty-state h2 { font-size: 26px; }
+  .v4-empty-state p { margin-left: auto; margin-right: auto; }
+  .v4-empty-state .button { width: 100%; }
+  .v4-summary-card { margin: 24px 16px 36px; padding: 24px; }
+  .v4-summary-card h1 { font-size: 36px; letter-spacing: -1.2px; }
+  .v4-result-message { padding: 16px; }
+  .v4-chain-card dd:first-of-type { font-size: 18px; }
+  .v4-summary-card .dialog-actions { gap: 10px; }
+  .v4-summary-card .dialog-actions .button { flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button, .button:active:not(:disabled) { transition: none; transform: none; }
+}
