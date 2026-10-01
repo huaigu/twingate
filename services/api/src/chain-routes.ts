@@ -1,9 +1,10 @@
 import type { Hono, Context } from 'hono'
 import { z } from 'zod'
 import type { Hex } from 'viem'
+import { DEFAULT_PRICING, QuoteRejectedError, quoteIntroduction } from '@signalpass/core'
 import type { Session } from './auth.js'
 import { ChainError, type ChainService } from './chain.js'
-import { profileByOwner, declineKey, type Store } from './store.js'
+import { profileByOwner, declineKey, queueDepth, unresolvedCountFor, type Store } from './store.js'
 import { transaction } from './database.js'
 
 type Env = { Variables: { session: Session } }
@@ -87,8 +88,23 @@ export function installChainRoutes(app: Hono<Env>, store: Store, chain?: ChainSe
       if (block.timestamp > quote.message.quoteExpiresAt) quote = undefined
     }
     if (!quote) {
-      quote = await service.quote(intro, recipient, policy)
-      store.introductions.set(intro.id, { ...intro, chain: { chainId: service.config.chainId, escrow: service.config.escrow, quote }, revision: intro.revision + 1 })
+      // Draft estimates are not approvals. Reprice only when issuing a new
+      // signature; an unexpired signed quote above keeps its approved amount.
+      let pricing
+      try {
+        pricing = quoteIntroduction({
+          policy, contextChars: Object.values(intro.intent).join(' ').length, attachmentCount: 0,
+          unresolvedFromSender: unresolvedCountFor(store, intro.sender, intro.recipient),
+          recipientQueueDepth: queueDepth(store, intro.recipient),
+          priorDeclinesFromSender: store.declines.get(declineKey(intro.sender, intro.recipient)) ?? 0,
+          now: Math.floor(Date.now() / 1000),
+        }, { ...DEFAULT_PRICING, baseEvaluationFee: 0n, perKiloCharFee: 0n, perAttachmentFee: 0n })
+      } catch (error) {
+        if (error instanceof QuoteRejectedError) throw new ChainError('introduction_limit_reached')
+        throw error
+      }
+      quote = await service.quote({ ...intro, quote: pricing }, recipient, policy)
+      store.introductions.set(intro.id, { ...intro, quote: pricing, chain: { chainId: service.config.chainId, escrow: service.config.escrow, quote }, revision: intro.revision + 1 })
     }
     return c.json({ summary: service.quoteSummary(quote), transaction: service.fundingTransaction(quote), network: service.publicConfig() })
   })))

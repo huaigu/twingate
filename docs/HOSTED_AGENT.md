@@ -4,7 +4,7 @@ SignalPass supplies the model connection and private workspace. Users sign in, d
 
 ## Implemented scope
 
-`/assistant` provides two bounded operations: discover people and draft an introduction. It is not an autonomous background agent. The first adapter uses OpenAI Responses with strict structured output; `AgentModel` keeps the workflow independent of that provider.
+`/assistant` provides two bounded operations: discover people and draft an introduction. It is not an autonomous background agent. OpenAI and the free-model OpenRouter test adapter use Responses with strict structured output; `AgentModel` keeps the workflow independent of either provider.
 
 1. A signed-in user enters a goal. Using their approved profile is an unchecked, explicit option.
 2. The server filters public, approved profiles that allow matching and are open to introductions, excluding the requester. Goal terms select at most 40 candidates; the model can recommend at most three of those supplied handles. This is a bounded shortlist, not an exhaustive semantic search.
@@ -25,20 +25,38 @@ export SIGNALPASS_AGENT_MODEL='<model supporting Responses and strict JSON schem
 pnpm dev
 ```
 
-Never put the key in frontend variables, source control or the user interface. `OPENAI_API_KEY` is deliberately not reused. A missing provider leaves the feature visibly disabled; an explicitly selected provider with missing/invalid settings fails API startup with a sanitized configuration error. No error substitutes simulated recommendations.
+Never put the key in frontend variables, source control or the user interface. Ambient `OPENAI_API_KEY` and `OPENROUTER_API_KEY` are deliberately not reused. A missing provider leaves the feature visibly disabled; an explicitly selected provider with missing/invalid settings fails API startup with a sanitized configuration error. No error substitutes simulated recommendations.
 
 | Setting | Default / constraint |
 | --- | --- |
-| `SIGNALPASS_AGENT_PROVIDER` | Empty disables AI; currently accepts `openai`. |
+| `SIGNALPASS_AGENT_PROVIDER` | Empty disables AI; accepts `openai` or `openrouter`. |
 | `SIGNALPASS_AGENT_API_KEY` | Required dedicated server-side key when enabled. |
-| `SIGNALPASS_AGENT_MODEL` | Required explicit model; select one with compatible structured output. |
-| `SIGNALPASS_AGENT_BASE_URL` | `https://api.openai.com/v1`; HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
+| `SIGNALPASS_AGENT_MODEL` | Required explicit model supporting structured output. OpenRouter accepts only a named `vendor/model:free` variant; router aliases and paid models are rejected. |
+| `SIGNALPASS_AGENT_BASE_URL` | Empty selects `https://api.openai.com/v1` or `https://openrouter.ai/api/v1`. HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
 | `SIGNALPASS_AGENT_DAILY_USER_LIMIT` | 20 inference attempts per account per UTC day; allowed 1–1000. |
 | `SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT` | 200 inference attempts per UTC day across accounts; allowed 1–10000. |
 
 Attempts include provider failures. SQLite reserves quota before inference; clearing history and restarting the API do not reset it. Inference is limited to one concurrent call per account and two globally. Leases expire after 120 seconds if the process dies. These are usage bounds, not a dollar spending ceiling; configure a provider project budget as appropriate for deployment. Wallet accounts are not unique-human identities.
 
 The provider has a 15-second deadline, a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Test model compatibility with the exact schema before a public demo.
+
+### Free OpenRouter acceptance test
+
+Free models still need a legitimate OpenRouter account API key. On October 1, 2026, the public model catalog was reachable and an anonymous Responses request returned HTTP 401. No authorized key was configured in the development environment, so live inference was not completed. There is no bundled or shared credential.
+
+Select a named `:free` model whose current catalog entry supports structured output. The adapter requires parameter support, disables provider fallback, caps prompt/completion/request/image pricing at zero, and requests providers that do not collect input data. If no endpoint satisfies those constraints, the request fails; it never upgrades to paid inference or a random model. Availability and quality still need the live test. Hunyuan is not selected or configured automatically.
+
+```sh
+export SIGNALPASS_AGENT_PROVIDER=openrouter
+export SIGNALPASS_AGENT_MODEL='<vendor/model:free from the current catalog>'
+unset SIGNALPASS_AGENT_BASE_URL
+# Set SIGNALPASS_AGENT_API_KEY securely in this process, then:
+pnpm agent:live:test
+```
+
+This command uses two temporary signed identities and fictional approved profiles in an in-memory database. It makes at most two model requests through the real discovery/draft routes, checks source evidence and ownership, and verifies that no introduction was sent. It does not load production profiles, use funded wallets or persist test history. Missing credentials, unsupported outputs and inference failures exit nonzero; fixture success cannot be mistaken for live success. It is a functional acceptance check, not a model-quality benchmark.
+
+References: [OpenRouter quickstart](https://openrouter.ai/docs/quickstart), [free variants](https://openrouter.ai/docs/guides/routing/model-variants/free), and [provider routing constraints](https://openrouter.ai/docs/guides/routing/provider-selection).
 
 ## Data and consent
 

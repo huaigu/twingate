@@ -1,6 +1,7 @@
 import type { AgentModel, HostedAgentOptions } from './agent-types.js'
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1'
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
 const MAX_RESPONSE_BYTES = 128 * 1024
 const PROVIDER_ERROR = 'The personal agent could not complete this request. Please try again.'
 const CONFIG_ERROR = 'Invalid SignalPass agent configuration. Check the server environment settings.'
@@ -16,6 +17,8 @@ export interface OpenAIResponsesAgentModelOptions {
   fetch?: Fetch
   timeoutMs?: number
 }
+
+export type OpenRouterResponsesAgentModelOptions = OpenAIResponsesAgentModelOptions
 
 function object(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -63,20 +66,21 @@ function tokenCount(value: unknown): number {
   return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : 0
 }
 
-/** Server-only, stateless Responses adapter. The caller validates the resulting data. */
-export class OpenAIResponsesAgentModel implements AgentModel {
-  readonly provider = 'openai'
+/** Shared server-only transport. The caller also validates the resulting data. */
+class ResponsesAgentModel implements AgentModel {
+  readonly provider: 'openai' | 'openrouter'
   readonly model: string
   readonly #apiKey: string
   readonly #endpoint: string
   readonly #fetch: Fetch
   readonly #timeoutMs: number
 
-  constructor(options: OpenAIResponsesAgentModelOptions) {
+  constructor(options: OpenAIResponsesAgentModelOptions, provider: 'openai' | 'openrouter') {
     if (!options.apiKey.trim() || !options.model.trim() || /[\r\n]/.test(options.apiKey)) throw new Error(CONFIG_ERROR)
+    this.provider = provider
     this.#apiKey = options.apiKey.trim()
     this.model = options.model.trim()
-    this.#endpoint = responseEndpoint(options.baseUrl ?? DEFAULT_BASE_URL)
+    this.#endpoint = responseEndpoint(options.baseUrl ?? (provider === 'openrouter' ? OPENROUTER_BASE_URL : DEFAULT_BASE_URL))
     this.#fetch = options.fetch ?? globalThis.fetch
     this.#timeoutMs = options.timeoutMs ?? 15_000
     if (!Number.isSafeInteger(this.#timeoutMs) || this.#timeoutMs < 1) throw new Error(CONFIG_ERROR)
@@ -115,6 +119,16 @@ export class OpenAIResponsesAgentModel implements AgentModel {
         store: false,
         max_output_tokens: 2400,
         text: { format: { type: 'json_schema', name: `signalpass_${request.operation}`, strict: true, schema: request.schema } },
+        ...(this.provider === 'openrouter' ? {
+          // Keep free-model tests free even if routing availability or prices change.
+          // Never weaken schema/data policies or retry against paid models/providers.
+          provider: {
+            require_parameters: true,
+            allow_fallbacks: false,
+            data_collection: 'deny',
+            max_price: { prompt: 0, completion: 0, request: 0, image: 0 },
+          },
+        } : {}),
       }),
     })
     if (!response.ok) {
@@ -146,6 +160,24 @@ export class OpenAIResponsesAgentModel implements AgentModel {
   }
 }
 
+/** OpenAI's existing explicit, stateless Responses integration. */
+export class OpenAIResponsesAgentModel extends ResponsesAgentModel {
+  constructor(options: OpenAIResponsesAgentModelOptions) {
+    super(options, 'openai')
+  }
+}
+
+/** Explicit free catalog entries only; no random router or paid fallback path. */
+export class OpenRouterResponsesAgentModel extends ResponsesAgentModel {
+  constructor(options: OpenRouterResponsesAgentModelOptions) {
+    const model = options.model.trim()
+    if (!/^[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*:free$/i.test(model) || /^openrouter\//i.test(model)) {
+      throw new Error(CONFIG_ERROR)
+    }
+    super(options, 'openrouter')
+  }
+}
+
 function dailyLimit(value: string | undefined, fallback: number, max: number): number {
   if (value === undefined) return fallback
   if (!/^\d+$/.test(value.trim())) throw new Error(CONFIG_ERROR)
@@ -154,17 +186,18 @@ function dailyLimit(value: string | undefined, fallback: number, max: number): n
   return parsed
 }
 
-/** Explicit opt-in only. No ambient OPENAI_API_KEY reuse and no mock fallback. */
+/** Explicit opt-in only. No ambient key reuse, paid OpenRouter routing, or mock fallback. */
 export function configuredHostedAgent(env: Record<string, string | undefined> = process.env): HostedAgentOptions {
   const provider = env.SIGNALPASS_AGENT_PROVIDER?.trim()
   if (!provider) return {}
-  if (provider !== 'openai') throw new Error(CONFIG_ERROR)
+  if (provider !== 'openai' && provider !== 'openrouter') throw new Error(CONFIG_ERROR)
+  const options = {
+    apiKey: env.SIGNALPASS_AGENT_API_KEY ?? '',
+    model: env.SIGNALPASS_AGENT_MODEL ?? '',
+    baseUrl: env.SIGNALPASS_AGENT_BASE_URL?.trim() || undefined,
+  }
   return {
-    model: new OpenAIResponsesAgentModel({
-      apiKey: env.SIGNALPASS_AGENT_API_KEY ?? '',
-      model: env.SIGNALPASS_AGENT_MODEL ?? '',
-      baseUrl: env.SIGNALPASS_AGENT_BASE_URL ?? DEFAULT_BASE_URL,
-    }),
+    model: provider === 'openrouter' ? new OpenRouterResponsesAgentModel(options) : new OpenAIResponsesAgentModel(options),
     dailyUserLimit: dailyLimit(env.SIGNALPASS_AGENT_DAILY_USER_LIMIT, 20, 1000),
     dailyGlobalLimit: dailyLimit(env.SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT, 200, 10_000),
   }

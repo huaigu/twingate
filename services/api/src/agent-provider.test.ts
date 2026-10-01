@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import { once } from 'node:events'
-import { OpenAIResponsesAgentModel, configuredHostedAgent } from './agent-provider.js'
+import { OpenAIResponsesAgentModel, OpenRouterResponsesAgentModel, configuredHostedAgent } from './agent-provider.js'
 
 const secret = 'test-key-PRIVATE-CANARY'
 const schema = { type: 'object', properties: { summary: { type: 'string' } }, required: ['summary'], additionalProperties: false }
@@ -178,4 +178,75 @@ test('deadline aborts stalled fetch and body reads with a sanitized error', asyn
     await assert.rejects(model.generate(request), safeFailure)
     assert.equal(signal?.aborted, true)
   }
+})
+
+test('OpenRouter configuration only accepts explicitly selected free catalog models with an explicit key', () => {
+  const env = { SIGNALPASS_AGENT_PROVIDER: 'openrouter', SIGNALPASS_AGENT_API_KEY: secret, SIGNALPASS_AGENT_MODEL: 'example/fixture-model:free' }
+  const configured = configuredHostedAgent(env)
+  assert.equal(configured.model?.provider, 'openrouter')
+  assert.equal(configured.model?.model, 'example/fixture-model:free')
+  assert.equal(configured.dailyUserLimit, 20)
+  assert.equal(configured.dailyGlobalLimit, 200)
+  assert(!JSON.stringify(configured).includes(secret))
+  assert.deepEqual(configuredHostedAgent({ OPENROUTER_API_KEY: secret }), {})
+  assert.throws(() => configuredHostedAgent({ ...env, SIGNALPASS_AGENT_API_KEY: undefined, OPENROUTER_API_KEY: secret }), /Invalid SignalPass agent configuration/)
+  for (const model of ['', 'example/paid-model', 'example/fixture:free:online', 'example/fixture:nitro', 'example/fixture:free?paid=true', 'openrouter/auto', 'openrouter/free', 'openrouter/fixture:free']) {
+    assert.throws(() => configuredHostedAgent({ ...env, SIGNALPASS_AGENT_MODEL: model }), /Invalid SignalPass agent configuration/)
+  }
+})
+
+test('OpenRouter wire request preserves Responses schema and requires zero-price, non-collecting providers', async () => {
+  let calls = 0
+  const model = new OpenRouterResponsesAgentModel({
+    apiKey: secret, model: 'example/fixture-model:free',
+    fetch: async (url, init) => {
+      calls++
+      assert.equal(url, 'https://openrouter.ai/api/v1/responses')
+      assert.equal(init?.redirect, 'error')
+      assert.equal(new Headers(init?.headers).get('authorization'), `Bearer ${secret}`)
+      assert.equal(init?.signal?.aborted, false)
+      assert.deepEqual(JSON.parse(String(init?.body)), {
+        model: 'example/fixture-model:free', instructions: request.instructions, input: JSON.stringify(request.input), store: false, max_output_tokens: 2400,
+        text: { format: { type: 'json_schema', name: 'signalpass_draft', strict: true, schema } },
+        provider: { require_parameters: true, allow_fallbacks: false, data_collection: 'deny', max_price: { prompt: 0, completion: 0, request: 0, image: 0 } },
+      })
+      return Response.json(completed())
+    },
+  })
+  assert.deepEqual(await model.generate({ ...request, operation: 'draft' }), { data: { summary: 'A grounded match.' }, inputTokens: 120, outputTokens: 30 })
+  assert.equal(calls, 1)
+})
+
+test('OpenRouter fails closed on unavailable eligible free providers without retrying or falling back', async () => {
+  for (const status of [400, 402, 404, 429, 503]) {
+    let calls = 0
+    const model = new OpenRouterResponsesAgentModel({
+      apiKey: secret, model: 'example/fixture-model:free',
+      fetch: async () => {
+        calls++
+        return Response.json({ error: { message: secret } }, { status })
+      },
+    })
+    await assert.rejects(model.generate(request), safeFailure)
+    assert.equal(calls, 1)
+  }
+})
+
+test('OpenRouter shares refusal validation, response bounds, and abort deadlines', async () => {
+  for (const payload of [completed({ status: 'incomplete' }), completed({ output: [{ type: 'message', role: 'assistant', content: [{ type: 'refusal', refusal: secret }] }] })]) {
+    const model = new OpenRouterResponsesAgentModel({ apiKey: secret, model: 'example/fixture-model:free', fetch: async () => Response.json(payload) })
+    await assert.rejects(model.generate(request), safeFailure)
+  }
+  const oversized = new OpenRouterResponsesAgentModel({ apiKey: secret, model: 'example/fixture-model:free', fetch: async () => new Response(new Uint8Array(128 * 1024 + 1)) })
+  await assert.rejects(oversized.generate(request), safeFailure)
+  let signal: AbortSignal | undefined
+  const stalled = new OpenRouterResponsesAgentModel({
+    apiKey: secret, model: 'example/fixture-model:free', timeoutMs: 20,
+    fetch: async (_url, init) => {
+      signal = init?.signal ?? undefined
+      return await new Promise<Response>((_resolve, reject) => signal!.addEventListener('abort', () => reject(new Error(secret)), { once: true }))
+    },
+  })
+  await assert.rejects(stalled.generate(request), safeFailure)
+  assert.equal(signal?.aborted, true)
 })

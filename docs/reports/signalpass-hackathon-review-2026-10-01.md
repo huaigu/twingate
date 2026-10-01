@@ -48,12 +48,19 @@ Be prepared to answer:
 
 ## Remaining engineering findings
 
-These are source-level findings, not fresh chain reproductions, and remain outside this patch:
+The initial review identified the following source-level findings. Both are resolved in the subsequent hosted-agent branch follow-up; they remain here to preserve the review rationale:
 
 1. **Fresh signatures can retain stale bond pricing.** `services/api/src/chain-routes.ts:70–93` issues a new signature through `ChainService.quote`, which reads `intro.quote.attentionBond` (`services/api/src/chain.ts:93`). Drafts created before later declines/congestion can keep the older price. Recalculate when issuing a new signed quote while preserving an already-valid approved quote. Reproduce with two drafts, decline the first funded request, then obtain the second funding quote; also cover quote expiry. This weakens adaptive pricing; it is not evidence of lost escrow funds.
 2. **Evaluation policy version can be mislabeled after a policy edit.** `services/api/src/evaluation.ts` reads the latest policy but hashes the introduction's original `policyVersion`. Snapshot the policy at submission, or require an explicit new review when the policy changes. Add a submit → edit recipient policy → evaluate regression before relying on these receipts as policy-version evidence.
 
 No critical ownership or refund-loss defect was established in the reviewed supported EOA/manual-review path. This is not a security certification, and the unchanged contracts were not executed in this environment.
+
+### Follow-up resolution and verification
+
+- Funding quotes now recalculate current queue pressure, prior declines and unresolved limits when issuing the first or an expired signature. A still-valid signed quote is reused without repricing. The persisted introduction, receipt amount and wallet approval use the same bond. `services/api/src/chain-quotes.test.ts` verifies real EIP-712 signatures and decoded calldata with controlled RPC observations; `scripts/wallet-quote-test.mjs` exercises the shipped wallet script. These checks do not replace real EVM settlement tests.
+- Evaluation rejects a missing or changed recipient policy with a clear 409 response before provider work. Receipts bind the exact captured policy version and hash, including when an edit occurs during inference. `services/api/src/evaluation-policy.test.ts` covers both timing cases. Existing manual recipient decisions remain available; the sender must review a new introduction to evaluate under changed terms.
+- OpenRouter now has an explicit free-only adapter and `pnpm agent:live:test` for two signed synthetic accounts through the real discover/draft routes. The current public model catalog was reachable; an anonymous Responses request returned 401. No authorized key was configured, so successful live inference is still unverified. The CLI correctly fails before inference when credentials are missing.
+- Follow-up verification: all 34 API tests, 5 wallet quote regressions, 8 existing V4 regressions and the API typecheck pass. The earlier hosted-agent implementation also passed its 14 browser scenarios, five TypeScript projects and production build. The follow-up does not claim a new public deployment, contract execution or video recording.
 
 ## Verification performed in this pass
 

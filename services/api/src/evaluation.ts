@@ -1,22 +1,27 @@
-import type { EvaluationOutcome } from '@signalpass/core'
+import type { EvaluationOutcome, GatePolicy } from '@signalpass/core'
 import type { StoredIntroduction, Store } from './store.js'
 import { hashDocument } from './store.js'
 import { z } from 'zod'
 
+export class EvaluationPolicyChangedError extends Error {
+  constructor() { super('recipient_policy_changed_start_new') }
+}
+
 function mockEvaluate(
   intro: StoredIntroduction,
-  topics: readonly string[],
+  policy: GatePolicy,
 ): EvaluationOutcome {
   const body = [intro.intent.whoAmI, intro.intent.whyYou, intro.intent.whatIOffer, intro.reply, intro.sharedProfile?.bio, ...(intro.sharedProfile?.interests ?? [])].filter(Boolean).join(' ').toLowerCase()
-  const hits = topics.filter((t) => body.includes(t.toLowerCase().split(' ')[0] ?? ''))
+  const hits = policy.topics.filter((t) => body.includes(t.toLowerCase().split(' ')[0] ?? ''))
   const hasDetail = [intro.intent.whyYou, intro.reply].filter(Boolean).join(' ').trim().length > 80
   const recommendation: EvaluationOutcome['recommendation'] =
     hits.length > 0 && hasDetail ? 'review' : hits.length > 0 ? 'ask_for_context' : 'not_now'
 
   const receiptBody = {
     introductionId: intro.id,
-    policyVersion: intro.policyVersion,
-    modelVersion: 'mock-evaluator-v1',
+    policyVersion: policy.version,
+    policyHash: hashDocument(policy),
+    modelVersion: 'mock-evaluator-v2',
     recommendation,
     signals: intro.disclosedSignals.length,
     payloadHash: intro.payloadHash,
@@ -58,12 +63,16 @@ function evaluationContext(intro: StoredIntroduction) {
 }
 export async function evaluateIntroduction(store: Store, intro: StoredIntroduction, url?: string) {
   const policy = store.policies.get(intro.recipientHandle)
-  if (!url) return { outcome: mockEvaluate(intro, policy?.topics ?? []), provider: 'mock-local' }
+  // Older introductions have no immutable policy snapshot. Never evaluate the
+  // latest policy under their old version; ask the sender to review a new intro.
+  if (!policy || policy.version !== intro.policyVersion) throw new EvaluationPolicyChangedError()
+  const policyHash = hashDocument(policy)
+  if (!url) return { outcome: mockEvaluate(intro, policy), provider: 'mock-local' }
   const response = await fetch((url.endsWith('/') ? url.slice(0, -1) : url) + '/evaluate', {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(15000),
     body: JSON.stringify({ introductionId: intro.id, senderHandle: intro.senderName, recipientHandle: intro.recipientHandle, intent: intro.intent, context: evaluationContext(intro), recipientPolicy: policy, disclosedSignals: intro.disclosedSignals }, (_k, v) => typeof v === 'bigint' ? v.toString() : v),
   })
   if (!response.ok) throw new Error('Evaluator unavailable')
   const body = z.object({ outcome: resultSchema, provider: z.string().min(1).max(100) }).parse(await response.json())
-  return { provider: body.provider, outcome: { ...body.outcome, receiptHash: hashDocument({ introductionId: intro.id, payloadHash: intro.payloadHash, context: evaluationContext(intro), policyVersion: intro.policyVersion, provider: body.provider, outcome: body.outcome }) } }
+  return { provider: body.provider, outcome: { ...body.outcome, receiptHash: hashDocument({ introductionId: intro.id, payloadHash: intro.payloadHash, context: evaluationContext(intro), policyVersion: policy.version, policyHash, provider: body.provider, outcome: body.outcome }) } }
 }

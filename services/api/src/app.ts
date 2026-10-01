@@ -8,7 +8,7 @@ import { type Address, type Hex, isAddress } from 'viem'
 import { createAuth, type Session } from './auth.js'
 import { transaction } from './database.js'
 import { createStore, hashDocument, profileByOwner, queueDepth, unresolvedCountFor, declineKey, type ProfileSettings, type StoredIntroduction, type Store } from './store.js'
-import { evaluateIntroduction } from './evaluation.js'
+import { evaluateIntroduction, EvaluationPolicyChangedError } from './evaluation.js'
 import { ChainError, type ChainService } from './chain.js'
 import { installChainRoutes } from './chain-routes.js'
 import { DEFAULT_PRICING } from '@signalpass/core'
@@ -191,7 +191,11 @@ export function createApp(options: { databasePath?: string; origin: string; eval
       const updated: StoredIntroduction = { ...evaluating, state: outcome.recommendation === 'ask_for_context' ? 'needs_context' : 'ready_for_review', evaluationOutcome: outcome, evaluationProvider: provider, evaluationReceiptHash: outcome.receiptHash, updatedAt: now(), revision: evaluating.revision + 1 }
       store.introductions.set(intro.id, updated)
       return c.json({ introduction: project(updated, viewer), provider })
-    } catch { store.introductions.set(intro.id, { ...intro, revision: evaluating.revision + 1 }); return c.json({ error: 'evaluation_unavailable_retry', fallback: false }, 502) }
+    } catch (error) {
+      store.introductions.set(intro.id, { ...intro, revision: evaluating.revision + 1 })
+      if (error instanceof EvaluationPolicyChangedError) return c.json({ error: error.message, fallback: false }, 409)
+      return c.json({ error: 'evaluation_unavailable_retry', fallback: false }, 502)
+    }
   })
   return { app, store, syncChain: chainRoutes.syncAll, close: () => store.db.close() }
 }
