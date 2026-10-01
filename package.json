@@ -15,6 +15,7 @@
     "v4:dev": "pnpm dev",
     "v4:verify": "node scripts/v4-verify.mjs",
     "v4:flow:test": "node --test scripts/v4-flow-test.mjs",
+    "agent:ui:test": "node scripts/agent-ui-test.mjs",
     "verify": "pnpm v4:flow:test && pnpm -r typecheck && pnpm -r test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
     "contracts:build": "pnpm --filter @signalpass/contracts build",

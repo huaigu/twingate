@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f0e8" />
+    <meta name="description" content="Your SignalPass agent helps you find people with a reason to connect, then prepare an introduction you approve." />
+    <title>Your Personal Agent · SignalPass</title>
+    <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="/v4/styles.css" rel="stylesheet" />
+    <link href="/v4/v4.css" rel="stylesheet" />
+    <link href="/v4/polish.css" rel="stylesheet" />
+    <link href="/v4/experience.css" rel="stylesheet" />
+    <link href="/v4/assistant.css" rel="stylesheet" />
+    <script defer src="/v4/client.js"></script>
+    <script defer src="/v4/navigation.js"></script>
+    <script defer src="/v4/assistant.js"></script>
+  </head>
+  <body class="sp-workspace sp-assistant" data-page="assistant">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div id="session-slot" aria-busy="true"><span class="session-loading">Loading your workspace…</span></div>
+    <div class="viewport"><div class="scene">
+      <header class="site-header v4-header">
+        <a class="v4-brand" href="/" aria-label="SignalPass home"><span class="v4-mark" aria-hidden="true"><i></i><b></b></span><span>SignalPass</span></a>
+        <nav class="v4-menu" id="site-navigation" aria-label="Main navigation">
+          <a href="/profile/import">Your profile</a><a href="/assistant" aria-current="page">My agent</a><a href="/discover">Discover</a><a href="/inbox">Introductions</a><a href="/widget/create">Your widget</a>
+        </nav>
+        <button class="v4-menu-toggle" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation" type="button"><span></span><span></span></button>
+      </header>
+      <main id="main-content">
+        <div class="sp-page-heading assistant-heading">
+          <div><p class="sp-eyebrow">YOUR PERSONAL AGENT · BY SIGNALPASS</p><h1>A little context.<br />A better hello.</h1><p class="sp-page-description">Tell your agent what you’re working toward. Find people with a reason to connect, and a thoughtful way to start.</p></div>
+          <div class="assistant-signature" aria-hidden="true">
+            <svg viewBox="0 0 226 146" fill="none"><path d="M47 88C71 11 141 141 187 54" stroke="#8e81b0" stroke-width="1.5" stroke-dasharray="4 6"/><rect x="16" y="35" width="70" height="88" rx="8" transform="rotate(-9 16 35)" fill="#e6eadc" stroke="#c9d2bc"/><circle cx="55" cy="63" r="12" fill="#acba95"/><path d="M33 103c-1-30 39-31 43-7" fill="#acba95"/><rect x="147" y="19" width="65" height="86" rx="8" transform="rotate(9 147 19)" fill="#e9e2f2" stroke="#cfc0e1"/><circle cx="171" cy="54" r="12" fill="#9f8abb"/><path d="M147 85c6-27 36-23 39 6" fill="#9f8abb"/><path d="m109 47 3 10 10 3-10 3-3 10-3-10-10-3 10-3 3-10Z" fill="#5847bd"/><path d="m128 111 2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6Z" fill="#bb7d59"/></svg>
+            <span>People worth knowing,<br />with context.</span>
+          </div>
+        </div>
+        <div class="assistant-layout">
+          <div class="assistant-main">
+            <section class="paper assistant-goal-panel" aria-labelledby="goal-heading">
+              <div class="assistant-panel-top"><span class="assistant-step">01 / A REASON TO CONNECT</span><span class="assistant-state" id="agent-state">Checking availability…</span></div>
+              <h2 id="goal-heading">Who would help you move forward?</h2>
+              <form id="agent-goal-form" aria-busy="false">
+                <label class="sr-only" for="agent-goal">What would you like help with?</label>
+                <textarea id="agent-goal" name="goal" minlength="10" maxlength="1200" rows="4" required placeholder="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return." aria-describedby="goal-hint"></textarea>
+                <p class="assistant-field-hint" id="goal-hint">A useful goal says what you need and what you can offer.</p>
+                <div class="assistant-examples" aria-label="Example goals">
+                  <span>Start with an idea</span>
+                  <button type="button" data-example="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return.">Get early feedback ↗</button>
+                  <button type="button" data-example="I’d like to meet a designer interested in making onchain tools easier to use. I can help prototype and test a small idea together.">Find a collaborator ↗</button>
+                  <button type="button" data-example="I want to understand how people build welcoming online communities. I’d love to exchange experiences in a short conversation.">Learn from someone ↗</button>
+                </div>
+                <label class="assistant-consent" for="agent-use-profile"><input type="checkbox" id="agent-use-profile" /><span><strong>Use my approved profile for this request</strong><small>Include my background and interests so the introduction sounds like me. You can search with just your goal.</small></span></label>
+                <p class="assistant-disclosure" id="agent-disclosure">Your goal and selected public profiles are sent to SignalPass’s AI provider. Your approved profile is included only when you check the box. This does not share your profile with another person.</p>
+                <div class="assistant-submit-row"><button type="submit" class="button primary" id="agent-submit" disabled>Find relevant people <span aria-hidden="true">→</span></button><span id="agent-budget" class="assistant-budget">Checking included usage…</span></div>
+              </form>
+              <div class="assistant-notice" id="agent-notice" hidden><p id="agent-notice-text"></p><div id="agent-notice-actions" class="assistant-actions"></div></div>
+              <p id="agent-progress" class="assistant-progress" role="status" aria-live="polite"></p>
+              <div id="agent-error" class="assistant-error" role="alert" hidden></div>
+            </section>
+            <section id="agent-results" class="assistant-results" aria-labelledby="results-heading" tabindex="-1" hidden>
+              <div class="assistant-section-heading"><div><p class="assistant-step">02 / PEOPLE, WITH REASONS</p><h2 id="results-heading">A few people to consider.</h2></div><a href="/discover" class="sp-text-link">Browse everyone ↗</a></div>
+              <p id="results-goal" class="assistant-results-goal"></p><p id="results-context" class="assistant-field-hint"></p>
+              <div id="agent-matches" class="assistant-matches"></div>
+              <p id="agent-next-question" class="assistant-next-question" hidden></p>
+            </section>
+            <section id="agent-draft-panel" class="paper assistant-draft-panel" aria-labelledby="draft-heading" tabindex="-1" hidden>
+              <p class="assistant-step">03 / MAKE IT YOURS</p><h2 id="draft-heading">An introduction to review.</h2>
+              <p class="assistant-draft-caption">AI draft—review the details before sending. Nothing has been sent.</p>
+              <div id="agent-draft-fields" class="assistant-draft-fields"></div>
+              <p id="agent-draft-notes" class="assistant-field-hint"></p><p id="agent-draft-expiry" class="assistant-field-hint"></p>
+              <a id="agent-draft-handoff" class="button primary" href="/discover">Review &amp; edit introduction <span aria-hidden="true">→</span></a>
+              <p class="assistant-field-hint">You’ll edit the message, choose whether to share profile context, and approve delivery on the next page.</p>
+            </section>
+          </div>
+          <aside class="assistant-sidebar" aria-label="Your agent workspace">
+            <section class="paper assistant-how"><div class="assistant-orbit" aria-hidden="true">✳</div><h2>Your goal.<br />Your final word.</h2><p>Your agent reads public profiles, explains possible connections, and helps you write the first hello.</p><ol><li><span>1</span>Tell it what matters</li><li><span>2</span>Look at the evidence</li><li><span>3</span>Review before you send</li></ol><p class="assistant-aside-note">No installation. No API key.<br />AI usage is covered within a daily limit.</p><a href="/agent" class="sp-text-link">Profile &amp; privacy settings ↗</a></section>
+            <section class="paper assistant-history" aria-labelledby="history-heading"><div class="assistant-history-heading"><h2 id="history-heading">Your recent work</h2><span class="assistant-private">PRIVATE</span></div><p class="assistant-field-hint">Goals and drafts are private to your signed-in account.</p><div id="agent-history"><p class="assistant-history-empty">Your recent goals and drafts will appear here.</p></div><button type="button" class="assistant-text-button" id="agent-clear-history" hidden>Clear history</button><div class="assistant-clear-confirm" id="agent-clear-confirm" hidden><p>Delete your saved goals and drafts? Sent introductions stay in your inbox. This won’t reset today’s usage.</p><div class="assistant-actions"><button type="button" class="button outline" id="agent-confirm-clear">Delete history</button><button type="button" class="assistant-text-button" id="agent-cancel-clear">Keep history</button></div></div></section>
+          </aside>
+        </div>
+        <footer class="assistant-footer"><span>SignalPass · People worth knowing, with context.</span><span>Suggestions need your judgment. Introductions need your approval.</span></footer>
+      </main>
+    </div></div>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # SignalPass 产品方向与目标架构
 
-> 当前实现边界（2026-10-01）：Web 资料、双方介绍、追问与人工决定已有实现；钱包保证金已在本地 EVM 验证，人工审核的 AI 费用为零。公开 Monad 部署、真实模型驱动的发现/起草、OpenClaw/Hermes 直连和第三方信号仍待交付。Hunyuan 按此前决定保持不配置。下文的 Agent Handshake 和赞助商能力是目标设计，不是已完成清单；参赛文案以 `SIGNALPASS_SUBMISSION_COPY.md` 的当前能力说明为准。
+> 当前实现边界（2026-10-01）：Web 资料、双方介绍、追问与人工决定已有实现；钱包保证金已在本地 EVM 验证，人工审核的 AI 费用为零。SignalPass 托管的 `/assistant`、公开资料推荐、私有草稿和 OpenAI Responses 适配器已有实现；真实付费模型运行仍待配置并取得证据。公开 Monad 部署、OpenClaw/Hermes 直连和第三方信号仍待交付。Hunyuan 按此前决定保持不配置。下文的 Agent Handshake 和赞助商能力是目标设计，不是已完成清单；参赛文案以 `SIGNALPASS_SUBMISSION_COPY.md` 的当前能力说明为准。
 
 > 规范定位：SignalPass 是 Monad 上面向 Builder 的高信号介绍网络。它不是新的聊天协议，也不是面向开发者出售的基础设施；它用用户自有的 Agent Persona、结构化介绍、发起人承担评估成本和可验证的注意力承诺，让陌生联系变得有上下文、可选择、可追溯。
 
@@ -38,7 +38,7 @@ SignalPass 的交互单位是 Introduction，不是 Message。
 
 目标体验是“认真地认识一个人”，不是在收件箱里处理一串支付交易。
 
-当前黑客松 MVP 保留人工发现：用户先在 Builder 目录中选择一个具体对象。Agent 辅助发现属于下一步增强：Personal Agent 可以从公开 Profile 和用户自己的目标中生成候选列表，但每次发送 Introduction 之前仍需要用户确认。
+当前提供两条入口：用户可以继续手动浏览目录，也可以在 `/assistant` 使用 SignalPass 托管的 Personal Agent。后者根据目标和经过授权的资料，从最多 40 个公开且允许匹配的候选人中推荐最多三位，展示来源引文与不确定点，再起草 Introduction。使用自己的已批准资料必须明确勾选；草稿进入现有编辑器后，由人审阅并确认发送。模型路径需要运营方配置专用密钥和兼容模型，用户不需要自备 Agent 或 API key。实现与验收边界见 `docs/HOSTED_AGENT.md`。
 
 ## 3. 3D Agent Persona
 
@@ -87,7 +87,7 @@ Agent 间的原始对话、私有策略文本、Prompt、内部评分和未经�
 | 接收 | 把陌生请求映射到用户的 Gate Policy，生成摘要和建议。 | 接受、要求补充上下文或拒绝。 |
 | 后续 | 在双方同意后准备开场问题、约定下一步或整理回顾。 | 是否继续沟通、是否授权更多动作。 |
 
-Web、OpenClaw、Hermes 或其他宿主都只实现入口适配器。黑客松先提供一个 provider-neutral 的 Agent surface 和一个 Web 参考客户端，再为 OpenClaw/Hermes 提供可复用的 skills；不把任何一个宿主写成协议依赖。
+默认入口是 SignalPass 提供的托管 Personal Agent 与 Web 工作区。服务端保留 provider-neutral 模型接口，用户资料、草稿、权限和资金规则仍由 SignalPass 管理。OpenClaw、Hermes 和其他宿主是后续可选适配器，不是首次使用产品的前提。当前只实现发现与起草；对话式资料创建、收件箱 AI 助手和宿主 skills 不应描述为已完成。
 
 ## 5. 费用与公平边界
 
@@ -186,7 +186,7 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 ### 8.3 近期必须取得的演示证据
 
 - 部署当前签名报价合约到公开 Monad 网络并完成预检；用两个独立钱包记录锁仓、接收方决定、退款与可访问的交易链接。具体参赛网络要求仍需核对报名规则。
-- 跑通一种真实模型或宿主路径：目标 → 有依据的候选 → 草稿 → 人工确认。未完成前继续诚实演示现有人工流程。
+- 为已实现的托管路径配置模型，并取得真实推理证据：目标 → 有依据的候选 → 草稿 → 人工确认。接口与浏览器 fixture 测试不能代替真实模型演示；未配置时界面明确显示不可用。
 
 ### 8.4 后续扩展
 

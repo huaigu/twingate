@@ -2,13 +2,18 @@
 (() => {
   const routes = {
     "index.html": "/profile/import",
-    "agent.html": "/agent",
+    "agent.html": "/assistant",
+    "assistant.html": "/assistant",
     "discover.html": "/discover",
     "widget.html": "/widget/create",
     "compose.html": "/introductions/new",
     "inbox.html": "/inbox",
     "widget-preview.html": "/widget/preview",
   };
+  document.querySelectorAll('.v4-menu a[href="/agent"]').forEach((link) => {
+    link.href = "/assistant";
+    if (document.body.dataset.page === "agent") link.removeAttribute("aria-current");
+  });
   document.addEventListener(
     "click",
     (event) => {

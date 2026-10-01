@@ -35,6 +35,7 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         { source: '/api/:path*', destination: (process.env.SIGNALPASS_API_ORIGIN ?? 'http://127.0.0.1:8789') + '/:path*' },
         { source: '/', destination: '/v4/index.html' },
+        { source: '/assistant', destination: '/v4/assistant.html' },
         { source: '/profile/import', destination: '/v4/profile.html' },
         { source: '/profile/review', destination: '/v4/profile.html?review=1' },
         { source: '/agent', destination: '/v4/agent.html' },
