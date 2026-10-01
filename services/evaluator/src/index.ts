@@ -51,6 +51,11 @@ const evaluateRequestSchema = z.object({
   senderHandle: z.string().min(1),
   recipientHandle: z.string().min(1),
   intent: introductionIntentSchema,
+  context: z.object({
+    sharedProfile: z.object({ bio: z.string().max(600), interests: z.array(z.string().max(80)).max(12) }).nullable(),
+    question: z.string().max(1000).nullable(),
+    reply: z.string().max(1000).nullable(),
+  }).optional(),
   recipientPolicy: gatePolicySchema,
   disclosedSignals: z.array(disclosedSignalSchema).max(3).default([]),
 })

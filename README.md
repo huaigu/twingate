@@ -115,6 +115,7 @@ Individually:
 | `pnpm contracts:test` | 47 Foundry tests, incl. a 256-run fuzz over terminal paths |
 | `pnpm --filter @signalpass/indexer test` | 8 aggregation tests (queue health, standing, pressure index) |
 | `pnpm --filter @signalpass/api test` | Signed sessions, replay, object permissions, consent, idempotency and database reopen |
+| `pnpm v4:flow:test` | Asset-independent regressions for guest-to-wallet draft recovery and composing with sparse profile interests; uses controlled DOM/API fixtures, not a browser E2E |
 | `pnpm e2e` | Real API + Next servers and 3 browser sessions: sign in → approve profile → send/receive → request/reply → accept → API restart |
 | `pnpm chain:test` | Real Anvil contracts, EIP-712 signature compatibility, funding verification, authorization, refunds, interrupted-callback recovery and restart |
 | `pnpm chain:verify` | Chain integration plus two-browser wallet flow, network switch, profile sync, cancel, accept, decline and expiry |
