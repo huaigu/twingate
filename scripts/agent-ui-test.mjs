@@ -159,7 +159,7 @@ try {
   browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH, args: ['--no-sandbox', '--no-zygote', '--disable-dev-shm-usage', '--disable-webgl'] } : {}) });
   console.log('Browser:', browser.version());
 
-  await scenario('goal → evidence → draft → editable composer → explicit confirmation', {}, async ({ page, calls }) => {
+  await scenario('goal → evidence → draft → editable composer → explicit confirmation', { draft: { ...makeDraft(), notes: [] } }, async ({ page, calls }) => {
     assert.equal(await page.locator('#agent-use-profile').isChecked(), false);
     await discover(page);
     assert.equal(calls.find(call => call.path === '/agent/discover').body.useProfile, false, 'Search defaults to goal-only consent');
@@ -172,6 +172,10 @@ try {
     await page.locator('#agent-use-profile').check();
     await page.locator('.assistant-prepare-draft').first().click();
     await page.locator('#agent-draft-panel').waitFor({ state: 'visible' });
+    assert.match(await page.locator('.assistant-draft-caption').innerText(), /Check personal claims.*untrue suggestion.*know them or follow their work/);
+    assert.equal(await page.locator('#agent-draft-notes').innerText(), '', 'The review reminder is product-owned even without model notes');
+    await geometry(page, 1440);
+    await page.screenshot({ path: path.join(output, 'assistant-draft-1440.png'), fullPage: true });
     const draftCall = calls.find(call => call.path === '/agent/draft');
     assert.equal(draftCall.body.recipientHandle, recipient.handle);
     assert.equal(draftCall.body.useProfile, true);
@@ -181,6 +185,9 @@ try {
     await page.waitForURL('**/introductions/new/**');
     await page.waitForFunction(() => document.querySelector('#intro-field-1')?.value.includes('I’m Alex'));
     assert.equal(await page.locator('#intro-field-2').inputValue(), makeDraft().intent.whyYou);
+    assert.match(await page.locator('.sp-draft-readiness[role=note]').innerText(), /Check personal claims.*untrue suggestion.*know them or follow their work/);
+    await geometry(page, 1440);
+    await page.screenshot({ path: path.join(output, 'agent-composer-1440.png'), fullPage: true });
     assert.equal(sends(calls).length, 0, 'Handoff never sends an introduction');
     const edit = 'I am Alex. I revised this introduction myself after reading Maya’s profile.';
     await page.locator('#intro-field-1').fill(edit);
@@ -201,11 +208,30 @@ try {
     assert.equal(sends(calls)[0].body.intent.whoAmI, edit);
   });
 
-  await scenario('mobile recommendations have no horizontal overflow', { width: 390 }, async ({ page, calls }) => {
+  await scenario('mobile recommendations and draft review reminders have no horizontal overflow', { width: 390, draft: { ...makeDraft(), notes: [] } }, async ({ page, calls }) => {
     await discover(page);
     await geometry(page, 390);
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({ path: path.join(output, 'assistant-recommendations-390.png'), fullPage: true });
+    await page.locator('#agent-use-profile').check();
+    await page.locator('.assistant-prepare-draft').first().click();
+    await page.locator('#agent-draft-panel').waitFor({ state: 'visible' });
+    assert.match(await page.locator('.assistant-draft-caption').innerText(), /Check personal claims.*untrue suggestion.*know them or follow their work/);
+    assert.equal(await page.locator('#agent-draft-notes').innerText(), '');
+    await geometry(page, 390);
+    await page.screenshot({ path: path.join(output, 'assistant-draft-390.png'), fullPage: true });
+    await page.locator('#agent-draft-handoff').click();
+    await page.waitForURL('**/introductions/new/**');
+    await page.waitForFunction(() => document.querySelector('#intro-field-1')?.value.includes('I’m Alex'));
+    assert.match(await page.locator('.sp-draft-readiness[role=note]').innerText(), /Check personal claims.*untrue suggestion.*know them or follow their work/);
+    await geometry(page, 390);
+    const contextLayout = await page.evaluate(() => {
+      const copy = document.querySelector('.verified-context-inner > p').getBoundingClientRect();
+      const button = document.querySelector('.verified-context-inner .context-button').getBoundingClientRect();
+      return { copyWidth: copy.width, copyBottom: copy.bottom, buttonTop: button.top };
+    });
+    assert(contextLayout.copyWidth > 180 && contextLayout.copyBottom <= contextLayout.buttonTop, 'Mobile profile-sharing explanation remains readable above its separate control');
+    await page.screenshot({ path: path.join(output, 'agent-composer-390.png'), fullPage: true });
     assert.equal(sends(calls).length, 0);
   });
 

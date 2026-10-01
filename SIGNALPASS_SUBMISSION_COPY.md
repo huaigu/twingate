@@ -28,7 +28,7 @@ The prototype also has an optional wallet-bond flow, verified on a local EVM. A 
 
 We are building toward Monad so that attention commitments and refunds can be checked independently of the application. The current signed-quote revision has not yet been verified on public Monad Testnet. Local transactions demonstrate the mechanism; they are not public deployment evidence.
 
-A SignalPass-hosted Personal Agent is now implemented at `/assistant`, with a server-configured OpenAI Responses adapter. It can recommend a few eligible public profiles with source quotes, prepare a private draft, and hand that draft to the existing editor for human confirmation. Users do not need their own agent host or model key. Its privacy, consent and provider behavior have fixture coverage; live paid inference still requires server configuration and a recorded acceptance run. The ambition is a better beginning to a relationship, with people retaining control of their attention, context and money.
+A SignalPass-hosted Personal Agent is implemented at `/assistant`, with server-configured OpenAI Responses and free-only OpenRouter adapters. It can recommend a few eligible public profiles with source quotes, prepare a private draft, and hand that draft to the existing editor for human confirmation. Users do not need their own agent host or model key. Live OpenRouter discovery and drafting passed on October 1, 2026 using fictional profiles and signed sessions, with zero reported inference cost. This verifies the model integration; public availability and usefulness with a real community remain to be demonstrated. The ambition is a better beginning to a relationship, with people retaining control of their attention, context and money.
 
 ## Current Capability Boundary
 
@@ -37,7 +37,7 @@ A SignalPass-hosted Personal Agent is now implemented at `/assistant`, with a se
 | Web introductions | Authenticated cross-account delivery, profile approval and visibility, context requests/replies, recipient decisions, participant-only receipts and persistence. |
 | Wallet bonds | Signed quotes, funding verification and refunds implemented and tested on a local EVM; public Monad Testnet deployment remains pending. |
 | AI evaluation | Evaluation interfaces and mock mode exist. The wallet-bond flow uses human review with zero AI evaluation fee; it does not charge for real model inference. |
-| Hosted Personal Agent | Discover/draft API, Web workspace, public-profile evidence, explicit profile consent, private history, usage limits and an OpenAI Responses adapter are implemented. No live paid model run or deployed availability is claimed yet. |
+| Hosted Personal Agent | Discover/draft API, Web workspace, public-profile evidence, explicit profile consent, private history, usage limits and provider adapters are implemented. Free OpenRouter inference passed a synthetic signed-session acceptance run; free-provider failures were also observed. See [live evidence](docs/reports/signalpass-hosted-agent-live-2026-10-01.md). No paid inference or deployed availability is claimed. |
 | Bring your own agent | A person can import a JSON profile draft and review it. This is not a direct OpenClaw or Hermes integration. |
 | Privacy | Private introduction records have participant access controls. The server does not provide application-level encryption at rest or end-to-end encrypted chat. |
 | Sponsors | Dynamic, a live Envio index and Nansen verification are not integrated. Hunyuan remains unconfigured. No sponsor integration is claimed as complete. |
@@ -45,7 +45,7 @@ A SignalPass-hosted Personal Agent is now implemented at `/assistant`, with a se
 ## Roadmap — Not Shipped Claims
 
 1. **Public Monad proof:** deploy and verify the current contracts, make the product accessible, and record a two-wallet lock, decision and refund with explorer links.
-2. **Live hosted-agent proof:** configure the implemented SignalPass model adapter, run a real goal → recommendation → edited draft → human-confirmed send, and record the provider/model and behavior. Fixture tests are not live inference evidence. External hosts and Hunyuan are not prerequisites.
+2. **Public hosted-agent journey:** build on the synthetic live-inference proof with two consenting people: real goal → recommendation → edited draft → human-confirmed send. Configure the deployed provider, confirm availability, and record its behavior. External hosts and Hunyuan are not prerequisites.
 3. **Sender-funded evaluation:** connect real evaluation to settlement before charging an evaluation fee. Display the fee separately from the refundable bond and explain when it is earned. Pre-evaluation expiry must refund both the unearned fee and bond; AI must never seize the bond or accept an introduction.
 4. **Useful connections in practice:** test with a small, consenting first community of Monad builders and record where context helps, where people hesitate and whether they choose to continue the conversation. No traction or outcome figures are claimed yet.
 5. **Optional enhancements:** evaluate embedded wallets, event indexing, consented verified signals and 3D personas when they improve the introduction experience or meet a selected bounty's verified requirements.
@@ -53,7 +53,7 @@ A SignalPass-hosted Personal Agent is now implemented at `/assistant`, with a se
 ## Copy Rules
 
 - Lead with **people**, **context**, **introductions** and **human consent**. Describe Monad builders as the initial community.
-- Describe the hosted discover/draft workflow as implemented but awaiting live model verification. Broader Personal Agent abilities remain vision. Importing JSON, profile filtering and fixture tests do not prove live inference.
+- Describe hosted discovery/drafting as implemented and verified with live free inference against fictional profiles. Do not imply deployed availability, consistent model quality or community outcomes from this acceptance run. Broader Personal Agent abilities remain vision.
 - Identify **sample mode**, **live no-payment mode**, **local EVM** and **public testnet** accurately in copy and recordings. Local proof must not imply public deployment.
 - Keep fees and bonds separate. The current manual-review wallet flow has a zero AI evaluation fee; gas still applies. A refundable bond does not buy acceptance or eliminate every form of spam.
 - Do not call SignalPass a chat protocol, public infrastructure layer, or standalone pay-to-DM product.

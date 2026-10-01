@@ -82,7 +82,7 @@ class ResponsesAgentModel implements AgentModel {
     this.model = options.model.trim()
     this.#endpoint = responseEndpoint(options.baseUrl ?? (provider === 'openrouter' ? OPENROUTER_BASE_URL : DEFAULT_BASE_URL))
     this.#fetch = options.fetch ?? globalThis.fetch
-    this.#timeoutMs = options.timeoutMs ?? 15_000
+    this.#timeoutMs = options.timeoutMs ?? (provider === 'openrouter' ? 45_000 : 15_000)
     if (!Number.isSafeInteger(this.#timeoutMs) || this.#timeoutMs < 1) throw new Error(CONFIG_ERROR)
   }
 
@@ -186,6 +186,14 @@ function dailyLimit(value: string | undefined, fallback: number, max: number): n
   return parsed
 }
 
+function configuredTimeout(value: string | undefined): number | undefined {
+  if (value === undefined || !value.trim()) return undefined
+  if (!/^\d+$/.test(value.trim())) throw new Error(CONFIG_ERROR)
+  const parsed = Number(value)
+  if (!Number.isSafeInteger(parsed) || parsed < 1000 || parsed > 60_000) throw new Error(CONFIG_ERROR)
+  return parsed
+}
+
 /** Explicit opt-in only. No ambient key reuse, paid OpenRouter routing, or mock fallback. */
 export function configuredHostedAgent(env: Record<string, string | undefined> = process.env): HostedAgentOptions {
   const provider = env.SIGNALPASS_AGENT_PROVIDER?.trim()
@@ -195,6 +203,7 @@ export function configuredHostedAgent(env: Record<string, string | undefined> = 
     apiKey: env.SIGNALPASS_AGENT_API_KEY ?? '',
     model: env.SIGNALPASS_AGENT_MODEL ?? '',
     baseUrl: env.SIGNALPASS_AGENT_BASE_URL?.trim() || undefined,
+    timeoutMs: configuredTimeout(env.SIGNALPASS_AGENT_TIMEOUT_MS),
   }
   return {
     model: provider === 'openrouter' ? new OpenRouterResponsesAgentModel(options) : new OpenAIResponsesAgentModel(options),

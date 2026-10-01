@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@signalpass/core'],
   outputFileTracingRoot: repoRoot,
   typedRoutes: false,
+  // Rewritten API calls must outlast the agent's bounded 60-second deadline.
+  // Next otherwise terminates upstream requests at its 30-second default.
+  experimental: { proxyTimeout: 65_000 },
   // V4 is a native multi-page HTML site. Rewrites keep stable public URLs and
   // leave the existing React/API implementation available outside these routes.
   async redirects() {

@@ -34,10 +34,13 @@
     funding_already_confirmed: 'This introduction is already funded. Refresh to see its confirmed receipt.',
   };
   api.request = async (path, body, allowAnonymous = false) => {
+    // Hosted inference may use the provider's full 60-second server deadline.
+    // Keep ordinary reads, wallet actions and other mutations on a short budget.
+    const timeout = body !== undefined && (path === '/agent/discover' || path === '/agent/draft') ? 65000 : 18000;
     const response = await fetch('/api' + path, {
       method: body === undefined ? 'GET' : 'POST', credentials: 'same-origin',
       headers: body === undefined ? {} : { 'Content-Type': 'application/json', ...(api.me?.session ? { 'X-SignalPass-CSRF': api.me.session.csrf } : {}) },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.timeout(18000),
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.timeout(timeout),
     });
     const data = await response.json().catch(() => ({ error: 'service_unavailable' }));
     if (response.status === 401 && allowAnonymous) return null;

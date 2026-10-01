@@ -1,6 +1,6 @@
 # SignalPass Agent Surface 与未来产品形态
 
-> 当前实现（2026-10-01）：默认入口已改为 SignalPass 托管的 `/assistant`。已实现 goal → 公开候选与来源引文 → 私有草稿 → 人工编辑确认；模型密钥只由运营方配置，用户不必安装 OpenClaw/Hermes。初始适配器是 OpenAI Responses，真实付费推理仍待配置验收。仅公开、已批准、允许匹配的资料能成为候选；下文私有资料匹配、完整 skills、收件箱 AI 和宿主适配仍属目标设计。详见 [托管实现与验收](HOSTED_AGENT.md)。
+> 当前实现（2026-10-01）：默认入口已改为 SignalPass 托管的 `/assistant`。已实现 goal → 公开候选与来源引文 → 私有草稿 → 人工编辑确认；模型密钥只由运营方配置，用户不必安装 OpenClaw/Hermes。已有 OpenAI Responses 与免费模型专用 OpenRouter 适配器；OpenRouter 已用虚构资料和签名会话完成真实推荐与草稿验收，供应商报告费用为零。公开部署和真实社区效果仍待验证，免费供应商的限流与不完整响应也有记录。仅公开、已批准、允许匹配的资料能成为候选；下文私有资料匹配、完整 skills、收件箱 AI 和宿主适配仍属目标设计。详见 [托管实现与验收](HOSTED_AGENT.md)。
 
 这份文档把 SignalPass 从 Web-first 黑客松 Demo 延展到 Agent-first 产品时的边界固定下来。目标不是做一个公开的 AI 分身广场，而是让每个 Builder 拥有一个私有 Personal Agent，帮助他们发现值得认识的人、准备 Introduction，并处理别人发来的请求。
 

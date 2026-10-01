@@ -981,7 +981,7 @@
       const note = document.createElement("p");
       note.className = "sp-draft-readiness";
       note.setAttribute("role", "note");
-      note.textContent = "AI draft—review details before sending. Using your profile with the agent does not grant permission to share it with this person.";
+      note.textContent = "AI draft—review details before sending. Check personal claims and remove any untrue suggestion that you know them or follow their work. Using your profile with the agent does not grant permission to share it with this person.";
       $(".intro-edit-section").prepend(note);
     }
     const showContext = () => {

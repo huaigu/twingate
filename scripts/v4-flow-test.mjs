@@ -159,3 +159,61 @@ for (const tags of [[], ['Monad'], ['Monad', 'Open source']]) {
     if (tags.length < 2) assert.match(fields[1].value, /possible collaboration/);
   });
 }
+
+
+function requestClient(response = { status: 200, data: { ok: true } }) {
+  const calls = [];
+  const window = {};
+  vm.runInNewContext(clientSource, {
+    window, localStorage: storage({}), sessionStorage: storage({}), URLSearchParams,
+    location: { search: '?demo=1', pathname: '/assistant' },
+    document: { body: { dataset: { page: 'assistant' } }, getElementById: () => null, querySelector: () => null, querySelectorAll: () => [] },
+    AbortSignal: { timeout: milliseconds => ({ milliseconds }) },
+    fetch: async (path, options) => {
+      calls.push({ path, ...options });
+      if (response.error) throw response.error;
+      return { ok: response.status < 400, status: response.status, json: async () => response.data };
+    },
+  });
+  window.SignalPass.me = { session: { address, csrf: 'test-csrf' } };
+  return { api: window.SignalPass, calls };
+}
+
+test('only hosted discover and draft mutations receive a 65-second request budget', async () => {
+  const { api, calls } = requestClient();
+  await api.ready;
+  for (const path of ['/agent/discover', '/agent/draft']) {
+    await api.request(path, { goal: 'A test request' });
+    const call = calls.at(-1);
+    assert.equal(call.signal.milliseconds, 65000);
+    assert.equal(call.method, 'POST');
+    assert.equal(call.headers['X-SignalPass-CSRF'], 'test-csrf');
+    assert.equal(call.credentials, 'same-origin');
+  }
+  for (const [path, body] of [
+    ['/agent/status'], ['/agent/workspace'], ['/agent/drafts/example'], ['/agent/discover'], ['/agent/draft'],
+    ['/profiles'], ['/introductions/example'], ['/agent/history/clear', {}],
+    ['/introductions', {}], ['/introductions/example/funding-quote', {}], ['/introductions/example/funding', {}],
+  ]) {
+    await api.request(path, body);
+    assert.equal(calls.at(-1).signal.milliseconds, 18000, path);
+  }
+});
+
+test('long inference requests still expose provider, budget and timeout errors to the UI', async () => {
+  for (const [status, code] of [[502, 'agent_unavailable'], [429, 'agent_budget_exhausted']]) {
+    const { api, calls } = requestClient({ status, data: { error: code } });
+    await api.ready;
+    await assert.rejects(api.request('/agent/discover', { goal: 'A test goal' }), error => {
+      assert.equal(error.code, code);
+      assert.equal(error.status, status);
+      assert.match(error.message, /Could not complete/);
+      return true;
+    });
+    assert.equal(calls[0].signal.milliseconds, 65000);
+  }
+  const timeoutError = Object.assign(new Error('The operation timed out'), { name: 'TimeoutError' });
+  const { api } = requestClient({ error: timeoutError });
+  await api.ready;
+  await assert.rejects(api.request('/agent/draft', { runId: 'example' }), error => error === timeoutError);
+});

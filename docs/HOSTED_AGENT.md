@@ -33,18 +33,19 @@ Never put the key in frontend variables, source control or the user interface. A
 | `SIGNALPASS_AGENT_API_KEY` | Required dedicated server-side key when enabled. |
 | `SIGNALPASS_AGENT_MODEL` | Required explicit model supporting structured output. OpenRouter accepts only a named `vendor/model:free` variant; router aliases and paid models are rejected. |
 | `SIGNALPASS_AGENT_BASE_URL` | Empty selects `https://api.openai.com/v1` or `https://openrouter.ai/api/v1`. HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
+| `SIGNALPASS_AGENT_TIMEOUT_MS` | Optional integer 1000–60000; blank defaults to 15000 for OpenAI and 45000 for OpenRouter. |
 | `SIGNALPASS_AGENT_DAILY_USER_LIMIT` | 20 inference attempts per account per UTC day; allowed 1–1000. |
 | `SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT` | 200 inference attempts per UTC day across accounts; allowed 1–10000. |
 
 Attempts include provider failures. SQLite reserves quota before inference; clearing history and restarting the API do not reset it. Inference is limited to one concurrent call per account and two globally. Leases expire after 120 seconds if the process dies. These are usage bounds, not a dollar spending ceiling; configure a provider project budget as appropriate for deployment. Wallet accounts are not unique-human identities.
 
-The provider has a 15-second deadline, a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Test model compatibility with the exact schema before a public demo.
+The provider has a bounded deadline (15 seconds for OpenAI, 45 seconds for OpenRouter by default), a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Browser discovery/draft requests and the Next API proxy allow up to 65 seconds for a configured provider deadline of at most 60 seconds; other browser API requests retain their 18-second timeout. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Exact source quotes are checked, but generated draft claims are not fact-verified. The live test still invented prior familiarity despite prompt instructions; the draft and composer remind the sender to check personal claims. Test model compatibility with the exact schema before a public demo.
 
 ### Free OpenRouter acceptance test
 
-Free models still need a legitimate OpenRouter account API key. On October 1, 2026, the public model catalog was reachable and an anonymous Responses request returned HTTP 401. No authorized key was configured in the development environment, so live inference was not completed. There is no bundled or shared credential.
+Free models still need a legitimate OpenRouter account API key. On October 1, 2026, an authorized, transient test key completed live discovery and drafting with `dots-studio/dots-3-note-preview:free` through the actual signed-session API routes and fictional profiles. OpenRouter reported zero cost for both calls. The key was not saved in the repository or application configuration. See [the acceptance report](reports/signalpass-hosted-agent-live-2026-10-01.md) for timings, repeat-run failures and exact scope. There is no bundled or shared credential.
 
-Select a named `:free` model whose current catalog entry supports structured output. The adapter requires parameter support, disables provider fallback, caps prompt/completion/request/image pricing at zero, and requests providers that do not collect input data. If no endpoint satisfies those constraints, the request fails; it never upgrades to paid inference or a random model. Availability and quality still need the live test. Hunyuan is not selected or configured automatically.
+Select a named `:free` model whose current catalog entry supports structured output. The adapter requires parameter support, disables provider fallback, caps prompt/completion/request/image pricing at zero, and requests providers that do not collect input data. If no endpoint satisfies those constraints, the request fails; it never upgrades to paid inference or a random model. Free-provider availability varies: the acceptance session also observed a rate limit, a timeout and an incomplete response. Recheck the chosen model before a demo. Hunyuan is not selected or configured automatically.
 
 ```sh
 export SIGNALPASS_AGENT_PROVIDER=openrouter
@@ -89,11 +90,12 @@ pnpm -r typecheck
 pnpm v4:flow:test
 pnpm exec playwright install chromium
 pnpm agent:ui:test
+node scripts/agent-proxy-smoke.mjs
 ```
 
-The browser suite serves the actual V4 pages with mocked HTTP responses and stops at the user-confirmed delivery request. It verifies desktop/mobile behavior and failure states without claiming real model output, real wallet sign-in or real delivery. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` can select an installed Chromium; screenshots default to `.run/agent-ui-qa`. Existing bitmap artwork is excluded from this targeted test.
+The browser suite serves the actual V4 pages with mocked HTTP responses and stops at the user-confirmed delivery request. It verifies desktop/mobile behavior and failure states without claiming real model output, real wallet sign-in or real delivery. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` can select an installed Chromium; screenshots default to `.run/agent-ui-qa`. Existing bitmap artwork is excluded from this targeted test. The separate proxy smoke starts real Next with a localhost fixture and verifies a response delayed beyond 30 seconds; it needs no model key.
 
-Before claiming a live model demonstration:
+The synthetic live acceptance proves model integration, not a deployed community workflow. Before a public product demonstration:
 
 1. Configure the dedicated server key and a compatible model. Confirm `/assistant` identifies the provider and available quota.
 2. Use two separately signed-in, consenting accounts with approved profiles. Ensure the intended candidate is public, open and matching-enabled.

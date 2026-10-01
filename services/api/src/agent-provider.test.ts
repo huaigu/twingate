@@ -250,3 +250,50 @@ test('OpenRouter shares refusal validation, response bounds, and abort deadlines
   await assert.rejects(stalled.generate(request), safeFailure)
   assert.equal(signal?.aborted, true)
 })
+
+test('server timeout setting accepts only a bounded millisecond deadline', () => {
+  const env = { SIGNALPASS_AGENT_PROVIDER: 'openrouter', SIGNALPASS_AGENT_API_KEY: secret, SIGNALPASS_AGENT_MODEL: 'example/fixture-model:free' }
+  for (const timeout of [undefined, '', '1000', '45000', '60000']) {
+    assert.doesNotThrow(() => configuredHostedAgent({ ...env, SIGNALPASS_AGENT_TIMEOUT_MS: timeout }))
+  }
+  for (const timeout of ['-1', '0', '999', '60001', '1.5', '1e4', 'Infinity', secret]) {
+    assert.throws(() => configuredHostedAgent({ ...env, SIGNALPASS_AGENT_TIMEOUT_MS: timeout }), error => {
+      assert(error instanceof Error)
+      assert.equal(error.message, 'Invalid SignalPass agent configuration. Check the server environment settings.')
+      return true
+    })
+  }
+})
+
+test('provider defaults and configured deadlines abort at the exact bounded time', async context => {
+  context.mock.timers.enable({ apis: ['setTimeout'] })
+  const captured: { signal?: AbortSignal } = {}
+  context.mock.method(globalThis, 'fetch', async (_url: unknown, init: RequestInit | undefined) => {
+    captured.signal = init?.signal ?? undefined
+    return await new Promise<Response>((_resolve, reject) => captured.signal!.addEventListener('abort', () => reject(new Error(secret)), { once: true }))
+  })
+  const cases = [
+    { provider: 'openai', model: 'fixture-model', configured: undefined, expected: 15_000 },
+    { provider: 'openrouter', model: 'example/fixture-model:free', configured: undefined, expected: 45_000 },
+    { provider: 'openrouter', model: 'example/fixture-model:free', configured: '', expected: 45_000 },
+    { provider: 'openai', model: 'fixture-model', configured: '1000', expected: 1000 },
+    { provider: 'openrouter', model: 'example/fixture-model:free', configured: '60000', expected: 60_000 },
+  ]
+  for (const entry of cases) {
+    delete captured.signal
+    const configured = configuredHostedAgent({
+      SIGNALPASS_AGENT_PROVIDER: entry.provider, SIGNALPASS_AGENT_API_KEY: secret,
+      SIGNALPASS_AGENT_MODEL: entry.model, SIGNALPASS_AGENT_TIMEOUT_MS: entry.configured,
+    })
+    const pending = configured.model!.generate(request)
+    const rejected = assert.rejects(pending, safeFailure)
+    // The injected fetch assigns the signal synchronously; TS cannot follow that callback.
+    const signal = captured.signal as AbortSignal | undefined
+    assert(signal)
+    context.mock.timers.tick(entry.expected - 1)
+    assert.equal(signal.aborted, false)
+    context.mock.timers.tick(1)
+    assert.equal(signal.aborted, true)
+    await rejected
+  }
+})
