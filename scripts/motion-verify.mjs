@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
 const origin = process.env.MOTION_BASE_URL || 'http://localhost:3005';
-const output = '.run/motion-pass'; mkdirSync(output, { recursive: true });
+const output = process.env.MOTION_QA_DIR || '.run/motion-pass'; mkdirSync(output, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const errors = [], mutations = [], measurements = [];
 const watch = page => {

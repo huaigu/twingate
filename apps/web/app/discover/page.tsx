@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useV3Demo } from '@/lib/v3-context'
 import type { DiscoveryGoal } from '@/lib/v3-data'
-import styles from '@/app/v3.module.css'
+import { SignalPassHeader } from '@/components/v3/header'
+import { LockIcon } from '@/components/v3/icons'
 
 export default function DiscoverPage() {
   const router = useRouter()
@@ -22,272 +23,525 @@ export default function DiscoverPage() {
   }
 
   return (
-    <div className={styles.v3Page}>
-      <div className={styles.v3Container1672}>
-        <div className={styles.discoverGrid1672}>
-          {/* Left Column: People worth knowing title & Alex Sitting 3D Scene */}
-          <div className={styles.discoverLeftCol}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/design/slices/p3_left_art_448.png"
-              alt="People worth knowing - Different backgrounds. Shared curiosity. A more open internet."
-              style={{ width: '100%', maxWidth: 448, objectFit: 'contain' }}
-            />
-          </div>
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundColor: '#f6f3ed',
+        backgroundImage: 'radial-gradient(rgba(18, 16, 22, 0.05) 1px, transparent 1px)',
+        backgroundSize: '20px 20px',
+        color: '#14121a',
+        paddingBottom: '4rem',
+        position: 'relative',
+        overflowX: 'hidden',
+      }}
+    >
+      {/* Top Header */}
+      <SignalPassHeader activeNav="our-approach" />
 
-          {/* Center Column: Query Bar, Curated Candidates, Privacy Guarantee Bar */}
-          <div>
-            {/* Top Paper Tablet: I'm curious about... */}
-            <div className={styles.paperTablet} style={{ marginBottom: '2rem' }}>
-              <h2 className={styles.tabletTitle} style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>
-                I&apos;m{' '}
-                <span className={styles.orangeBrushWrapper}>
-                  curious
-                </span>{' '}
-                about...
-              </h2>
+      {/* Main 3-Column Layout Grid matching 03-people-discovery.png */}
+      <div
+        style={{
+          maxWidth: '1672px',
+          margin: '0 auto',
+          padding: '1rem 2rem 2rem',
+          display: 'grid',
+          gridTemplateColumns: '380px minmax(700px, 920px) 320px',
+          gap: '1.5rem',
+          alignItems: 'start',
+          position: 'relative',
+        }}
+      >
+        {/* Left Column: People worth knowing + Alex sitting on block */}
+        <div style={{ position: 'relative' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/design/slices/03_left_people_column.png"
+            alt="People worth knowing - Different backgrounds. Shared curiosity. A more open internet."
+            style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 16 }}
+          />
+        </div>
 
-              <form onSubmit={handleSearch}>
+        {/* Center Column: Search & Curated Candidates */}
+        <div>
+          {/* Top Paper Card: I'm curious about... */}
+          <div
+            style={{
+              background: '#fdfbf7',
+              border: '1px solid #d9d2c4',
+              borderRadius: 20,
+              padding: '2rem 2.25rem',
+              boxShadow: '0 10px 30px rgba(45, 30, 20, 0.07)',
+              marginBottom: '1.75rem',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                fontSize: '2.4rem',
+                fontWeight: 700,
+                margin: '0 0 1.25rem',
+                color: '#14121a',
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              I&apos;m{' '}
+              <span style={{ position: 'relative', display: 'inline-block' }}>
+                curious
+                <span
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    bottom: -4,
+                    width: '100%',
+                    height: 6,
+                    background: 'url(/design/slices/03_brush_curious.png) no-repeat center',
+                    backgroundSize: '100% 100%',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </span>{' '}
+              about...
+            </h2>
+
+            <form onSubmit={handleSearch}>
+              {/* Natural Language Input */}
+              <div style={{ marginBottom: '1.25rem' }}>
                 <input
                   type="text"
                   value={localQuery}
                   onChange={(e) => setLocalQuery(e.target.value)}
                   placeholder="e.g. finding a design partner, learning about zk, or meeting creators..."
-                  className={styles.inputField}
-                  style={{ width: '100%', padding: '0.85rem 1.25rem', fontSize: '1rem', borderRadius: 10, marginBottom: '1rem' }}
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.5rem',
+                    fontSize: '1rem',
+                    color: '#1e293b',
+                    background: '#f8f6f0',
+                    border: '1px solid #d5cebf',
+                    borderRadius: 9999,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)',
+                  }}
                 />
+              </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      type="button"
-                      onClick={() => handleGoalClick('chat')}
-                      className={styles.btnSecondaryCream}
-                      style={{
-                        padding: '0.45rem 1rem',
-                        fontSize: '0.875rem',
-                        background: selectedGoal === 'chat' ? '#ede9fe' : '#fdfbf7',
-                        borderColor: selectedGoal === 'chat' ? '#6366f1' : '#c9c2b4',
-                      }}
-                    >
-                      💬 Chat
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleGoalClick('collaborate')}
-                      className={styles.btnSecondaryCream}
-                      style={{
-                        padding: '0.45rem 1rem',
-                        fontSize: '0.875rem',
-                        background: selectedGoal === 'collaborate' ? '#ede9fe' : '#fdfbf7',
-                        borderColor: selectedGoal === 'collaborate' ? '#6366f1' : '#c9c2b4',
-                      }}
-                    >
-                      👥 Collaborate
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleGoalClick('learn')}
-                      className={styles.btnSecondaryCream}
-                      style={{
-                        padding: '0.45rem 1rem',
-                        fontSize: '0.875rem',
-                        background: selectedGoal === 'learn' ? '#ede9fe' : '#fdfbf7',
-                        borderColor: selectedGoal === 'learn' ? '#6366f1' : '#c9c2b4',
-                      }}
-                    >
-                      📖 Learn
-                    </button>
-                  </div>
-
+              {/* Action Buttons Row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  {/* Chat */}
                   <button
-                    type="submit"
-                    className={styles.btnPrimaryBlue}
-                    style={{ padding: '0.55rem 1.5rem', fontSize: '0.9375rem' }}
+                    type="button"
+                    onClick={() => handleGoalClick('chat')}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.6rem 1.4rem',
+                      borderRadius: 9999,
+                      border: selectedGoal === 'chat' ? '1.5px solid #2328b0' : '1px solid #c9c2b4',
+                      background: selectedGoal === 'chat' ? '#e0e7ff' : '#ffffff',
+                      color: selectedGoal === 'chat' ? '#1e1b4b' : '#38342f',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
                   >
-                    Ask my agent &rarr;
+                    💬 Chat
+                  </button>
+                  {/* Collaborate */}
+                  <button
+                    type="button"
+                    onClick={() => handleGoalClick('collaborate')}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.6rem 1.4rem',
+                      borderRadius: 9999,
+                      border: selectedGoal === 'collaborate' ? '1.5px solid #2328b0' : '1px solid #c9c2b4',
+                      background: selectedGoal === 'collaborate' ? '#e0e7ff' : '#ffffff',
+                      color: selectedGoal === 'collaborate' ? '#1e1b4b' : '#38342f',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    👥 Collaborate
+                  </button>
+                  {/* Learn */}
+                  <button
+                    type="button"
+                    onClick={() => handleGoalClick('learn')}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.6rem 1.4rem',
+                      borderRadius: 9999,
+                      border: selectedGoal === 'learn' ? '1.5px solid #2328b0' : '1px solid #c9c2b4',
+                      background: selectedGoal === 'learn' ? '#e0e7ff' : '#ffffff',
+                      color: selectedGoal === 'learn' ? '#1e1b4b' : '#38342f',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    📖 Learn
                   </button>
                 </div>
-              </form>
-            </div>
 
-            {/* Candidates Section */}
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontFamily: 'Georgia, serif', fontWeight: 700, margin: 0 }}>
-                  A few people your agent found
-                </h3>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/design/slices/note_suggestions_ranking.png"
-                  alt="Suggestions, not a ranking."
-                  style={{ width: 170 }}
-                />
+                <button
+                  type="submit"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem 2rem',
+                    borderRadius: 9999,
+                    border: 'none',
+                    background: '#1b1f9b',
+                    color: '#ffffff',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(27, 31, 155, 0.3)',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  Ask my agent &rarr;
+                </button>
               </div>
+            </form>
+          </div>
 
-              {/* 3 Candidate Cards Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
-                {filteredCandidates.slice(0, 3).map((candidate) => {
-                  const candidateAvatar =
-                    candidate.id === 'maya'
-                      ? '/design/slices/avatar_maya_candidate.png'
-                      : candidate.id === 'rohan'
-                      ? '/design/slices/avatar_rohan_candidate.png'
-                      : candidate.id === 'leo'
-                      ? '/design/slices/avatar_leo_candidate.png'
-                      : candidate.avatarUrl
+          {/* Candidates Section Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', position: 'relative' }}>
+            <h3 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: '1.45rem', fontWeight: 700, margin: 0, color: '#14121a' }}>
+              A few people your agent found
+            </h3>
+            {/* Sticky note: Suggestions, not a ranking */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/design/slices/03_sticky_suggestions.png"
+              alt="Suggestions, not a ranking."
+              style={{ width: 190, height: 'auto', pointerEvents: 'none' }}
+            />
+          </div>
 
-                  return (
-                    <div
-                      key={candidate.id}
-                      className={styles.paperTablet}
-                      style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                    >
-                      <div>
-                        {/* Avatar & Title */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.75rem' }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={candidateAvatar}
-                            alt={candidate.name}
-                            style={{
-                              width: 54,
-                              height: 54,
-                              borderRadius: 9999,
-                              objectFit: 'cover',
-                            }}
-                          />
-                          <div>
-                            <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#1c1917' }}>{candidate.name}</h4>
-                            <p style={{ margin: 0, fontSize: '0.78rem', color: '#57534e' }}>{candidate.role}</p>
-                          </div>
-                        </div>
-
-                      {/* Tag Chips */}
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1rem' }}>
-                        {candidate.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            style={{
-                              fontSize: '0.72rem',
-                              fontWeight: 600,
-                              background: '#f5f5f4',
-                              color: '#44403c',
-                              padding: '0.2rem 0.5rem',
-                              borderRadius: 9999,
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Why this might fit */}
-                      <div style={{ borderTop: '1px solid #e7e5e4', paddingTop: '0.75rem', marginBottom: '1rem' }}>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#78716c', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.5rem' }}>
-                          Why this might fit
-                        </span>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.78rem', color: '#44403c' }}>
-                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
-                            <span>💡</span>
-                            <span><strong>Shared curiosity:</strong> {candidate.sharedCuriosity}</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
-                            <span>🧩</span>
-                            <span><strong>Complementary practice:</strong> {candidate.complementaryPractice}</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#15803d', fontWeight: 600 }}>
-                            <span>⭐</span>
-                            <span>Both open to matching</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Link
-                      href={`/introductions/new/${candidate.id}`}
-                      style={{
-                        display: 'block',
-                        textAlign: 'center',
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                        color: '#2528ab',
-                        textDecoration: 'none',
-                        padding: '0.4rem 0',
-                        borderTop: '1px solid #f5f5f4',
-                      }}
-                    >
-                      Confirm &amp; explore introduction &rarr;
-                    </Link>
-                  </div>
-                )
-              })}
-              </div>
-            </div>
-
-            {/* Bottom Paper Tablet: Private matching guarantee */}
+          {/* 3 Candidate Cards Side-by-Side matching 03-people-discovery.png */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem', marginBottom: '1.75rem' }}>
+            {/* Card 1: Maya */}
             <div
-              className={styles.paperTablet}
               style={{
+                background: '#fdfbf7',
+                border: '1px solid #d9d2c4',
+                borderRadius: 18,
+                padding: '1.5rem',
+                boxShadow: '0 8px 24px rgba(45, 30, 20, 0.06)',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '1rem 1.5rem',
-                gap: '1.5rem',
+                flexDirection: 'column',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9999, background: '#ede9fe', color: '#6d28d9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
-                  🔒
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/design/slices/avatar_maya_circle.png"
+                  alt="Maya"
+                  style={{ width: 62, height: 62, borderRadius: 9999, objectFit: 'cover' }}
+                />
                 <div>
-                  <strong style={{ fontSize: '0.9rem', color: '#1e293b', display: 'block' }}>Private matching is on</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#64748b' }}>No raw interests shared</span>
+                  <h4 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: '1.35rem', fontWeight: 700, margin: '0 0 0.2rem', color: '#14121a' }}>
+                    Maya
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>
+                    Product designer &amp; community builder
+                  </p>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.8125rem', color: '#475569' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span>👁️‍🗨️</span> <span>Your interests stay private</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span>👥</span> <span>We don&apos;t contact anyone</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span>🛡️</span> <span>You decide who to meet</span>
-                </div>
+              {/* Tags */}
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#dcfce7', color: '#166534', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Design
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#dcfce7', color: '#166534', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Communities
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#dcfce7', color: '#166534', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Open Source
+                </span>
+              </div>
+
+              {/* Why this might fit */}
+              <div style={{ borderTop: '1px solid #ede8de', paddingTop: '1rem', flex: 1 }}>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#14121a', display: 'block', marginBottom: '0.75rem' }}>
+                  Why this might fit
+                </span>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.8125rem', color: '#4b5563' }}>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>💡</span>
+                    <span>Shared curiosity about more human social tools</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>👥</span>
+                    <span>Complementary practice (product &times; community)</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>⭐</span>
+                    <span>Both open to matching</span>
+                  </li>
+                </ul>
               </div>
 
               <Link
-                href="/discover"
+                href="/introductions/new/maya"
                 style={{
-                  fontSize: '0.9rem',
+                  display: 'block',
+                  textAlign: 'center',
+                  marginTop: '1.25rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: 9999,
+                  background: '#f0eef8',
+                  color: '#2328b0',
                   fontWeight: 600,
-                  color: '#2528ab',
+                  fontSize: '0.875rem',
                   textDecoration: 'none',
-                  whiteSpace: 'nowrap',
+                  border: '1px solid #dcd5f0',
                 }}
               >
-                Browse people &rarr;
+                Confirm &amp; explore introduction &rarr;
+              </Link>
+            </div>
+
+            {/* Card 2: Rohan */}
+            <div
+              style={{
+                background: '#fdfbf7',
+                border: '1px solid #d9d2c4',
+                borderRadius: 18,
+                padding: '1.5rem',
+                boxShadow: '0 8px 24px rgba(45, 30, 20, 0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/design/slices/avatar_rohan_circle.png"
+                  alt="Rohan"
+                  style={{ width: 62, height: 62, borderRadius: 9999, objectFit: 'cover' }}
+                />
+                <div>
+                  <h4 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: '1.35rem', fontWeight: 700, margin: '0 0 0.2rem', color: '#14121a' }}>
+                    Rohan
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>
+                    Protocol engineer &amp; educator
+                  </p>
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ede9fe', color: '#4329b5', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Infrastructure
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ede9fe', color: '#4329b5', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Education
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ede9fe', color: '#4329b5', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Monad
+                </span>
+              </div>
+
+              {/* Why this might fit */}
+              <div style={{ borderTop: '1px solid #ede8de', paddingTop: '1rem', flex: 1 }}>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#14121a', display: 'block', marginBottom: '0.75rem' }}>
+                  Why this might fit
+                </span>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.8125rem', color: '#4b5563' }}>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>📖</span>
+                    <span>Shared curiosity about open internet infrastructure</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>🧩</span>
+                    <span>Complementary practice (technical &times; product)</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>⭐</span>
+                    <span>Both open to matching</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                href="/introductions/new/rohan"
+                style={{
+                  display: 'block',
+                  textAlign: 'center',
+                  marginTop: '1.25rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: 9999,
+                  background: '#f0eef8',
+                  color: '#2328b0',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  border: '1px solid #dcd5f0',
+                }}
+              >
+                Confirm &amp; explore introduction &rarr;
+              </Link>
+            </div>
+
+            {/* Card 3: Leo */}
+            <div
+              style={{
+                background: '#fdfbf7',
+                border: '1px solid #d9d2c4',
+                borderRadius: 18,
+                padding: '1.5rem',
+                boxShadow: '0 8px 24px rgba(45, 30, 20, 0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/design/slices/avatar_leo_circle.png"
+                  alt="Leo"
+                  style={{ width: 62, height: 62, borderRadius: 9999, objectFit: 'cover' }}
+                />
+                <div>
+                  <h4 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: '1.35rem', fontWeight: 700, margin: '0 0 0.2rem', color: '#14121a' }}>
+                    Leo
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>
+                    Creator &amp; researcher
+                  </p>
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ccfbf1', color: '#0f766e', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Content
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ccfbf1', color: '#0f766e', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Research
+                </span>
+                <span style={{ padding: '0.25rem 0.6rem', background: '#ccfbf1', color: '#0f766e', borderRadius: 9999, fontSize: '0.75rem', fontWeight: 600 }}>
+                  Onchain Culture
+                </span>
+              </div>
+
+              {/* Why this might fit */}
+              <div style={{ borderTop: '1px solid #ede8de', paddingTop: '1rem', flex: 1 }}>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#14121a', display: 'block', marginBottom: '0.75rem' }}>
+                  Why this might fit
+                </span>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.8125rem', color: '#4b5563' }}>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>💬</span>
+                    <span>Shared curiosity about creator economies</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>👥</span>
+                    <span>Complementary practice (research &times; storytelling)</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.9rem' }}>⭐</span>
+                    <span>Both open to matching</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                href="/introductions/new/leo"
+                style={{
+                  display: 'block',
+                  textAlign: 'center',
+                  marginTop: '1.25rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: 9999,
+                  background: '#f0eef8',
+                  color: '#2328b0',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  border: '1px solid #dcd5f0',
+                }}
+              >
+                Confirm &amp; explore introduction &rarr;
               </Link>
             </div>
           </div>
 
-          {/* Right Column: Rohan Standing 3D Persona in Purple Monad Hoodie & Note */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/design/slices/p3_note_agent_finds.png"
-              alt="Your agent finds people, with context."
-              style={{ width: 135, alignSelf: 'flex-start' }}
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/design/slices/p3_rohan_column_clean.png"
-              alt="Real conversations. Real progress. Rohan on Monad"
-              style={{ width: '100%', maxWidth: 277, objectFit: 'contain' }}
-            />
+          {/* Bottom Security / Privacy Guarantee Bar */}
+          <div
+            style={{
+              background: '#fbf9f5',
+              border: '1px solid #ded8cc',
+              borderRadius: 16,
+              padding: '1.1rem 1.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9999, background: '#ede9fe', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <LockIcon size={18} color="#6346eb" />
+              </div>
+              <div>
+                <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#14121a', display: 'block' }}>
+                  Private matching is on
+                </span>
+                <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+                  No raw interests shared
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.8125rem', color: '#555048' }}>
+              <span>👁️ Your interests stay private</span>
+              <span>👥 We don&apos;t contact anyone</span>
+              <span>🛡️ You decide who to meet</span>
+            </div>
+
+            <Link
+              href="/builders"
+              style={{
+                textDecoration: 'none',
+                color: '#2328b0',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                borderBottom: '1px solid #2328b0',
+                paddingBottom: 2,
+              }}
+            >
+              Browse people &rarr;
+            </Link>
           </div>
+        </div>
+
+        {/* Right Column: Rohan Standing in Monad Hoodie & Quotes */}
+        <div style={{ position: 'relative' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/design/slices/03_right_art_column.png"
+            alt="Rohan standing - Real conversations. Real progress."
+            style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 16 }}
+          />
         </div>
       </div>
     </div>

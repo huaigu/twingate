@@ -96,5 +96,8 @@ export async function browserCheck({ chain, origin, base, users, processes }) {
     assert.equal(await a.locator('#chain-receipt h2').innerText(), 'Your attention bond is back.');
     assert.deepEqual(errors, []);
     console.log('PASS: browser decline and expiry claims refund; desktop/mobile layout, assets and JavaScript checks pass');
-  } finally { await browser.close(); }
+  } finally {
+    await Promise.all(browser.contexts().map(context => context.close()));
+    await browser.close();
+  }
 }

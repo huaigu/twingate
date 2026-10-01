@@ -17,19 +17,16 @@
     <link rel="stylesheet" href="/v4/v4.css" />
     <link rel="stylesheet" href="/v4/polish.css" />
     <link rel="stylesheet" href="/v4/motion.css" />
+    <link rel="stylesheet" href="/v4/experience.css" />
     <script defer src="/v4/navigation.js"></script>
     <script defer src="/v4/motion.js"></script>
   </head>
-  <body data-page="compose">
+  <body class="sp-workspace" data-page="compose">
     <a class="skip-link" href="#main-content">Skip to content</a>
     <div id="session-slot" aria-busy="true"><span class="session-loading">Loading your workspace…</span></div>
     <div class="viewport">
       <div class="scene scene-compose">
-        <div aria-hidden="true" class="collage-base">
-          <span class="paper-top"></span><span class="tape tape-one"></span
-          ><span class="tape tape-two"></span><span class="paper-bottom"></span>
-        </div>
-        <header class="site-header v4-header">
+<header class="site-header v4-header">
           <a class="v4-brand" href="/" aria-label="SignalPass home"
             ><span class="v4-mark" aria-hidden="true"><i></i><b></b></span
             ><span>SignalPass</span></a
@@ -55,53 +52,12 @@
           </button>
         </header>
         <main id="main-content">
-          <img
-            alt=""
-            aria-hidden="true"
-            class="art bottom-paper"
-            draggable="false"
-            src="/v4/assets/bottom-paper.webp"
-            style="left: 179px; top: 861px; width: 1330px; height: 67px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art compose-left"
-            draggable="false"
-            src="/v4/assets/compose-left.webp"
-            style="left: 0px; top: 233px; width: 309px; height: 695px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art compose-right-art"
-            draggable="false"
-            src="/v4/assets/compose-right-art.webp"
-            style="left: 1418px; top: 177px; width: 230px; height: 751px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art compose-note-top"
-            draggable="false"
-            src="/v4/assets/compose-note-top.webp"
-            style="left: 1465px; top: 74px; width: 174px; height: 118px"
-          />
-          <div class="compose-heading">
-            <h1 class="hero-title">A better first hello</h1>
-            <span aria-hidden="true" class="brush"></span>
-          </div>
-          <p class="compose-subtitle">
-            Thoughtful introductions<br />for conversation, collaboration<br />and
-            learning.
-          </p>
-          <ol class="compose-steps">
-            <li class="active"><span>1</span>Choose</li>
-            <li><span>2</span>Draft</li>
-            <li><span>3</span>Confirm</li>
-          </ol>
+          <div class="sp-page-heading compose-heading"><div><p class="sp-eyebrow">A PERSONAL INTRODUCTION</p><h1>A good hello starts with you.</h1><p class="sp-page-description">Make it personal. Review your words and shared context before anything is sent.</p></div><ol class="compose-steps"><li><span>1</span>Choose</li><li class="active"><span>2</span>Write</li><li><span>3</span>Review</li></ol></div>
           <div class="compose-workspace">
             <section class="paper introduction-composer">
               <div class="composer-top">
                 <span aria-hidden="true" class="logo-mark"><i></i><b></b></span>
-                <h2>My Personal Agent</h2>
+                <h2>Your introduction</h2>
                 <span class="status-pill green"
                   ><svg
                     aria-hidden="true"
@@ -118,14 +74,10 @@
                       fill="currentColor"
                       stroke="none"
                     ></path></svg
-                  >Suggested, not sent</span
+                  >Draft · not sent</span
                 >
               </div>
-              <p class="composer-intro">
-                A thoughtful starting point, based on your goal and shared
-                curiosity. Make it sound like you — nothing is sent without your
-                approval.
-              </p>
+              <p class="composer-intro">A starting point, in your own words. Give them a reason to be curious.</p>
               <form id="intro-form">
                 <div class="intro-goal-section">
                   <h3>What’s your goal for this introduction?</h3>
@@ -326,14 +278,9 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                   ><span aria-hidden="true" class="logo-mark"
                     ><i></i><b></b></span
                   ><span>SignalPass</span></span
-                ><span>INTRODUCTION · PREVIEW</span>
+                ><span>WHAT YOU’LL SHARE</span>
               </div>
-              <h2 class="introduction-card-heading">
-                Two curious people.<br />A thoughtful starting point.<span
-                  aria-hidden="true"
-                  class="brush"
-                ></span>
-              </h2>
+              <h2 class="introduction-card-heading">A little context.<br>A better hello.</h2>
               <div class="intro-portraits">
                 <div class="intro-portrait you">
                   <img
@@ -361,7 +308,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                       fill="currentColor"
                       stroke="none"
                     ></path></svg
-                  ><strong>SHARED<br />CURIOSITY</strong>
+                  ><strong>THEIR<br />INTERESTS</strong>
                   <p>Open infrastructure<br />for more people</p>
                   <span aria-hidden="true" class="brush"></span>
                 </div>
@@ -431,7 +378,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                   </ul>
                 </div>
                 <div>
-                  <h3>THEY CAN OFFER</h3>
+                  <h3>THEIR INTERESTS</h3>
                   <ul>
                     <li>
                       <svg
@@ -532,7 +479,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                   data-action="approve-introduction"
                   type="button"
                 >
-                  Approve and send<svg
+                  Review introduction<svg
                     aria-hidden="true"
                     class="icon"
                     fill="none"

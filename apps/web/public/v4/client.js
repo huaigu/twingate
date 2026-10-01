@@ -2,6 +2,9 @@
 (() => {
   'use strict';
   const query = new URLSearchParams(location.search);
+  const sessionSlot = document.getElementById('session-slot');
+  const sessionHeader = document.querySelector('.site-header') || document.querySelector('header');
+  if (sessionSlot && sessionHeader) { sessionHeader.append(sessionSlot); sessionSlot.classList.add('session-in-header'); }
   try {
     if (query.has('demo')) sessionStorage.setItem('signalpass-demo', query.get('demo') === '1' ? '1' : '0');
   } catch {}
@@ -139,11 +142,11 @@
     const label = document.createElement('span'); label.className = 'v4-session-copy'; label.setAttribute('role', 'status');
     const title = document.createElement('strong'), detail = document.createElement('small');
     const button = document.createElement('button'); button.type = 'button'; button.className = 'button outline'; button.id = 'session-action';
-    title.textContent = demo ? 'You’re exploring a sample.' : api.error ? 'Let’s reconnect.' : api.me ? (api.me.profile?.displayName || api.me.session.address.slice(0, 8)) : 'Your next connection starts here.';
+    title.textContent = demo ? 'Sample mode' : api.error ? 'Let’s reconnect.' : api.me ? (api.me.profile?.displayName || api.me.session.address.slice(0, 8)) : 'Your next connection starts here.';
     detail.textContent = demo ? 'Sample people · no messages or payments' : api.error ? 'Connection unavailable. No new action was sent.' : api.me ? (api.chain?.enabled ? (api.chain.local ? 'Local EVM · DEV' : api.chain.name) + ' · manual review · AI fee 0' : 'Live introductions · no payments') : 'Free wallet sign-in · no payment';
-    label.append(title, detail); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
+    label.append(title, detail); if (api.error) label.classList.add('has-error'); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
     button.textContent = demo ? 'Open live product' : api.me ? 'Sign out' : 'Connect wallet';
-    button.onclick = async () => { button.disabled = true; try { if (demo) { location.href = '/?demo=0'; return; } if (api.me) { await api.request('/auth/logout', {}); location.reload(); } else await api.connect(); } catch (error) { label.textContent = error.message; button.disabled = false; } };
+    button.onclick = async () => { button.disabled = true; try { if (demo) { location.href = '/?demo=0'; return; } if (api.me) { await api.request('/auth/logout', {}); location.reload(); } else await api.connect(); } catch (error) { label.textContent = error.message; label.classList.add('has-error'); button.disabled = false; } };
     bar.append(label, button);
     const slot = document.getElementById('session-slot');
     if (slot) { slot.replaceChildren(bar); slot.setAttribute('aria-busy', 'false'); }

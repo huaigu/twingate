@@ -20,6 +20,22 @@ try {
   page.on("response", (r) => {
     if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`);
   });
+  const assertSessionAlignment = async (label) => {
+    await page.locator('#session-action').waitFor();
+    const layout = await page.evaluate(() => {
+      const header = document.querySelector('.site-header,.preview-header');
+      const slot = document.getElementById('session-slot');
+      const h = header.getBoundingClientRect(), b = document.getElementById('session-action').getBoundingClientRect();
+      const children = [...header.children].filter(e => {
+        const r = e.getBoundingClientRect(), s = getComputedStyle(e);
+        return r.width > 0 && r.height > 0 && s.position !== 'absolute' && s.visibility !== 'hidden';
+      }).map(e => e.getBoundingClientRect());
+      const overlaps = children.some((a,i) => children.slice(i+1).some(b => Math.min(a.right,b.right)-Math.max(a.left,b.left)>1 && Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1));
+      return { integrated: slot.parentElement === header, contained: b.left >= h.left && b.right <= h.right + 1 && b.top >= h.top && b.bottom <= h.bottom + 1, height: b.height, overlaps };
+    });
+    assert(layout.integrated && layout.contained && !layout.overlaps, 'Account/navigation geometry: ' + label + JSON.stringify(layout));
+    assert(layout.height >= 43.5, 'Account target size: ' + label);
+  };
   const routes = [
     ["landing", "/"],
     ["profile", "/profile/import"],
@@ -30,7 +46,7 @@ try {
     ["inbox", "/inbox"],
     ["widget-preview", "/widget/preview"],
   ];
-  for (const width of [1440, 390]) {
+  for (const width of [1440, 1920, 390]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
     for (const [name, route] of routes) {
       await page.goto(origin + route, { waitUntil: "networkidle" });
@@ -53,6 +69,7 @@ try {
         `Horizontal overflow: ${route} at ${width}`,
       );
       assert.deepEqual(geometry.missing, [], `Missing image: ${route}`);
+      await assertSessionAlignment(route + ' at ' + width);
       await page.screenshot({
         path: `${out}/${name}-${width}.png`,
         fullPage: true,
@@ -166,7 +183,12 @@ try {
   assert(await page.locator("[data-action=decline-introduction]").isDisabled());
   await page.goto(receiptURL);
   assert.equal(await page.locator("#receipt-status").innerText(), "Accepted");
-  await page.screenshot({ path: `${out}/receipt-1440.png`, fullPage: true });
+  for (const width of [1440, 1920, 390]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    await assertSessionAlignment('receipt at ' + width);
+    await page.screenshot({ path: out + '/receipt-' + width + '.png', fullPage: true });
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + "/widget/create");
   assert.equal(await page.locator("#widget-name").inputValue(), "Jamie Chen");
   await page.locator("#widget-name").fill("Jamie & friends");

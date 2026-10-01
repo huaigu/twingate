@@ -1,5 +1,7 @@
 # Desktop motion and reading pass
 
+The animated people-and-context hero is the active homepage direction again, following user feedback on 2026-09-28. The three-panel example treatment was removed. The fluid discovery/composer workspaces and integrated account navigation from EXPERIENCE.md remain. motion:verify checks the hero reveal, replay geometry and reduced-motion behavior. MOTION_QA_DIR can select a separate capture directory.
+
 Baseline: 9410b00. Direction: a living correspondence desk, keeping the supplied figures and paper collage.
 
 ## Intent and system

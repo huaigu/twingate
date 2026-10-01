@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5eee3" />
-    <title>SignalPass — People worth knowing, with context.</title>
+    <title>SignalPass — People worth building with.</title>
     <meta
       name="description"
       content="Thoughtful introductions for builders. Share your context, discover common interests, and choose what to share before you reach out."
@@ -19,12 +19,13 @@
     <link rel="stylesheet" href="/v4/v4.css" />
     <link rel="stylesheet" href="/v4/polish.css" />
     <link rel="stylesheet" href="/v4/motion.css" />
+    <link rel="stylesheet" href="/v4/experience.css" />
     <script defer src="/v4/client.js"></script>
     <script defer src="/v4/wallet.js"></script>
     <script defer src="/v4/hero.js"></script>
     <script defer src="/v4/motion.js"></script>
   </head>
-  <body>
+  <body class="v4-home sp-home">
     <a class="skip-link" href="#main">Skip to content</a>
     <div id="session-slot" aria-busy="true"><span class="session-loading">Loading your workspace…</span></div>
     <div class="hero-page">
@@ -56,20 +57,17 @@
             <path d="M4 12h15m-6-6 6 6-6 6" /></svg
         ></a>
       </header>
-      <main id="main" class="hero-layout">
+      <main id="main" class="sp-home-main">
+        <section class="hero-layout sp-home-hero" aria-label="People connected through context">
         <div class="hero-copy">
           <h1>
             <span>People worth</span><span>knowing,</span
             ><span class="underlined">with context.</span>
           </h1>
-          <p class="hero-description">
-            Turn shared context into a thoughtful introduction. Show what
-            you’re building, discover people with common interests, and choose
-            what to share before you reach out.
-          </p>
+          <p class="hero-description">Find a shared interest and a reason to reach out. Make the first hello personal — and let the other person choose what comes next.</p>
           <div class="hero-actions">
-            <a class="button primary" href="/profile/import"
-              >Create your profile
+            <a class="button primary" href="/discover"
+              >Find your next connection
               <svg
                 class="icon"
                 viewBox="0 0 24 24"
@@ -551,65 +549,14 @@
           alt=""
           aria-hidden="true"
         />
+        </section>
+        <section class="sp-how" id="how-it-works" aria-labelledby="how-title">
+          <div class="sp-section-heading"><p class="sp-eyebrow">LESS EXPLAINING. MORE POSSIBILITY.</p><h2 id="how-title">A little context changes<br>the whole conversation.</h2></div>
+          <div class="sp-how-steps"><article><span>YOUR CONTEXT</span><h3>Bring something of yourself.</h3><p>What you’re building, what you can offer, and what you’re curious about. Choose what becomes public.</p><a href="/profile/import">Shape your profile ↗</a></article><article><span>A REASON TO CONNECT</span><h3>Look beyond a job title.</h3><p>Explore people’s interests and work. Find a concrete starting point for a conversation worth having.</p><a href="/discover">Meet the community ↗</a></article><article><span>A PERSONAL HELLO</span><h3>Make the invitation yours.</h3><p>Review your words and shared context. The other person can accept, ask a question, or pass.</p><a href="/introductions/new/maya?demo=1">Try a sample introduction ↗</a></article></div>
+        </section>
+        <section class="sp-calling-card"><div><p class="sp-eyebrow">TAKE YOUR CONTEXT WITH YOU</p><h2>Your corner of the internet.<br>An open door to a good hello.</h2><p>Make a small, personal profile card for the places you already call home.</p><a class="button outline" href="/widget/create">Create your calling card ↗</a></div><div class="calling-card-preview" aria-label="Illustrative profile card"><span class="example-badge">Example card</span><img src="/v4/assets/avatar-alex.webp" width="88" height="88" alt=""><h3>Alex Chen</h3><p>Building useful things<br>with curious people.</p><span class="calling-card-tag">Product</span><span class="calling-card-tag">Open source</span><div class="calling-card-signature">A little context. A better hello. ↗</div></div></section>
       </main>
+      <footer class="v4-footer"><a href="/">SignalPass</a><span>A little context. A better hello.</span><small>Live introductions · no payments</small><a href="#how-it-works">How it works ↗</a></footer>
     </div>
-    <section
-      id="how-it-works"
-      class="landing-content"
-      aria-labelledby="how-title"
-    >
-      <p class="landing-eyebrow">Less explaining. More connecting.</p>
-      <h2 id="how-title">
-        A little context changes<br />the whole conversation.
-      </h2>
-      <div class="landing-steps">
-        <article class="landing-step">
-          <span>01 / YOUR STORY</span>
-          <h3>Start with what makes you, you.</h3>
-          <p>
-            Bring your interests, projects and public links — or a draft from
-            your own agent. Shape a profile that sounds like you.
-          </p>
-          <a href="/profile/import">Build your profile →</a>
-        </article>
-        <article class="landing-step">
-          <span>02 / SHARED CURIOSITY</span>
-          <h3>Follow a curiosity.</h3>
-          <p>
-            A new friend, a fresh perspective or a potential collaborator.
-            Explore a few thoughtful suggestions, with a reason behind each one.
-          </p>
-          <a href="/discover">Meet the community →</a>
-        </article>
-        <article class="landing-step">
-          <span>03 / A BETTER FIRST HELLO</span>
-          <h3>Your agent prepares. You decide.</h3>
-          <p>
-            Review the introduction and choose the context to share. The other
-            person has the same choice. A conversation starts with two yeses.
-          </p>
-          <a href="/introductions/new">Try an introduction →</a>
-        </article>
-      </div>
-      <div class="landing-outro">
-        <div>
-          <p class="landing-eyebrow">YOUR LITTLE CORNER OF THE INTERNET</p>
-          <h3>A calling card with a little character.</h3>
-          <p>
-            Your persona, a few interests and an invitation. Take your
-            SignalPass widget wherever you call home online.
-          </p>
-        </div>
-        <a class="button primary" href="/widget/create"
-          >Make it yours <span aria-hidden="true">→</span></a
-        >
-      </div>
-    </section>
-
-    <footer class="v4-footer">
-      <a href="/">SignalPass</a><span>More human. More possible.</span
-      ><small>Interactive demo · your changes stay on this device</small
-      ><a href="/#how-it-works">How it works ↗</a>
-    </footer>
   </body>
 </html>

@@ -544,6 +544,13 @@
       $(".people-grid").innerHTML = directory.length ? directory.map((p) => '<article class="paper person-card" role="button" tabindex="0" data-person="' + escapeHTML(p.name) + '"><div class="person-header"><img class="avatar" src="/v4/assets/avatar-' + p.avatar + '.webp" alt=""><div><h3>' + escapeHTML(p.displayName || p.name) + '</h3><p>' + escapeHTML(p.role) + '</p><div class="person-tags">' + p.tags.map(t => '<span class="chip mint">' + escapeHTML(t) + '</span>').join('') + '</div></div></div><h4>In their own words</h4><p>' + escapeHTML(p.description) + '</p></article>').join('') : '<div class="v4-live-empty"><h3>The first connections start with you.</h3><p>There are no other public profiles yet. Save your profile, choose public visibility and invite another builder.</p><a class="button outline" href="/profile/import">Create my profile</a></div>';
       if (!directory.length) api.emptyState($(".v4-live-empty"), { title: "Good people start with a hello.", description: "There are no other public profiles here yet. Add yours, share what you are building, and invite someone you would like to know.", action: "Create my profile", href: "/profile/import", eyebrow: "Your circle starts here" });
     }
+    $('[data-person]')?.classList.add('is-featured');
+    const emptyCopy = $('.v4-live-empty .v4-empty-copy');
+    if (api.live && emptyCopy) {
+      const example = document.createElement('a'); example.className = 'sp-example-link';
+      example.href = '/discover?demo=1'; example.textContent = 'Explore sample profiles →';
+      emptyCopy.append(example);
+    }
     if (!state.agent.matching) {
       $(".discovery-private h3").textContent = "Private matching is paused";
       $(".discovery-private p").textContent =
@@ -610,6 +617,7 @@
       scores.forEach((p, i) => {
         const card = $(`[data-person="${p.name}"]`);
         card.style.order = String(i);
+        card.classList.toggle('is-featured', i === 0 && !noMatch);
         card.hidden = noMatch;
       });
       $(".v4-empty")?.remove();
@@ -1353,7 +1361,7 @@
 
   const adjustStage = () => {
     const scene = $(".scene");
-    if (!scene) return;
+    if (!scene || document.body.classList.contains("sp-workspace")) return;
     if (document.documentElement.clientWidth <= 1180) {
       document.documentElement.style.setProperty("--scene-height", "928px");
       return;

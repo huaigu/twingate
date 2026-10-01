@@ -17,19 +17,16 @@
     <link rel="stylesheet" href="/v4/v4.css" />
     <link rel="stylesheet" href="/v4/polish.css" />
     <link rel="stylesheet" href="/v4/motion.css" />
+    <link rel="stylesheet" href="/v4/experience.css" />
     <script defer src="/v4/navigation.js"></script>
     <script defer src="/v4/motion.js"></script>
   </head>
-  <body data-page="discover">
+  <body class="sp-workspace" data-page="discover">
     <a class="skip-link" href="#main-content">Skip to content</a>
     <div id="session-slot" aria-busy="true"><span class="session-loading">Loading your workspace…</span></div>
     <div class="viewport">
       <div class="scene scene-discover">
-        <div aria-hidden="true" class="collage-base">
-          <span class="paper-top"></span><span class="tape tape-one"></span
-          ><span class="tape tape-two"></span><span class="paper-bottom"></span>
-        </div>
-        <header class="site-header v4-header">
+<header class="site-header v4-header">
           <a class="v4-brand" href="/" aria-label="SignalPass home"
             ><span class="v4-mark" aria-hidden="true"><i></i><b></b></span
             ><span>SignalPass</span></a
@@ -56,65 +53,10 @@
           </button>
         </header>
         <main id="main-content">
-          <img
-            alt=""
-            aria-hidden="true"
-            class="art bottom-paper"
-            draggable="false"
-            src="/v4/assets/bottom-paper.webp"
-            style="left: 179px; top: 861px; width: 1330px; height: 67px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art discover-left"
-            draggable="false"
-            src="/v4/assets/discover-left.webp"
-            style="left: 0px; top: 404px; width: 477px; height: 524px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art discover-note-left"
-            draggable="false"
-            src="/v4/assets/discover-note-left.webp"
-            style="left: 296px; top: 204px; width: 144px; height: 158px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art discover-right"
-            draggable="false"
-            src="/v4/assets/discover-right.webp"
-            style="left: 1340px; top: 184px; width: 308px; height: 744px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art discover-note-top"
-            draggable="false"
-            src="/v4/assets/discover-note-top.webp"
-            style="left: 1315px; top: 135px; width: 134px; height: 187px"
-          /><img
-            alt=""
-            aria-hidden="true"
-            class="art discover-tape"
-            draggable="false"
-            src="/v4/assets/discover-tape.webp"
-            style="left: 1012px; top: 370px; width: 301px; height: 58px"
-          />
-          <div class="discovery-heading">
-            <h1 class="hero-title">People <br />worth <br />knowing</h1>
-            <span aria-hidden="true" class="brush"></span>
-            <p>
-              Different backgrounds.<br />Shared curiosity.<br />A more open
-              internet.
-            </p>
-          </div>
+          <div class="sp-page-heading discovery-heading"><div><p class="sp-eyebrow">PEOPLE, WITH CONTEXT</p><h1>Find a reason to say hello.</h1><p class="sp-page-description">Shared interests. Useful differences. People you’d like to build with.</p></div><a class="sp-text-link" href="/profile/import">Make your own introduction easier ↗</a></div>
           <div class="discovery-workspace">
             <section class="paper discovery-query">
-              <h2>
-                I’m curious about...<span
-                  aria-hidden="true"
-                  class="brush"
-                ></span>
-              </h2>
+              <h2>What would you like to explore?</h2>
               <form id="discovery-form">
                 <label class="sr-only" for="curiosity"
                   >What are you curious about?</label
@@ -190,7 +132,7 @@
                     </button>
                   </div>
                   <button class="button primary" type="submit">
-                    Ask my agent<svg
+                    Explore people<svg
                       aria-hidden="true"
                       class="icon"
                       fill="none"
@@ -207,7 +149,7 @@
               </form>
             </section>
             <section class="discovery-results">
-              <h2>A few people your agent found</h2>
+              <h2>People to get curious about · sample</h2>
               <div class="people-grid">
                 <article
                   aria-label="Learn more about Maya"
