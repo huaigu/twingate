@@ -42,9 +42,10 @@ export function createApp(options: { databasePath?: string; origin: string; eval
     c.header('Cache-Control', 'no-store')
     const mutation = c.req.method !== 'GET' && c.req.method !== 'OPTIONS'
     if (mutation && !auth.sameOrigin(c)) return c.json({ error: 'origin_not_allowed' }, 403)
-    const publicRead = c.req.method === 'GET' && (c.req.path === '/health' || c.req.path === '/chain/config' || c.req.path === '/profiles' || c.req.path.startsWith('/profiles/'))
+    const readiness = c.req.method === 'GET' && c.req.path === '/ready'
+    const publicRead = readiness || c.req.method === 'GET' && (c.req.path === '/health' || c.req.path === '/chain/config' || c.req.path === '/profiles' || c.req.path.startsWith('/profiles/'))
     const authRequest = ['/auth/challenge', '/auth/verify'].includes(c.req.path)
-    const session = auth.session(c)
+    const session = readiness ? null : auth.session(c)
     if (session) c.set('session', session)
     if (!publicRead && !authRequest && c.req.method !== 'OPTIONS') {
       if (!session) return c.json({ error: 'authentication_required' }, 401)
@@ -56,6 +57,12 @@ export function createApp(options: { databasePath?: string; origin: string; eval
   const chainRoutes = installChainRoutes(app, store, options.chain)
   installAgentRoutes(app, store, options.agent)
   app.get('/health', (c) => c.json({ ok: true, service: '@signalpass/api', storage: 'sqlite', identity: 'siwe-eoa', settlement: options.chain ? 'configured_manual_review' : 'not_connected', evaluator: options.chain ? 'disabled_manual_review' : options.evaluatorUrl ? 'external' : 'mock-local' }))
+  app.get('/ready', (c) => {
+    try {
+      store.db.prepare('SELECT 1').get()
+      return c.json({ ok: true, ready: true, service: '@signalpass/api', checks: { database: 'ok' }, scope: 'database_only' })
+    } catch { return c.json({ ok: false, ready: false, error: 'database_unavailable' }, 503) }
+  })
   app.post('/auth/challenge', async (c) => {
     const parsed = z.object({ address, chainId: z.number().int().positive().max(Number.MAX_SAFE_INTEGER) }).safeParse(await c.req.json().catch(() => null))
     if (!parsed.success) return c.json({ error: 'invalid_request' }, 400)

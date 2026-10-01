@@ -39,6 +39,8 @@ Extra questions and replies remain offchain; they do not alter the original sign
 
 ## Verification commands
 
+On October 1, 2026, the current contract suite passed 47 tests and the local EVM integration passed signed locking, all refund paths, lost-callback recovery and API restart recovery. See [the deployment readiness report](reports/signalpass-deployment-readiness-2026-10-01.md) for tooling, scope and remaining public-network evidence. The browser chain variant was not rerun in that session.
+
 - **pnpm verify**: strict TypeScript projects, API/indexer/Foundry tests, real HTTP and browser no-payment flow, responsive and explicit sample-mode regression.
 - **pnpm chain:test**: deploy fresh real local contracts and verify signing, tamper/replay rejection, identity and recipient permissions, event binding, accept/decline/expiry refunds, callback loss and API restart.
 - **pnpm chain:verify**: additionally drive two independent browser wallets through actual EVM transactions, profile sync/network switch, cancellation, context exchange and all three refund paths.

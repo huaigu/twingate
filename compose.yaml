@@ -1,0 +1,127 @@
+name: signalpass
+
+services:
+  api:
+    image: signalpass-api:local
+    build:
+      context: .
+      target: api
+    init: true
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      NODE_ENV: production
+      API_HOST: 0.0.0.0
+      API_PORT: "8789"
+      APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN to the exact public HTTPS origin}
+      SIGNALPASS_DB_PATH: /data/signalpass.sqlite
+      API_SHUTDOWN_GRACE_MS: "70000"
+      SIGNALPASS_AGENT_PROVIDER: ${SIGNALPASS_AGENT_PROVIDER:-}
+      SIGNALPASS_AGENT_API_KEY: ${SIGNALPASS_AGENT_API_KEY:-}
+      SIGNALPASS_AGENT_MODEL: ${SIGNALPASS_AGENT_MODEL:-}
+      SIGNALPASS_AGENT_BASE_URL: ${SIGNALPASS_AGENT_BASE_URL:-}
+      SIGNALPASS_AGENT_TIMEOUT_MS: ${SIGNALPASS_AGENT_TIMEOUT_MS:-}
+      SIGNALPASS_AGENT_DAILY_USER_LIMIT: ${SIGNALPASS_AGENT_DAILY_USER_LIMIT:-20}
+      SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT: ${SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT:-200}
+      # These require a deliberate override and read-only files; never inherit
+      # a workstation's ambient chain/evaluator configuration.
+      SIGNALPASS_CHAIN_CONFIG: ""
+      SIGNALPASS_QUOTE_SIGNER_KEY_FILE: ""
+      SIGNALPASS_QUOTE_SIGNER_PRIVATE_KEY: ""
+      EVALUATOR_URL: ""
+    expose:
+      - "8789"
+    volumes:
+      - sqlite:/data
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+    healthcheck:
+      test: ["CMD", "node", "/app/deploy/healthcheck.mjs", "api"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    stop_grace_period: 75s
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    image: signalpass-web:local
+    build:
+      context: .
+      target: web
+    init: true
+    restart: unless-stopped
+    user: "1000:1000"
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "3000"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "node", "/app/deploy/healthcheck.mjs", "web"]
+      interval: 15s
+      timeout: 8s
+      start_period: 30s
+      retries: 3
+    stop_grace_period: 75s
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN to the exact public HTTPS origin}
+    depends_on:
+      web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - backend
+    healthcheck:
+      # The admin endpoint is loopback-only and is never published.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    stop_grace_period: 75s
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  # No backend ports are published. Outbound access is needed for an explicitly
+  # enabled AI provider, optional chain RPC and Caddy certificate renewal.
+  backend:
+    driver: bridge
+
+volumes:
+  sqlite:
+  caddy_data:
+  caddy_config:
