@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import { once } from 'node:events'
-import { OpenAIResponsesAgentModel, OpenRouterResponsesAgentModel, configuredHostedAgent } from './agent-provider.js'
+import { AgentProviderError, OpenAIResponsesAgentModel, OpenRouterResponsesAgentModel, configuredHostedAgent } from './agent-provider.js'
 
 const secret = 'test-key-PRIVATE-CANARY'
 const schema = { type: 'object', properties: { summary: { type: 'string' } }, required: ['summary'], additionalProperties: false }
@@ -29,6 +29,35 @@ const safeFailure = (error: unknown) => {
   assert.equal(error.cause, undefined)
   return true
 }
+
+test('public recovery categories are bounded and never expose private provider errors or retry automatically', async () => {
+  const cases = [
+    { response: () => Response.json({ error: { message: secret } }, { status: 429 }), code: 'agent_provider_busy' },
+    { response: () => Response.json({ error: { message: secret } }, { status: 503 }), code: 'agent_provider_busy' },
+    { response: () => Response.json({ error: { message: secret } }, { status: 401 }), code: 'agent_unavailable' },
+    { response: () => Response.json(completed({ status: 'incomplete', incomplete_details: { reason: secret } })), code: 'agent_response_incomplete' },
+    { response: () => Response.json(completed({ output: [{ type: 'message', role: 'assistant', content: [{ type: 'refusal', refusal: secret }] }] })), code: 'agent_response_incomplete' },
+    { response: () => Response.json(completed({ output: [{ type: 'message', role: 'assistant', content: [{ type: 'output_text', text: secret }] }] })), code: 'agent_response_incomplete' },
+  ]
+  for (const entry of cases) {
+    let calls = 0
+    const model = new OpenAIResponsesAgentModel({ apiKey: secret, model: 'fixture-model', fetch: async () => { calls++; return entry.response() } })
+    await assert.rejects(model.generate(request), error => {
+      safeFailure(error)
+      assert(error instanceof AgentProviderError)
+      assert.equal(error.code, entry.code)
+      return true
+    })
+    assert.equal(calls, 1)
+  }
+  const timeout = new OpenAIResponsesAgentModel({ apiKey: secret, model: 'fixture-model', timeoutMs: 5, fetch: () => new Promise(() => {}) })
+  await assert.rejects(timeout.generate(request), error => {
+    safeFailure(error)
+    assert(error instanceof AgentProviderError)
+    assert.equal(error.code, 'agent_timeout')
+    return true
+  })
+})
 
 test('hosted agent is explicitly enabled and does not reuse ambient model credentials', () => {
   assert.deepEqual(configuredHostedAgent({ OPENAI_API_KEY: secret }), {})

@@ -117,6 +117,9 @@
   state.agent.interests = state.agent.interests
     .filter((x) => typeof x === "string")
     .slice(0, 12);
+  // Older settings used "links", which is not a supported API source value.
+  state.agent.sources = [...new Set(state.agent.sources.map((source) => source === "links" ? "website" : source))]
+    .filter((source) => ["github", "x", "website", "agent"].includes(source));
   for (const key of ["name", "bio", "cta", "persona"])
     if (typeof state.widget[key] !== "string")
       state.widget[key] = initial.widget[key];
@@ -131,6 +134,10 @@
     try {
       const { introductions, inbox, ...draft } = state;
       store.setItem(storageKey, JSON.stringify(api.demo ? state : draft));
+      if (page === "agent") {
+        const status = $("[data-settings-status]");
+        if (status) status.textContent = "Unsaved changes. Save settings to apply them.";
+      }
     } catch (_) {
       /* The UI still works without persistent storage. */
     }
@@ -231,7 +238,9 @@
   };
   const editProfile = (field) => {
     const fields =
-      field === "profile"
+      field === "all"
+        ? [["name", "Name"], ["bio", "What are you working on?"], ["interests", "Interests (optional)"], ["offer", "What can you offer?"], ["meet", "Who would you like to meet?"]]
+        : field === "profile"
         ? [
             ["name", "Name"],
             ["bio", "Profile introduction"],
@@ -247,12 +256,12 @@
             ],
           ];
     openDialog(
-      "Edit your draft",
-      `<form id="edit-profile-form">${fields.map(([key, label]) => `<label class="dialog-field" for="edit-${key}">${label}</label>${key === "name" ? `<input class="dialog-input" id="edit-${key}" name="${key}" maxlength="45" required value="${escapeHTML(state.profile[key] || "")}" autofocus>` : `<textarea class="dialog-input" id="edit-${key}" name="${key}" maxlength="240" required>${escapeHTML(state.profile[key] || "")}</textarea>`}`).join("")}${notice("You control what to share. Changes are saved in this browser only.")}<div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>Cancel</button><button type="submit" class="button primary">Save changes</button></div></form>`,
+      field === "all" ? "A little about you" : "Edit your draft",
+      `<form id="edit-profile-form">${fields.map(([key, label]) => `<label class="dialog-field" for="edit-${key}">${label}</label>${key === "name" ? `<input class="dialog-input" id="edit-${key}" name="${key}" maxlength="45" required value="${escapeHTML(state.profile[key] || "")}" autofocus>` : `<textarea class="dialog-input" id="edit-${key}" name="${key}" maxlength="240" ${key === "interests" ? "" : "required"}>${escapeHTML(state.profile[key] || "")}</textarea>`}`).join("")}${notice("You control what to share. Changes are saved in this browser only.")}<div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>Cancel</button><button type="submit" class="button primary">Save changes</button></div></form>`,
       (root) => {
         $("#edit-profile-form", root).addEventListener("submit", (e) => {
           e.preventDefault();
-          if (fields.some(([key]) => !$(`[name="${key}"]`, root).value.trim()))
+          if (fields.some(([key]) => key !== "interests" && !$(`[name="${key}"]`, root).value.trim()))
             return toast("Please add a little context before saving.");
           fields.forEach(
             ([key]) =>
@@ -269,6 +278,13 @@
   };
   if (page === "sources") {
     if (api.live || saved.profile) updateProfile();
+    if (api.profileReturnPath?.()) {
+      const note = $("#profile-return-note");
+      if (note) {
+        note.hidden = false;
+        note.textContent = "Save your profile to return to your goal and selected person. You’ll review the draft before anything is sent.";
+      }
+    }
     const setSourceButton = (el) => {
       const selected = state.sources.includes(el.dataset.source);
       el.classList.toggle("selected", selected);
@@ -340,7 +356,7 @@
         }
         openDialog(
           `Add ${source === "github" ? "GitHub" : source === "x" ? "Twitter / X" : "your website"}`,
-          `<p class="dialog-copy">Save a public source for your profile. This demo stores the link; it does not fetch or verify the account.</p><form id="source-form"><label class="dialog-field" for="source-url">Public URL</label><input type="url" class="dialog-input" id="source-url" required autofocus maxlength="500" value="${escapeHTML(state.sourceLinks[source] || "")}" placeholder="${source === "github" ? "https://github.com/yourname" : source === "x" ? "https://x.com/yourname" : "https://your-site.com"}"><p id="source-error" class="dialog-copy" role="alert"></p><div class="dialog-actions"><button class="button outline" id="remove-source" type="button">Remove source</button><button class="button primary" type="submit">Save source</button></div></form>`,
+          `<p class="dialog-copy">Save a public link for reference. SignalPass does not fetch its contents or verify the account.</p><form id="source-form"><label class="dialog-field" for="source-url">Public URL</label><input type="url" class="dialog-input" id="source-url" required autofocus maxlength="500" value="${escapeHTML(state.sourceLinks[source] || "")}" placeholder="${source === "github" ? "https://github.com/yourname" : source === "x" ? "https://x.com/yourname" : "https://your-site.com"}"><p id="source-error" class="dialog-copy" role="alert"></p><div class="dialog-actions"><button class="button outline" id="remove-source" type="button">Remove source</button><button class="button primary" type="submit">Save source</button></div></form>`,
           (root) => {
             $("#source-form", root).addEventListener("submit", (event) => {
               event.preventDefault();
@@ -423,7 +439,7 @@
         );
         $(".public-profile-preview .section-heading p").textContent =
           el.value === "private"
-            ? "This preview is hidden from the public. Private matching can stay on."
+            ? "Your profile stays out of the directory and other people’s AI suggestions. You can still search for people."
             : el.value === "limited"
               ? "Hidden from discovery. Anyone with your profile link can view it."
               : "This snapshot will be visible in the SignalPass community.";
@@ -452,8 +468,8 @@
       setToggle();
       toast(
         toggle.checked
-          ? "Matching is on. You decide who to meet."
-          : "Matching paused. Your profile settings are unchanged.",
+          ? "Save settings to appear in AI suggestions when your profile is public."
+          : "Save settings to stay out of AI suggestions. You can still browse and search.",
       );
     });
     $$("[name=data-source]").forEach((el) => {
@@ -551,11 +567,8 @@
       example.href = '/discover?demo=1'; example.textContent = 'Explore sample profiles →';
       emptyCopy.append(example);
     }
-    if (!state.agent.matching) {
-      $(".discovery-private h3").textContent = "Private matching is paused";
-      $(".discovery-private p").textContent =
-        api.demo ? "You can still browse example profiles" : "You can still browse approved public profiles";
-    }
+    $(".discovery-private h3").textContent = api.demo ? "Sample profiles" : "Public profiles, your choice";
+    $(".discovery-private p").textContent = api.demo ? "No messages or payments in this tour." : "Browse approved profile details. AI suggestions are in My agent.";
     let goal = state.discoveryGoal || "";
     $("#curiosity").value = state.discoveryQuery || "";
     $$("[data-discovery-goal]").forEach((el) =>
@@ -583,11 +596,6 @@
     });
     $("#discovery-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!state.agent.matching)
-        return openDialog(
-          "Matching is paused",
-          '<p class="dialog-copy">You can browse people now, or turn on matching to try suggestions. Your profile can stay private.</p><div class="dialog-actions"><button class="button outline" data-close-dialog>Keep browsing</button><a class="button primary" href="/agent">Matching settings</a></div>',
-        );
       const submit = $("#discovery-form [type=submit]");
       submit.disabled = true;
       const label = submit.innerHTML;
@@ -1150,7 +1158,7 @@
       const link = document.createElement("a");
       link.className = "v4-continue";
       link.href = `/introductions/${c.record.id}/receipt`;
-      link.textContent = "View receipt →";
+      link.textContent = api.live && c.record.status === "accepted" ? "Continue conversation →" : "View receipt →";
       message.append(title, copy);
       if (c.record.reply) {
         const reply = document.createElement("p");
@@ -1219,7 +1227,7 @@
       for (const record of api.outbox) {
         const link = document.createElement("a"); link.className = "inbox-row"; link.dataset.group = "sent";
         link.href = "/introductions/" + record.id + "/receipt";
-        link.textContent = "To " + record.recipient + " · " + record.status.replaceAll("_", " ");
+        link.textContent = "To " + record.recipient + " · " + (record.status === "accepted" ? "Continue conversation →" : record.status.replaceAll("_", " "));
         $(".inbox-rows").append(link);
       }
     }
@@ -1327,12 +1335,17 @@
         );
       return;
     }
-    if (action === "start-manually") return editProfile("profile");
-    if (action === "review-draft")
+    if (action === "start-manually") return editProfile("all");
+    if (action === "review-draft") {
+      if (["name", "bio", "offer", "meet"].some((key) => !state.profile[key].trim())) {
+        editProfile("all");
+        return toast("Add your name, work, offer and who you’d like to meet before reviewing.");
+      }
       return openDialog(
         "Review your profile draft",
-        `<img class="avatar dialog-avatar" src="assets/avatar-alex.webp" alt="Illustrated profile avatar"><h3 style="font-size:26px">${escapeHTML(state.profile.name)}</h3><p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><ul class="context-list"><li><strong>Current interests</strong><br>${escapeHTML(state.profile.interests)}</li><li><strong>Can offer</strong><br>${escapeHTML(state.profile.offer)}</li><li><strong>Wants to meet</strong><br>${escapeHTML(state.profile.meet)}</li></ul>${notice("You choose the visibility next. Approving this draft does not make it public.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep editing</button><button class="button primary" data-action="approve-profile">Approve draft ${icon("arrow")}</button></div>`,
+        `<img class="avatar dialog-avatar" src="assets/avatar-alex.webp" alt="Illustrated profile avatar"><h3 style="font-size:26px">${escapeHTML(state.profile.name)}</h3><p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><ul class="context-list"><li><strong>Current interests</strong><br>${escapeHTML(state.profile.interests || "Not added")}</li><li><strong>Can offer</strong><br>${escapeHTML(state.profile.offer)}</li><li><strong>Wants to meet</strong><br>${escapeHTML(state.profile.meet)}</li></ul>${notice(state.agent.visibility === "private" ? "Saved privately. You can change visibility in Profile & privacy." : state.agent.visibility === "limited" ? "Your saved profile is unlisted: anyone with its link can view it." : "Saving updates your public profile, including the interests people can see.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep editing</button><button class="button primary" data-action="approve-profile">${api.profileReturnPath?.() ? "Save & return to my agent" : "Approve draft"} ${icon("arrow")}</button></div>`,
       );
+    }
     if (action === "approve-profile") {
       state.profileApproved = true;
       state.agent.interests = state.profile.interests
@@ -1345,15 +1358,19 @@
         closeDialog();
         try { await api.saveProfile(state); } catch (error) { state.profileApproved = false; save(); toast(error.message); return; }
       }
-      location.href = "/agent";
+      location.href = api.profileReturnPath?.() || "/agent";
       return;
     }
     if (action === "save-agent") {
+      if (api.live && !state.profileApproved) {
+        return openDialog("Review your profile first", '<p class="dialog-copy">Approve the details in your profile before saving its visibility and suggestion preferences.</p><div class="dialog-actions"><a class="button primary" href="/profile/import">Review my profile →</a></div>');
+      }
       if (api.live) { try { await api.saveProfile(state); } catch (error) { toast(error.message); return; } }
       save();
+      if ($("[data-settings-status]")) $("[data-settings-status]").textContent = "Settings saved.";
       return openDialog(
-        "Your agent is ready",
-        '<p class="dialog-copy">Your preferences are saved. Follow a curiosity, or create a little card for your corner of the internet.</p><div class="dialog-actions"><a class="button outline" href="/widget/create">Create my widget</a><a class="button primary" href="/discover">Discover people →</a></div>',
+        "Your preferences are saved",
+        '<p class="dialog-copy">Tell your agent what you need, or explore the public directory at your own pace.</p><div class="dialog-actions"><a class="button outline" href="/discover">Discover people →</a><a class="button primary" href="/assistant">Open my agent →</a></div>',
       );
     }
     if (action === "preview-profile")

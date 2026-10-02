@@ -8,9 +8,11 @@ SignalPass supplies the model connection and private workspace. Users sign in, d
 
 1. A signed-in user enters a goal. Using their approved profile is an unchecked, explicit option.
 2. The server filters public, approved profiles that allow matching and are open to introductions, excluding the requester. Goal terms select at most 40 candidates; the model can recommend at most three of those supplied handles. This is a bounded shortlist, not an exhaustive semantic search.
-3. Each recommendation includes a reason, caveat and exact public-profile quote. The server validates the handle and quote against the supplied source. Quotes are traceable; generated interpretations and self-reported profile claims are not independently verified.
-4. Drafting requires consent to use the sender's approved profile. The model writes the four Introduction Card fields and review notes.
-5. The user opens the existing composer, edits the draft, independently chooses what profile context to share, reviews delivery and confirms sending. Existing wallet-bond confirmation remains in that flow. The model cannot send, accept, publish or spend.
+3. Each recommendation includes a reason, caveat and exact public-profile quote. The Why you two card combines the original goal, a validated recipient quote, the sender’s exact approved offer when consented, and a clearly tentative first step. Interest-only evidence is marked exploratory. The server validates the handle and quote against the supplied source; it does not independently verify self-reported claims or mutual interest.
+4. Answer the agent’s clarification to refine the same goal, up to three times. Each answer is bounded to 600 characters. The server resolves the original owned run and keeps its goal, applies clarification terms to the bounded shortlist and sends the answer history with the new request. An empty eligible pool makes no provider call and consumes no inference quota.
+5. Drafting requires consent to use the sender's approved profile. The model writes the four Introduction Card fields and review notes.
+6. The user opens the existing composer, edits the draft, independently chooses what profile context to share, reviews delivery and confirms sending. Existing wallet-bond confirmation remains in that flow. The model cannot send, accept, publish or spend.
+7. After acceptance, either participant can explicitly share one email, contact link or scheduling link in the private receipt. Nothing is shared automatically and neither party can publish the other’s channel. Removal takes effect on future reads; it cannot undo a copy already made by the other participant.
 
 Conversational profile creation, recipient inbox assistance, long-term memory, external host adapters, private-profile matching and source verification are not implemented by this change. Hunyuan remains unconfigured. Hosted discovery/drafting does not enable or charge an introduction evaluation fee.
 
@@ -39,7 +41,7 @@ Never put the key in frontend variables, source control or the user interface. A
 
 Attempts include provider failures. SQLite reserves quota before inference; clearing history and restarting the API do not reset it. Inference is limited to one concurrent call per account and two globally. Leases expire after 120 seconds if the process dies. These are usage bounds, not a dollar spending ceiling; configure a provider project budget as appropriate for deployment. Wallet accounts are not unique-human identities.
 
-The provider has a bounded deadline (15 seconds for OpenAI, 45 seconds for OpenRouter by default), a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Browser discovery/draft requests and the Next API proxy allow up to 65 seconds for a configured provider deadline of at most 60 seconds; other browser API requests retain their 18-second timeout. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Exact source quotes are checked, but generated draft claims are not fact-verified. The live test still invented prior familiarity despite prompt instructions; the draft and composer remind the sender to check personal claims. Test model compatibility with the exact schema before a public demo.
+The provider has a bounded deadline (15 seconds for OpenAI, 45 seconds for OpenRouter by default), a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Browser discovery/draft requests and the Next API proxy allow up to 65 seconds for a configured provider deadline of at most 60 seconds; other browser API requests retain their 18-second timeout. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Exact source quotes are checked. A conservative draft guard rejects recognizable unsupported familiarity, quantitative career/scale claims, credentials and completed achievements against supplied context. This closes the observed invented-familiarity case; it is not general fact verification, may reject some legitimate paraphrases, and does not cover every language or possible claim. The draft and composer still require the sender to review personal claims. Safe timeout, capacity and incomplete-response categories support deliberate retry or manual composition while preserving existing work; no raw provider response is returned. Test model compatibility with the exact schema before a public demo.
 
 ### Free OpenRouter acceptance test
 
@@ -65,7 +67,11 @@ All `/agent/*` endpoints require the existing verified SIWE session; writes also
 
 Model input contains the goal and a minimal profile projection: handle, display name, building, can offer, wants to meet and interests. Candidate data must be public and matching-enabled. The user's own approved profile is included only with consent; its visibility need not be public. Wallet addresses, imported source links, private source text, inbox messages and gate policy internals are not sent. Treat every submitted field as untrusted data. The model receives no executable tools.
 
+A pending goal and selected person are retained in tab-scoped browser session storage for onboarding return, bounded to 24 hours and the signed owner. Inference consent is not restored as an automatic approval. Logout or an account change clears return state.
+
 Runs and drafts belong to the signed-in account in the existing SQLite database. History is capped at 50 combined records per account and pruned on activity for records older than seven days; this is not a scheduled deletion guarantee for inactive accounts. Drafts expire after 30 minutes. Reads and writes recheck profile versions and recipient eligibility. Clearing history deletes the account's saved runs/drafts, blocks in-flight requests from restoring them, and clears agent-derived local compose drafts on that browser. It does not erase sent introductions or reset usage.
+
+Contact channels use a separate SQLite collection and never enter public profiles, ordinary receipt/inbox projections or model inputs. Accepted-introduction participants alone can read them through the private connection endpoint.
 
 The database uses access controls, not application-level encryption at rest. Draft edits in the composer also use the existing account-scoped browser storage. The provider request uses `store:false`; this is not a promise of zero provider retention. Review the chosen provider's data policy for deployment. The feature does not provide end-to-end encryption.
 
@@ -75,10 +81,13 @@ The database uses access controls, not application-level encryption at rest. Dra
 | --- | --- |
 | `GET /agent/status` | Availability, provider/model and remaining included requests. |
 | `GET /agent/workspace` | Account's recent runs and currently valid drafts. |
-| `POST /agent/discover` | `{goal, useProfile}` → a run with recommendations and pool counts. |
+| `POST /agent/discover` | `{goal, useProfile}` or `{parentRunId, answer, useProfile}` → an owned run with original goal, bounded clarifications, evidence cards and pool counts. |
 | `POST /agent/draft` | `{runId, recipientHandle, useProfile}` → a private four-field draft. The Web client always sends current explicit consent. |
 | `GET /agent/drafts/:id` | Fetch an owned, unexpired draft with current profile versions. |
 | `POST /agent/history/clear` | Delete the current account's history without resetting quota. |
+| `GET /introductions/:id/connection` | Accepted-introduction parties only; returns own and explicitly shared counterpart contact. |
+| `POST /introductions/:id/connection` | Explicitly share/replace own `{type, label, value}`; type is `email`, `contact_url` or `scheduling_url`. URL channels require HTTPS. |
+| `POST /introductions/:id/connection/remove` | `{}` removes only the current participant’s contact. |
 
 ## Verification and demo acceptance
 
@@ -94,6 +103,8 @@ node scripts/agent-proxy-smoke.mjs
 ```
 
 The browser suite serves the actual V4 pages with mocked HTTP responses and stops at the user-confirmed delivery request. It verifies desktop/mobile behavior and failure states without claiming real model output, real wallet sign-in or real delivery. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` can select an installed Chromium; screenshots default to `.run/agent-ui-qa`. Existing bitmap artwork is excluded from this targeted test. The separate proxy smoke starts real Next with a localhost fixture and verifies a response delayed beyond 30 seconds; it needs no model key.
+
+See [the product demo and first-community guide](HACKATHON_PRODUCT_DEMO.md) for the complete journey, synthetic comparative cases and rehearsal criteria. Those fixture cases do not constitute a live model-ranking benchmark.
 
 The synthetic live acceptance proves model integration, not a deployed community workflow. Before a public product demonstration:
 

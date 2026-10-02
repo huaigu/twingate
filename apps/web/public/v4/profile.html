@@ -116,7 +116,7 @@
           <div class="source-hero">
             <h1 class="hero-title">Build your <br />profile</h1>
             <span aria-hidden="true" class="brush"></span>
-            <p>Your agent writes. You approve.</p>
+            <p>Your context. Your approval.</p>
             <ol class="steps">
               <li class="done">
                 <span>1</span>Get started<svg
@@ -132,16 +132,15 @@
                   <path d="m5 12 4 4L19 6"></path>
                 </svg>
               </li>
-              <li class="active"><span>2</span>Add sources</li>
+              <li class="active"><span>2</span>Your context</li>
               <li><span>3</span>Review</li>
             </ol>
           </div>
           <div class="source-workspace">
             <section class="paper source-picker">
-              <h2>Add sources</h2>
+              <h2>Optional references</h2>
               <p class="source-help">
-                Draft your profile from public information you choose to share.
-                You’ll approve every detail before saving.
+                Write your profile, or paste a draft from your own agent. You can also save links for reference; adding a link does not import its contents.
               </p>
               <div class="source-grid">
                 <button
@@ -180,7 +179,7 @@
                       <path d="m5 12 4 4L19 6"></path></svg></span
                   ><strong>GitHub</strong
                   ><span class="source-desc text-block"
-                    >Projects, repositories, contributions</span
+                    >Save your public GitHub link</span
                   ></button
                 ><button
                   aria-pressed="false"
@@ -216,7 +215,7 @@
                       <path d="M12 5v14M5 12h14"></path></svg></span
                   ><strong>Twitter / X</strong
                   ><span class="source-desc text-block"
-                    >Ideas, conversations, public activity</span
+                    >Save your public X link</span
                   ></button
                 ><button
                   aria-pressed="false"
@@ -252,7 +251,7 @@
                       <path d="M12 5v14M5 12h14"></path></svg></span
                   ><strong>Personal website</strong
                   ><span class="source-desc text-block"
-                    >About you, blog, projects, links</span
+                    >Save your website link</span
                   ></button
                 ><button
                   aria-pressed="false"
@@ -288,9 +287,9 @@
                       viewbox="0 0 24 24"
                     >
                       <path d="M12 5v14M5 12h14"></path></svg></span
-                  ><strong>From my Agent</strong
+                  ><strong>Import a draft</strong
                   ><span class="source-desc text-block"
-                    >Relevant public context, chosen by you.</span
+                    >Paste profile JSON from your own agent.</span
                   >
                 </button>
               </div>
@@ -309,8 +308,7 @@
                   <path d="M12 10v7M12 6v.1"></path>
                 </svg>
                 <p>
-                  Public sources are not verified. Review and approve your draft
-                  before anything is saved.
+                  Links are not fetched or verified. Your draft stays in this browser until you approve saving it to your account.
                 </p>
               </div>
             </section>
@@ -333,6 +331,7 @@
                   >User-provided · not verified</span
                 >
               </div>
+              <p id="profile-return-note" class="dialog-notice" hidden role="status"></p>
               <div class="draft-person">
                 <img
                   alt=""
@@ -602,7 +601,7 @@
                 data-action="start-manually"
                 type="button"
               >
-                Start manually
+                Write my profile
               </button>
             </div>
           </div>

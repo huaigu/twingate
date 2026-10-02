@@ -18,6 +18,7 @@ type Receipt = {
   id: string; role: 'sender' | 'recipient'; intent: IntroductionIntent; state: string; revision: number;
   settlement: string; sharedProfile: unknown | null; payment: { status: string; charged: boolean };
 }
+type Connection = { connection: { introductionId: string; ownContact: { value: string } | null; otherContact: { value: string } | null } }
 const origin = 'http://localhost:3004'
 const originalModelText = 'MODEL_ORIGINAL_WORDING_CANARY: I build Monad onboarding prototypes.'
 const privateSource = 'PRIVATE_SOURCE_CANARY'
@@ -158,6 +159,23 @@ test('two-person local journey: hosted draft → edited approval → same receip
     assert.equal(accepted.data.introduction.id, id)
     assert.equal(accepted.data.introduction.state, 'accepted')
 
+    // Acceptance alone never discloses either person's contact details.
+    const emptyConnection = await request<Connection>(sender, '/introductions/' + id + '/connection')
+    assert.equal(emptyConnection.status, 200)
+    assert.deepEqual(emptyConnection.data.connection, { introductionId: id, ownContact: null, otherContact: null })
+    const contact = 'journey-contact-PRIVATE-CANARY@example.test'
+    const shared = await request<Connection>(sender, '/introductions/' + id + '/connection', { type: 'email', label: 'Email me about this prototype', value: contact })
+    assert.equal(shared.status, 200)
+    assert.equal(shared.data.connection.ownContact?.value, contact)
+    const receivedContact = await request<Connection>(recipient, '/introductions/' + id + '/connection')
+    assert.equal(receivedContact.data.connection.otherContact?.value, contact)
+    assert.equal(receivedContact.data.connection.ownContact, null, 'Sharing one channel never shares the other participant’s details')
+    assert.equal((await request(null, '/introductions/' + id + '/connection')).status, 401)
+    for (const path of ['/introductions/' + id, '/introductions?box=inbox', '/profiles']) {
+      const projection = await request(recipient, path)
+      assert(!JSON.stringify(projection.data).includes(contact), 'Contact stays outside receipt, inbox and public profile projections')
+    }
+
     await stop()
     api.close()
     api = createApp(options)
@@ -170,6 +188,10 @@ test('two-person local journey: hosted draft → edited approval → same receip
       assert.equal(persisted.data.introduction.sharedProfile, null)
     }
     assert.equal((await request(sender, '/agent/drafts/' + draft.id)).status, 200)
+    const persistedContact = await request<Connection>(recipient, '/introductions/' + id + '/connection')
+    assert.equal(persistedContact.data.connection.otherContact?.value, contact, 'Explicit contact sharing survives restart')
+    assert.equal((await request(sender, '/introductions/' + id + '/connection/remove', {})).status, 200)
+    assert.equal((await request<Connection>(recipient, '/introductions/' + id + '/connection')).data.connection.otherContact, null, 'Removal is reflected in the other participant’s next read')
     assert.equal((await request(sender, '/agent/history/clear', {})).status, 200)
     assert.equal((await request(sender, '/agent/drafts/' + draft.id)).status, 404)
     const afterClear = await request<{ introduction: Receipt }>(recipient, '/introductions/' + id)

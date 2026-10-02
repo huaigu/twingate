@@ -1,0 +1,94 @@
+{
+  "purpose": "Synthetic evaluation only. These are fictional people, not community members, endorsements or production seeds.",
+  "sender": {
+    "handle": "sample-prototyper",
+    "displayName": "Sample · Product prototyper",
+    "building": "A Monad wallet onboarding prototype for first-time users.",
+    "canOffer": "Frontend prototypes, interaction design and structured usability feedback.",
+    "wantsToMeet": "Wallet engineers and researchers who can review onboarding friction.",
+    "interests": ["Monad", "Wallet onboarding", "Product design"]
+  },
+  "profiles": [
+    {
+      "handle": "sample-wallet-engineer",
+      "displayName": "Sample · Wallet engineer",
+      "building": "Wallet connection and transaction recovery tools for Monad apps.",
+      "canOffer": "Reviews of wallet connection failures and transaction recovery flows.",
+      "wantsToMeet": "Designers who can prototype clearer error and recovery screens.",
+      "interests": ["Monad", "Wallets", "Reliability"]
+    },
+    {
+      "handle": "sample-researcher",
+      "displayName": "Sample · Usability researcher",
+      "building": "A study of first-time wallet setup and confusing approval screens.",
+      "canOffer": "Usability interview plans and reviews of onboarding prototypes.",
+      "wantsToMeet": "Builders with testable onboarding prototypes and research questions.",
+      "interests": ["Wallet onboarding", "User research"]
+    },
+    {
+      "handle": "sample-indexer",
+      "displayName": "Sample · Indexing engineer",
+      "building": "A Monad event indexer for transaction histories.",
+      "canOffer": "Event indexing, backfill strategies and data pipeline debugging.",
+      "wantsToMeet": "Teams with indexing workloads and reproducible pipeline bugs.",
+      "interests": ["Monad", "Data infrastructure"]
+    },
+    {
+      "handle": "sample-contract-reviewer",
+      "displayName": "Sample · Contract reviewer",
+      "building": "A property-based testing harness for escrow state transitions.",
+      "canOffer": "Feedback on escrow invariants and contract test cases; not a formal audit.",
+      "wantsToMeet": "Contract authors who can provide a minimal reproducible example.",
+      "interests": ["Solidity", "Escrow", "Testing"]
+    },
+    {
+      "handle": "sample-community-host",
+      "displayName": "Sample · Community host",
+      "building": "Small peer feedback sessions for independent makers.",
+      "canOffer": "Session facilitation and feedback on event formats.",
+      "wantsToMeet": "Makers willing to host a small peer feedback session.",
+      "interests": ["Community", "Monad", "Design"]
+    },
+    {
+      "handle": "sample-music-maker",
+      "displayName": "Sample · Music maker",
+      "building": "An electronic music collaboration project.",
+      "canOffer": "Sound design and music arrangement feedback.",
+      "wantsToMeet": "Musicians sharing unfinished tracks.",
+      "interests": ["Music", "Creative collaboration"]
+    }
+  ],
+  "cases": [
+    {
+      "id": "multiple-plausible",
+      "goal": "Find someone to review first-time wallet onboarding and confusing connection errors in my Monad prototype.",
+      "plausibleHandles": ["sample-wallet-engineer", "sample-researcher"],
+      "review": "Either specialist is plausible. A Monad keyword alone is insufficient to promote the indexer or community host. Quote the relevant offer and retain uncertainty about availability."
+    },
+    {
+      "id": "reciprocal-offer",
+      "goal": "I can prototype clearer error screens in exchange for a review of wallet connection failures.",
+      "plausibleHandles": ["sample-wallet-engineer"],
+      "review": "Connect the engineer's explicit need to the approved sender offer; never claim the engineer has already agreed."
+    },
+    {
+      "id": "weak-shared-interest",
+      "goal": "I need a formal independent security audit of a production Monad lending protocol.",
+      "plausibleHandles": [],
+      "review": "No profile offers a formal audit. Do not turn an interest in Monad or contract testing feedback into audit credentials. Return no match or a clearly limited exploratory alternative, never a qualified-auditor claim."
+    },
+    {
+      "id": "no-match",
+      "goal": "Find an experienced telescope optics manufacturer who can fabricate a custom primary mirror.",
+      "plausibleHandles": [],
+      "review": "Return zero recommendations and a useful clarification; never force a match."
+    },
+    {
+      "id": "refinement",
+      "goal": "Find someone who can help me improve my Monad app.",
+      "answer": "My blocker is event backfill and missing transaction-history records, not interface design.",
+      "plausibleHandles": ["sample-indexer"],
+      "review": "Preserve the original goal and apply the clarification. Prefer the explicit indexing offer without inventing experience beyond the supplied profile."
+    }
+  ]
+}

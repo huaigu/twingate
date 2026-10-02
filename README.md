@@ -22,11 +22,13 @@ The product shape is **one private Personal Agent per person, one public Builder
 3. **Blunt paywalls fail socially**: A fixed price can discourage legitimate first-time collaborators without creating a better introduction experience.
 
 ### The SignalPass Experience
-1. **3D Agent Persona**: Builders can create an optional Hunyuan-powered digital presence that represents their profile and current availability.
-2. **Private agent handshake**: The sender's Intro Coach and the recipient's Gatekeeper exchange only permitted structured context. People see clear summaries and next steps, not opaque agent reasoning.
-3. **Sender-pays evaluation**: The sender locks a transparent evaluation fee and refundable attention bond on Monad. The fee covers the recipient-side AI evaluation; the bond is governed by public timeout and resolution rules.
-4. **Opt-in verified context**: Nansen can contribute concise, explainable onchain signals only when a builder chooses to disclose them.
-5. **Human consent opens the introduction**: The recipient accepts, asks for more context, or declines. AI never grants access or unilaterally seizes funds.
+1. **A goal that survives setup**: Enter what you need, sign in and approve your profile, then return to the same goal and selected person.
+2. **People with reasons**: The hosted agent recommends eligible public profiles with source quotes and a “Why you two” explanation. Answer a clarification to refine the original goal; a weak fit stays tentative and no-match is a valid outcome.
+3. **An introduction you approve**: Explicitly permit profile use, review a private four-part draft, edit it and independently choose what context to share. AI cannot send or spend.
+4. **A recipient with a choice**: The recipient accepts, asks for context or declines. Optional refundable wallet bonds are verified on a local EVM; manual review has zero AI evaluation fee. Public Monad testnet deployment remains pending.
+5. **An explicit next step**: After acceptance, each participant can choose and share one contact or scheduling channel with the other participant. Acceptance never exposes contact details automatically.
+
+Hunyuan persona generation, a recipient-side autonomous agent, Nansen verification and embedded wallets remain future integrations. See [the product demo and first-community guide](docs/HACKATHON_PRODUCT_DEMO.md) for the current complete journey and clearly labelled rehearsal data.
 
 ---
 
@@ -38,6 +40,7 @@ In this repository:
 - [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): the canonical name, one-liner and description used on the submission form.
 - [🗺️ Product Architecture Diagram](./docs/architecture/signalpass-product-architecture.html): interactive diagram with dark and light themes.
 - [🤖 Agent Surface](./docs/SIGNALPASS_AGENT_SURFACES.md): the Personal Agent model, provider-neutral skills, OpenClaw/Hermes adapter boundary and hackathon acceptance criteria.
+- [Product demo and first community](./docs/HACKATHON_PRODUCT_DEMO.md): the complete product story, recovery rehearsal, synthetic quality cases and consenting cohort plan.
 - [🎨 V2 Design Set](./design-explorations/signalpass-v2/DESIGN.md): the redesigned Builders, Profile, Composer, Inbox and Hero interaction references.
 - [✨ V3 Design Set](./design-explorations/signalpass-v3/DESIGN.md): profile source import, private matching, people discovery, Profile Widget and the broader introduction flow.
 
@@ -121,6 +124,7 @@ Individually:
 | `pnpm --filter @signalpass/api test` | Signed sessions, replay, object permissions, consent, idempotency, database reopen, hosted agent privacy/budgets/staleness and provider transport fixtures; no paid inference |
 | `pnpm v4:flow:test` | Asset-independent regressions for guest-to-wallet draft recovery and composing with sparse profile interests; uses controlled DOM/API fixtures, not a browser E2E |
 | `pnpm agent:ui:test` | Real Chromium checks of hosted-agent pages with HTTP fixtures: consent, evidence, edited draft handoff, separate send confirmation, error states and mobile layout. Requires Playwright Chromium; no live model or wallet transaction. |
+| `pnpm connection:ui:test` | Real Chromium checks of accepted-contact sharing with HTTP fixtures: explicit review, safe links, removal, session expiry and mobile layout. No message is sent. |
 | `pnpm agent:live:test` | Opt-in OpenRouter free-model acceptance through actual signed-session discover/draft routes using fictional profiles; needs your server-side key and explicit free model. Fails when unconfigured; never sends an introduction or spends wallet funds. |
 | `pnpm wallet:quote:test` | Refreshed quote amount stays consistent in the receipt, saved record and wallet approval; quote errors and wallet cancellation never auto-send. |
 | `pnpm e2e` | Real API + Next servers and 3 browser sessions: sign in → approve profile → send/receive → request/reply → accept → API restart |

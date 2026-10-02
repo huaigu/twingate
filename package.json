@@ -16,6 +16,7 @@
     "v4:verify": "node scripts/v4-verify.mjs",
     "v4:flow:test": "node --test scripts/v4-flow-test.mjs",
     "agent:ui:test": "node scripts/agent-ui-test.mjs",
+    "connection:ui:test": "node scripts/connection-ui-test.mjs",
     "agent:live:test": "pnpm --filter @signalpass/api exec node --import tsx scripts/agent-live-smoke.ts",
     "wallet:quote:test": "node --test scripts/wallet-quote-test.mjs",
     "verify": "pnpm v4:flow:test && pnpm wallet:quote:test && pnpm -r typecheck && pnpm -r test && pnpm e2e",

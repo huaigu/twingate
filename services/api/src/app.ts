@@ -14,6 +14,7 @@ import { installChainRoutes } from './chain-routes.js'
 import { DEFAULT_PRICING } from '@signalpass/core'
 import { installAgentRoutes } from './agent-routes.js'
 import type { HostedAgentOptions } from './agent-types.js'
+import { installConnectionRoutes } from './connection-routes.js'
 
 const address = z.string().refine((v) => isAddress(v, { strict: false })).transform((v) => v.toLowerCase() as Address)
 const now = () => Math.floor(Date.now() / 1000)
@@ -56,6 +57,7 @@ export function createApp(options: { databasePath?: string; origin: string; eval
   app.onError((error, c) => { if (error instanceof ChainError) return c.json({ error: error.code }, error.status as 409 | 503); console.error('[api]', error.message); return c.json({ error: 'internal_error' }, 500) })
   const chainRoutes = installChainRoutes(app, store, options.chain)
   installAgentRoutes(app, store, options.agent)
+  installConnectionRoutes(app, store)
   app.get('/health', (c) => c.json({ ok: true, service: '@signalpass/api', storage: 'sqlite', identity: 'siwe-eoa', settlement: options.chain ? 'configured_manual_review' : 'not_connected', evaluator: options.chain ? 'disabled_manual_review' : options.evaluatorUrl ? 'external' : 'mock-local' }))
   app.get('/ready', (c) => {
     try {

@@ -258,6 +258,7 @@ test('profile changes and history clearing during inference cannot publish stale
     await h.request(bob, '/me/profile', hidden)
     resolve!({ matches: [{ handle: 'bob', reason: 'Contract simulation.', caveat: 'Unconfirmed.', evidence: [{ field: 'canOffer', quote: 'Contract simulation' }] }], nextQuestion: null })
     assert.equal((await first).data.error, 'agent_candidate_unavailable')
+    await h.request(bob, '/me/profile', profile('bob'))
     resolve = undefined
     const second = h.request(alice, '/agent/discover', { goal }); await waitFor()
     await h.request(alice, '/agent/history/clear', {})
