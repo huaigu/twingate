@@ -117,12 +117,36 @@
   };
   api.connect = async () => {
     if (!window.ethereum?.request) throw new Error('Open SignalPass in a browser with an Ethereum wallet to sign in. No payment is requested.');
+    const guestKey = 'signalpass-v4-draft-guest';
+    let guestDraft;
+    try { if (!api.me) guestDraft = localStorage.getItem(guestKey); } catch {}
     const [address] = await window.ethereum.request({ method: 'eth_requestAccounts' });
     const chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }), 16);
     const challenge = await api.request('/auth/challenge', { address, chainId });
     const hex = '0x' + [...new TextEncoder().encode(challenge.message)].map((b) => b.toString(16).padStart(2, '0')).join('');
     const signature = await window.ethereum.request({ method: 'personal_sign', params: [hex, address] });
-    await api.request('/auth/verify', { nonce: challenge.nonce, signature }); location.reload();
+    await api.request('/auth/verify', { nonce: challenge.nonce, signature });
+    if (guestDraft) {
+      try {
+        // Adopt a guest's work only into a new, verified account. Existing
+        // account profiles and drafts stay authoritative; nothing is published.
+        const account = await api.request('/me');
+        const owner = account.session.address.toLowerCase();
+        const key = 'signalpass-v4-draft-' + owner;
+        if (owner === address.toLowerCase() && !account.profile && localStorage.getItem(key) === null) {
+          const draft = JSON.parse(guestDraft);
+          if (draft?.profile && typeof draft.profile === 'object' && !Array.isArray(draft.profile)) {
+            const { profile, sources, sourceLinks, widget, widgetEdited } = draft;
+            localStorage.setItem(key, JSON.stringify({ profile, sources, sourceLinks, widget, widgetEdited, profileApproved: false }));
+            if (localStorage.getItem(guestKey) === guestDraft) localStorage.removeItem(guestKey);
+          }
+        }
+      } catch {
+        // A storage or refresh failure must not undo successful sign-in.
+        // Keep the guest copy so that it can be recovered on a later attempt.
+      }
+    }
+    location.reload();
   };
   api.emptyState = (container, { title, description, action, href, onAction, eyebrow = 'A thoughtful beginning' }) => {
     container.replaceChildren(); container.classList.add('v4-empty-state');

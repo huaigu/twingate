@@ -425,7 +425,7 @@
           el.value === "private"
             ? "This preview is hidden from the public. Private matching can stay on."
             : el.value === "limited"
-              ? "Visible only to people you match with or choose."
+              ? "Hidden from discovery. Anyone with your profile link can view it."
               : "This snapshot will be visible in the SignalPass community.";
       });
     });
@@ -434,8 +434,8 @@
       state.agent.visibility === "private"
         ? "Only you can see this preview while your profile is private."
         : state.agent.visibility === "limited"
-          ? "Visible only to people you match with or choose."
-          : "This snapshot is visible in the example community.";
+          ? "Hidden from discovery. Anyone with your profile link can view it."
+          : "This snapshot is visible in the SignalPass community.";
     const toggle = $("#matching-toggle");
     toggle.checked = state.agent.matching;
     const setToggle = () => {
@@ -897,8 +897,8 @@
       }
     } else {
       const fields = [
-        `Hi ${candidate.name}, your interest in ${candidate.tags[0].toLowerCase()} caught my attention.`,
-        `I’d love to exchange ideas about ${candidate.tags[1].toLowerCase()} and hear what you’re exploring.`,
+        `Hi ${candidate.name}, your interest in ${candidate.tags[0]?.toLowerCase() || "your work"} caught my attention.`,
+        `I’d love to exchange ideas about ${candidate.tags[1]?.toLowerCase() || "a possible collaboration"} and hear what you’re exploring.`,
         state.profile.offer,
         `Would you be open to a short conversation? No agenda — just a shared curiosity.`,
       ];
@@ -1283,7 +1283,7 @@
           .map((t) => `<span class="chip">${escapeHTML(t)}</span>`)
           .join(
             "",
-          )}</div>${notice(`Current visibility: <strong>${escapeHTML(state.agent.visibility)}</strong>. ${state.agent.visibility === "private" ? "The public profile is hidden; this is a private preview for you." : "This example shows the fields you have chosen to share."}`)}<div class="dialog-actions"><button class="button primary" type="button" data-close-dialog>Back to settings</button></div>`,
+          )}</div>${notice(`Current visibility: <strong>${escapeHTML(state.agent.visibility === "limited" ? "unlisted" : state.agent.visibility)}</strong>. ${state.agent.visibility === "private" ? "The public profile is hidden; this is a private preview for you." : state.agent.visibility === "limited" ? "Hidden from discovery. Anyone with your profile link can view it." : "This preview shows the fields you have chosen to share publicly."}`)}<div class="dialog-actions"><button class="button primary" type="button" data-close-dialog>Back to settings</button></div>`,
       );
     if (action === "browse-people")
       return openDialog(

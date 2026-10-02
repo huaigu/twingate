@@ -116,7 +116,7 @@
     panel.querySelector('.v4-chain-eyebrow').textContent = api.chain.name;
     document.querySelector('.agent-workspace').append(panel);
     const status = panel.querySelector('#profile-chain-status'), sync = panel.querySelector('#sync-chain-profile');
-    const refresh = async () => { try { const state = await api.request('/chain/profile'); status.textContent = state.synced ? 'Profile and policy confirmed on chain. Your inbox can receive bonded introductions.' : state.reason === 'publish_before_registering' ? 'Set your approved profile to public or limited before registering.' : 'Your approved profile needs ' + state.transactions.length + ' wallet transaction(s).'; sync.disabled = state.synced || state.reason === 'publish_before_registering'; } catch (error) { status.textContent = error.message; } };
+    const refresh = async () => { try { const state = await api.request('/chain/profile'); status.textContent = state.synced ? 'Profile and policy confirmed on chain. Your inbox can receive bonded introductions.' : state.reason === 'publish_before_registering' ? 'Set your approved profile to public or unlisted before registering.' : 'Your approved profile needs ' + state.transactions.length + ' wallet transaction(s).'; sync.disabled = state.synced || state.reason === 'publish_before_registering'; } catch (error) { status.textContent = error.message; } };
     sync.onclick = async () => {
       if (api.walletBusy) return; sync.disabled = true;
       try {

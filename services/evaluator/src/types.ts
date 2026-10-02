@@ -11,6 +11,11 @@ export interface EvaluateInput {
   readonly senderHandle: string
   readonly recipientHandle: string
   readonly intent: IntroductionIntent
+  readonly context?: {
+    readonly sharedProfile: { readonly bio: string; readonly interests: readonly string[] } | null
+    readonly question: string | null
+    readonly reply: string | null
+  }
   readonly recipientPolicy: GatePolicy
   readonly disclosedSignals: readonly DisclosedSignal[]
 }

@@ -1,5 +1,7 @@
 # SignalPass 产品方向与目标架构
 
+> 当前实现边界（2026-10-01）：Web 资料、双方介绍、追问与人工决定已有实现；钱包保证金已在本地 EVM 验证，人工审核的 AI 费用为零。公开 Monad 部署、真实模型驱动的发现/起草、OpenClaw/Hermes 直连和第三方信号仍待交付。Hunyuan 按此前决定保持不配置。下文的 Agent Handshake 和赞助商能力是目标设计，不是已完成清单；参赛文案以 `SIGNALPASS_SUBMISSION_COPY.md` 的当前能力说明为准。
+
 > 规范定位：SignalPass 是 Monad 上面向 Builder 的高信号介绍网络。它不是新的聊天协议，也不是面向开发者出售的基础设施；它用用户自有的 Agent Persona、结构化介绍、发起人承担评估成本和可验证的注意力承诺，让陌生联系变得有上下文、可选择、可追溯。
 
 ## 1. 一句话定位
@@ -53,7 +55,7 @@ Agent-to-Agent 交互是产品的内部机制，不是用户需要学习的协�
 
 ### 4.1 发起人侧：Intro Coach
 
-在发起人确认报价并锁定资金后，Hunyuan 的 Intro Coach 检查请求是否具备足够上下文。它可以要求补充一个关键问题，或将原始草稿整理为简洁、尊重对方注意力的 Introduction Card。
+目标是让 Intro Coach 检查请求是否具备足够上下文，指出需要补充的问题，或帮助整理 Introduction Card。真实模型的接入不绑定 Hunyuan；只有评估与结算闭环验收后，才启用发送人承担的评估费。当前钱包路径直接进入人工审核。
 
 ### 4.2 接收者侧：Gatekeeper
 
@@ -91,13 +93,15 @@ Web、OpenClaw、Hermes 或其他宿主都只实现入口适配器。黑客松�
 
 “想接触某个人，就承担让对方安全评估你的成本”是 SignalPass 的社会契约，但这不等于付钱购买对方的聊天许可。
 
+以下是目标收费机制。当前钱包保证金路径不调用 AI，Evaluation Fee 为零；用户仍需支付网络 gas。无保证金的介绍也可发送，不能声称所有请求都已受资金门槛保护。
+
 | 项目 | 付款方 | 目的 | 规则 |
 | --- | --- | --- | --- |
 | Persona generation fee | Profile owner | 生成可选 3D Agent Persona。 | 与陌生介绍无关，异步计费。 |
-| Introduction Evaluation Fee | Sender | 覆盖 Intro Coach 与对方 Gatekeeper 的推理、评估回执和必要的结算成本。 | 报价透明、不可退；接收者从不为陌生请求付推理费。 |
-| Attention Bond | Sender | 在请求未决期间表达可验证的注意力承诺，并限制批量骚扰吞吐。 | 按公开的超时和结算规则处理；LLM 不能单独没收。 |
+| Introduction Evaluation Fee | Sender | 覆盖 Intro Coach 与对方 Gatekeeper 的推理、评估回执和必要的结算成本。 | 完成评估进入审核后，结算时收取；此前超时或允许的撤回退还费用。接收者不承担陌生请求的推理费。 |
+| Attention Bond | Sender | 在请求未决期间表达可验证的注意力承诺，并限制批量骚扰吞吐。 | 接受、拒绝、允许的撤回或超时结算均全额退还；没有罚没路径。 |
 
-MVP 至少实行每个发起人对同一接收者的未决请求上限与明确的自动超时退款。接收者不能无限期占用发起人资金；任何确定性罚没规则必须公开并提供申诉路径。
+保证金路径实行每个发起人对同一接收者的未决请求上限。超时后需要有人提交到期结算交易，合约才退还资金；时间经过本身不会自动发交易。接收者不能无限期阻止该退款。
 
 ## 6. Nansen Verified Context
 
@@ -131,17 +135,18 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 | 自建部分 | 位置 | 负责什么 |
 | --- | --- | --- |
 | 网页 | `apps/web` | 唯一的用户界面：Builder Profile、Introduction Card 编写、受保护队列、回执与状态页。 |
-| 编排 API | `services/api` | 最小化上下文编排：报价、落 Introduction、调用评估、驱动状态机、向接收者开放队列，以及加密载荷与通知。 |
+| 编排 API | `services/api` | 报价、保存 Introduction、调用评估、驱动状态机与参与者队列权限。当前 SQLite 使用访问控制，未实现应用层静态加密或端到端加密。 |
 | Agent 服务 | `services/evaluator` | Intro Coach 与 Gatekeeper 的双侧受限评估，以及可选的 3D Agent Persona。 |
 | 索引服务 | `services/indexer` | 基于 Envio HyperIndex 索引事件，建立请求队列、回执历史与非敏感的聚合队列健康度。 |
 | 领域内核 | `packages/core` | 状态机、报价曲线、schema 与 EIP-712。API 与 Agent 共用同一份，避免两端规则漂移。 |
 | 端到端验证 | `scripts/e2e.mjs` | 拉起服务跑完整链路；不参与运行时。 |
 
-### 外部依赖
+### 计划中的外部集成
 
-- Dynamic：登录、嵌入式钱包和签名。
-- Tencent Hunyuan：3D Agent Persona 的生成，以及 Intro Coach / Gatekeeper 的受限评估。
-- Nansen：用户授权的 Verified Context。
+- Dynamic：未来可用于嵌入式钱包；当前使用注入式 EOA 钱包与 SIWE 签名会话。
+- Tencent Hunyuan：保留可选 provider 代码，当前不配置，不作为主线交付前提。
+- Nansen：用户授权的 Verified Context 设计，尚无真实信号验证。
+- Envio：已有配置和聚合代码，尚无公开部署的实时索引证明。
 
 原文、原始 Agent 对话、模型上下文、向量、内部评分和未经许可的 Nansen 数据都不直接上链。
 
@@ -178,15 +183,22 @@ Nansen 是 Gatekeeper 的可选上下文，而不是全局信誉排序器。
 4. 为 OpenClaw 和 Hermes 提供最小适配说明或示例 skill 包；适配器只调用 SignalPass surface，不复制状态机和资金规则。
 5. 在每次 Agent 动作旁显示“建议 / 待确认 / 已确认”，让用户知道什么时候只是推荐，什么时候会改变关系或资金状态。
 
-### 8.3 明确延期到生产阶段
+### 8.3 近期必须取得的演示证据
+
+- 部署当前签名报价合约到公开 Monad 网络并完成预检；用两个独立钱包记录锁仓、接收方决定、退款与可访问的交易链接。具体参赛网络要求仍需核对报名规则。
+- 跑通一种真实模型或宿主路径：目标 → 有依据的候选 → 草稿 → 人工确认。未完成前继续诚实演示现有人工流程。
+
+### 8.4 后续扩展
 
 - 多宿主的稳定发布、权限模型和版本兼容。
 - 用户自己的长期 Agent memory、加密存储、删除和迁移。
-- Dynamic 登录、真实 Monad 结算、Envio 实时读模型和真实 Nansen 数据接入。
+- Dynamic 登录、Envio 实时读模型和真实 Nansen 数据接入；是否优先实施取决于已核实的 bounty 要求与用户价值。
 - 接受后的长期私密沟通、日程协作和跨平台通知。
 - 大规模自动候选排序、公开社交 Feed 和 Agent 自主发帖。
 
-## 9. 已选 Sponsor Bounties
+## 9. Sponsor Bounties 的目标能力（实现待验收）
+
+下表是潜在用途；不代表已接入、已报名或已满足 bounty 要求。Hunyuan 继续保持不配置，真实模型路径可以选择其他供应方。
 
 | Sponsor | 核心贡献 |
 | --- | --- |

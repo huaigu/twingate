@@ -125,3 +125,78 @@ test('configured evaluator failure is visible, retryable and never silently mock
     assert.equal(after.data.introduction.evaluationProvider, null);
   } finally { api.close(); await new Promise<void>(resolve => service.close(() => resolve())); }
 });
+
+test('external evaluation receives the consented snapshot and follow-up, never private source settings', async () => {
+  const { createServer } = await import('node:http');
+  const received: any[] = [];
+  const service = createServer(async (request, response) => {
+    let body = '';
+    for await (const chunk of request) body += chunk;
+    received.push(JSON.parse(body));
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(JSON.stringify({ provider: 'capture-test', outcome: { recommendation: 'review', whyItMayMatter: 'Follow-up received.', recipientSummary: ['Relevant context.'], suggestedOpeningQuestion: 'Shall we talk?', coachNotes: [], missingContext: [] } }));
+  });
+  await new Promise<void>(resolve => service.listen(0, '127.0.0.1', resolve));
+  const port = (service.address() as { port: number }).port;
+  const api = createApp({ origin, evaluatorUrl: 'http://127.0.0.1:' + port });
+  const request = async (user: Identity | null, path: string, body?: unknown) => {
+    const res = await api.app.request(path, { method: body === undefined ? 'GET' : 'POST', headers: { origin, 'content-type': 'application/json', ...(user ? { cookie: user.cookie, 'x-signalpass-csrf': user.csrf } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
+    return { status: res.status, data: await res.json() as any, cookie: res.headers.get('set-cookie')?.split(';')[0] || '' };
+  };
+  try {
+    const users: Identity[] = [];
+    for (const [i, account] of accounts.slice(0, 2).entries()) {
+      const challenge = await request(null, '/auth/challenge', { address: account.address, chainId: 10143 });
+      const signature = await account.signMessage({ message: challenge.data.message });
+      const login = await request(null, '/auth/verify', { nonce: challenge.data.nonce, signature });
+      const user = { cookie: login.cookie, csrf: login.data.session.csrf }; users.push(user);
+      assert.equal((await request(user, '/me/profile', profile(i ? 'bob' : 'alice'))).status, 200);
+    }
+    const [sender, recipient] = users as [Identity, Identity];
+    const question = 'What would you contribute to our simulation project?';
+    const reply = 'I can contribute the simulation harness and concrete test cases for the contract interactions we discussed.';
+    for (const sharedContext of [false, true]) {
+      const me = await request(sender, '/me');
+      const created = await request(sender, '/introductions', { recipientHandle: 'bob', intent, idempotencyKey: crypto.randomUUID(), sharedContext, profileVersion: me.data.settings.version });
+      assert.equal(created.status, 201);
+      const id = created.data.introduction.id;
+      const snapshot = created.data.introduction.sharedProfile;
+      // Later profile edits were never approved for this introduction.
+      const changed = profile('alice'); changed.profile.bio = 'PRIVATE_LATER_PROFILE';
+      assert.equal((await request(sender, '/me/profile', changed)).status, 200);
+      assert.equal((await request(recipient, `/introductions/${id}/context`, { text: question, revision: 1 })).status, 200);
+      assert.equal((await request(sender, `/introductions/${id}/reply`, { text: reply, revision: 2 })).status, 200);
+      const evaluated = await request(sender, `/introductions/${id}/evaluate`, {});
+      assert.equal(evaluated.status, 200);
+      assert.deepEqual(received.at(-1).context, { sharedProfile: snapshot, question, reply });
+      assert.equal(snapshot !== null, sharedContext);
+      assert.deepEqual(received.at(-1).intent, intent);
+      assert(!JSON.stringify(received.at(-1)).includes('PRIVATE_CANARY'));
+      assert(!JSON.stringify(received.at(-1)).includes('PRIVATE_LATER_PROFILE'));
+      assert.equal(received.at(-1).context.sharedProfile?.sourceLinks, undefined);
+      const receiptHash = evaluated.data.introduction.evaluationReceiptHash;
+      assert.equal((await request(recipient, `/introductions/${id}/context`, { text: question, revision: evaluated.data.introduction.revision })).status, 200);
+      const current = await request(sender, `/introductions/${id}`);
+      assert.equal((await request(sender, `/introductions/${id}/reply`, { text: reply + ' I can also share a working demo.', revision: current.data.introduction.revision })).status, 200);
+      const reevaluated = await request(sender, `/introductions/${id}/evaluate`, {});
+      assert.equal(reevaluated.status, 200);
+      assert.notEqual(reevaluated.data.introduction.evaluationReceiptHash, receiptHash);
+      assert.equal((await request(sender, '/me/profile', profile('alice'))).status, 200);
+    }
+  } finally { api.close(); await new Promise<void>(resolve => service.close(() => resolve())); }
+});
+
+test('local evaluation can use a substantive reply to resolve missing context', async () => {
+  const { evaluateIntroduction } = await import('./evaluation.js');
+  const { seedDemoData } = await import('./store.js');
+  const api = createApp({ origin });
+  try {
+    seedDemoData(api.store);
+    const intro = { id: '0x1234', recipientHandle: 'bob', policyVersion: 1, payloadHash: '0xabcd', disclosedSignals: [], intent: { ...intent, whyYou: 'Monad tooling.' }, sharedProfile: null, question: 'Why this collaboration?', reply: null } as unknown as import('./store.js').StoredIntroduction;
+    assert.equal((await evaluateIntroduction(api.store, intro)).outcome.recommendation, 'ask_for_context');
+    const reply = 'Your simulation work directly complements our Monad indexing project. We can combine test cases and publish a working integration together.';
+    const result = await evaluateIntroduction(api.store, { ...intro, reply });
+    assert.equal(result.outcome.recommendation, 'review');
+    assert.deepEqual(result.outcome.missingContext, []);
+  } finally { api.close(); }
+});

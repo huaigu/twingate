@@ -15,6 +15,9 @@ export class MockEvaluator implements EvaluatorProvider {
       input.intent.whyYou,
       input.intent.whatIOffer,
       input.intent.nextStep,
+      input.context?.reply ?? '',
+      input.context?.sharedProfile?.bio ?? '',
+      ...(input.context?.sharedProfile?.interests ?? []),
     ]
       .join(' ')
       .toLowerCase()
@@ -24,8 +27,8 @@ export class MockEvaluator implements EvaluatorProvider {
       return head.length > 2 && body.includes(head)
     })
 
-    const hasSpecificWhy = input.intent.whyYou.trim().length >= 80
-    const hasOffer = input.intent.whatIOffer.trim().length >= 20
+    const hasSpecificWhy = [input.intent.whyYou, input.context?.reply].filter(Boolean).join(' ').trim().length >= 80
+    const hasOffer = [input.intent.whatIOffer, input.context?.reply].filter(Boolean).join(' ').trim().length >= 20
 
     const recommendation: ProviderResult['recommendation'] =
       matchedTopics.length > 0 && hasSpecificWhy && hasOffer
@@ -63,7 +66,7 @@ export class MockEvaluator implements EvaluatorProvider {
         : 'What would you want to get out of a first conversation?',
       coachNotes,
       missingContext,
-      modelVersion: 'mock-evaluator-v1',
+      modelVersion: 'mock-evaluator-v2',
     }
   }
 }
