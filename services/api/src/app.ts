@@ -8,10 +8,12 @@ import { type Address, type Hex, isAddress } from 'viem'
 import { createAuth, type Session } from './auth.js'
 import { transaction } from './database.js'
 import { createStore, hashDocument, profileByOwner, queueDepth, unresolvedCountFor, declineKey, type ProfileSettings, type StoredIntroduction, type Store } from './store.js'
-import { evaluateIntroduction } from './evaluation.js'
+import { evaluateIntroduction, EvaluationPolicyChangedError } from './evaluation.js'
 import { ChainError, type ChainService } from './chain.js'
 import { installChainRoutes } from './chain-routes.js'
 import { DEFAULT_PRICING } from '@signalpass/core'
+import { installAgentRoutes } from './agent-routes.js'
+import type { HostedAgentOptions } from './agent-types.js'
 
 const address = z.string().refine((v) => isAddress(v, { strict: false })).transform((v) => v.toLowerCase() as Address)
 const now = () => Math.floor(Date.now() / 1000)
@@ -30,7 +32,7 @@ const submissionSchema = introductionSubmissionSchema.omit({ sender: true }).ext
 })
 const revisionSchema = z.object({ revision: z.number().int().positive() })
 
-export function createApp(options: { databasePath?: string; origin: string; evaluatorUrl?: string; chain?: ChainService }) {
+export function createApp(options: { databasePath?: string; origin: string; evaluatorUrl?: string; chain?: ChainService; agent?: HostedAgentOptions }) {
   const store = createStore(options.databasePath)
   const auth = createAuth(store.db, options.origin)
   const app = new Hono<{ Variables: { session: Session } }>()
@@ -52,6 +54,7 @@ export function createApp(options: { databasePath?: string; origin: string; eval
   })
   app.onError((error, c) => { if (error instanceof ChainError) return c.json({ error: error.code }, error.status as 409 | 503); console.error('[api]', error.message); return c.json({ error: 'internal_error' }, 500) })
   const chainRoutes = installChainRoutes(app, store, options.chain)
+  installAgentRoutes(app, store, options.agent)
   app.get('/health', (c) => c.json({ ok: true, service: '@signalpass/api', storage: 'sqlite', identity: 'siwe-eoa', settlement: options.chain ? 'configured_manual_review' : 'not_connected', evaluator: options.chain ? 'disabled_manual_review' : options.evaluatorUrl ? 'external' : 'mock-local' }))
   app.post('/auth/challenge', async (c) => {
     const parsed = z.object({ address, chainId: z.number().int().positive().max(Number.MAX_SAFE_INTEGER) }).safeParse(await c.req.json().catch(() => null))
@@ -188,7 +191,11 @@ export function createApp(options: { databasePath?: string; origin: string; eval
       const updated: StoredIntroduction = { ...evaluating, state: outcome.recommendation === 'ask_for_context' ? 'needs_context' : 'ready_for_review', evaluationOutcome: outcome, evaluationProvider: provider, evaluationReceiptHash: outcome.receiptHash, updatedAt: now(), revision: evaluating.revision + 1 }
       store.introductions.set(intro.id, updated)
       return c.json({ introduction: project(updated, viewer), provider })
-    } catch { store.introductions.set(intro.id, { ...intro, revision: evaluating.revision + 1 }); return c.json({ error: 'evaluation_unavailable_retry', fallback: false }, 502) }
+    } catch (error) {
+      store.introductions.set(intro.id, { ...intro, revision: evaluating.revision + 1 })
+      if (error instanceof EvaluationPolicyChangedError) return c.json({ error: error.message, fallback: false }, 409)
+      return c.json({ error: 'evaluation_unavailable_retry', fallback: false }, 502)
+    }
   })
   return { app, store, syncChain: chainRoutes.syncAll, close: () => store.db.close() }
 }

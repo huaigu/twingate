@@ -14,7 +14,7 @@ See [V4 pages, interactions and implementation notes](design-explorations/signal
 
 **SignalPass** is a high-signal introduction network on **Monad**. It helps builders replace cold DMs with structured, context-rich introductions that only open when both people opt in.
 
-The long-term product shape is **one private Personal Agent per person, one public Builder Profile, and an optional 3D Persona**. The Agent can help discover compatible builders and prepare an introduction, but the human confirms every relationship or money action. The Web app is the current reference client; OpenClaw, Hermes and other Agent hosts are future adapters that call the same SignalPass skills and state machine.
+The product shape is **one private Personal Agent per person, one public Builder Profile, and an optional 3D Persona**. SignalPass provides the agent at `/assistant`: describe a goal, review a few people with public-profile evidence, and prepare a private introduction draft. The human edits and confirms every send or money action. Users do not need OpenClaw, Hermes or their own model key; those hosts remain optional future adapters. The hosted workflow has OpenAI Responses and free-only OpenRouter adapters. Live OpenRouter discovery and drafting passed with fictional profiles on October 1, 2026; public deployment and community validation remain pending. See [hosted agent setup and boundaries](docs/HOSTED_AGENT.md).
 
 ### The Core Problem
 1. **Cold DMs lack context**: Builders cannot tell whether a stranger is a future collaborator or another generic pitch.
@@ -55,8 +55,8 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 - **Domain Core**: `@signalpass/core` — Introduction state machine, pricing curve, zod schemas and EIP-712 payloads. Shipped as TypeScript source so the API, evaluator, indexer and web app all run the *same* logic as the contracts' off-chain twin.
 - **Services (Node.js + Hono)**: `services/api` (read/write API), `services/evaluator` (bilateral evaluation + recommendation guardrail), `services/indexer` (Envio HyperIndex event handlers and aggregation).
 - **Frontend**: Next.js 15 App Router with a hand-written CSS design system (custom properties, no UI framework).
-- **AI Experience**: Tencent Hunyuan 3D agent persona, sender-facing Intro Coach, recipient-side Gatekeeper.
-- **Agent-first target**: agent-assisted Builder discovery with explicit human confirmation before an Introduction is sent or accepted. The current MVP keeps discovery manual so the vertical loop is easy to demo.
+- **Hosted Personal Agent**: a provider-neutral discover/draft workflow in the API, an OpenAI Responses adapter, account-private history and a Web workspace. Profile context requires explicit consent; model outputs are validated against eligible public profiles. Hunyuan remains unconfigured.
+- **Agent-first flow**: goal → suggested people with source quotes → private draft → editable Introduction Card → human confirmation. The existing public directory remains available without AI. Recipient-side AI assistance and conversational profile creation remain future work.
 - **Account Abstraction**: Dynamic embedded wallets — *not wired yet. Default V4 uses server-verified SIWE signatures from injected EOA wallets and HttpOnly sessions.*
 - **Verified Context**: opt-in onchain signals — *consent record is real and hashed into the payload; third-party verification is not wired.*
 
@@ -97,7 +97,9 @@ Default V4 uses same-origin `/api/*`, proxied to `SIGNALPASS_API_ORIGIN` (defaul
 
 Node.js >=22.13 is required for built-in SQLite (experimental in Node 22). One API process uses WAL-backed storage at `.data/signalpass.sqlite`. Keep it on persistent disk, back it up, and exclude it from Git. Private records are access-controlled, not application-level encrypted at rest. Multiple API processes require an explicit database/concurrency design.
 
-The live flow supports approved profiles, visibility, actual cross-account delivery, participant-only receipts, context requests/replies, recipient decisions, idempotent sends, and session/data recovery after restart. Its initial state is `submitted`, not `locked`. Without a chain manifest, this is the no-payment flow. With `SIGNALPASS_CHAIN_CONFIG`, V4 also supports a signed, refundable wallet bond: `quoted` → verified lock → recipient decision or expiry → confirmed refund. Manual review charges zero AI evaluation fee. Hunyuan, automatic AI matching and source verification remain unconfigured. Local chain verification is not public Monad deployment evidence. Evaluation without `EVALUATOR_URL` is labelled `mock-local`; a configured evaluator failure returns an error rather than silently falling back. There is no production test-login bypass.
+The live flow supports approved profiles, visibility, actual cross-account delivery, participant-only receipts, context requests/replies, recipient decisions, idempotent sends, and session/data recovery after restart. Its initial state is `submitted`, not `locked`. Without a chain manifest, this is the no-payment flow. With `SIGNALPASS_CHAIN_CONFIG`, V4 also supports a signed, refundable wallet bond: `quoted` → verified lock → recipient decision or expiry → confirmed refund. Manual review charges zero AI evaluation fee. The hosted Personal Agent is disabled until a server operator configures its provider; it has no mock fallback. Hunyuan and source verification remain unconfigured. Local chain verification is not public Monad deployment evidence. Evaluation without `EVALUATOR_URL` is labelled `mock-local`; a configured evaluator failure returns an error rather than silently falling back. There is no production test-login bypass.
+
+To enable `/assistant`, export `SIGNALPASS_AGENT_PROVIDER=openai` or `openrouter`, a dedicated `SIGNALPASS_AGENT_API_KEY`, and an explicit `SIGNALPASS_AGENT_MODEL` supporting Responses structured output before starting the API. OpenRouter is currently a free-only test adapter: select a named `vendor/model:free`; it rejects paid models and random routers, disables fallback and requests zero-price providers. Leave `SIGNALPASS_AGENT_BASE_URL` empty for the correct provider default. The API does not read `.env` automatically. End users never enter these settings. See [the hosted agent guide](docs/HOSTED_AGENT.md) for limits, privacy and tests, and [the live acceptance evidence](docs/reports/signalpass-hosted-agent-live-2026-10-01.md) for observed successes and free-provider failures.
 
 ---
 
@@ -114,8 +116,11 @@ Individually:
 | `pnpm -r typecheck` | 5 configured TypeScript projects compile under `strict` (generated Envio handlers remain excluded) |
 | `pnpm contracts:test` | 47 Foundry tests, incl. a 256-run fuzz over terminal paths |
 | `pnpm --filter @signalpass/indexer test` | 8 aggregation tests (queue health, standing, pressure index) |
-| `pnpm --filter @signalpass/api test` | Signed sessions, replay, object permissions, consent, idempotency and database reopen |
+| `pnpm --filter @signalpass/api test` | Signed sessions, replay, object permissions, consent, idempotency, database reopen, hosted agent privacy/budgets/staleness and provider transport fixtures; no paid inference |
 | `pnpm v4:flow:test` | Asset-independent regressions for guest-to-wallet draft recovery and composing with sparse profile interests; uses controlled DOM/API fixtures, not a browser E2E |
+| `pnpm agent:ui:test` | Real Chromium checks of hosted-agent pages with HTTP fixtures: consent, evidence, edited draft handoff, separate send confirmation, error states and mobile layout. Requires Playwright Chromium; no live model or wallet transaction. |
+| `pnpm agent:live:test` | Opt-in OpenRouter free-model acceptance through actual signed-session discover/draft routes using fictional profiles; needs your server-side key and explicit free model. Fails when unconfigured; never sends an introduction or spends wallet funds. |
+| `pnpm wallet:quote:test` | Refreshed quote amount stays consistent in the receipt, saved record and wallet approval; quote errors and wallet cancellation never auto-send. |
 | `pnpm e2e` | Real API + Next servers and 3 browser sessions: sign in → approve profile → send/receive → request/reply → accept → API restart |
 | `pnpm chain:test` | Real Anvil contracts, EIP-712 signature compatibility, funding verification, authorization, refunds, interrupted-callback recovery and restart |
 | `pnpm chain:verify` | Chain integration plus two-browser wallet flow, network switch, profile sync, cancel, accept, decline and expiry |

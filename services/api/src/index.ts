@@ -2,12 +2,14 @@ import { serve } from '@hono/node-server'
 import { fileURLToPath } from 'node:url'
 import { createApp } from './app.js'
 import { configuredChain } from './chain.js'
+import { configuredHostedAgent } from './agent-provider.js'
 
 const api = createApp({
   chain: configuredChain(),
   databasePath: process.env.SIGNALPASS_DB_PATH || fileURLToPath(new URL('../../../.data/signalpass.sqlite', import.meta.url)),
   origin: process.env.APP_ORIGIN ?? 'http://localhost:3004',
   evaluatorUrl: process.env.EVALUATOR_URL || undefined,
+  agent: configuredHostedAgent(),
 })
 // An interrupted provider call is retryable after restart; it never grants access.
 for (const intro of api.store.introductions.values()) {

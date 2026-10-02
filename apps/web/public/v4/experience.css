@@ -134,7 +134,7 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
 .sp-workspace .intro-offers .icon { width: 14px; height: 14px; flex: none; margin-top: 3px; }
 .sp-workspace .verified-context { padding: 0; border: 0; margin-top: 24px; }
 .sp-workspace .verified-context > h3 { font: 600 10px/1.5 var(--sp-font-text); letter-spacing: .03em; margin-bottom: 10px; }
-.sp-workspace .verified-context-inner { flex-wrap: wrap; padding: 14px; gap: 10px; background: #edf0e6; }
+.sp-workspace .verified-context-inner { display: flex; flex-wrap: wrap; padding: 14px; gap: 10px; background: #edf0e6; }
 .sp-workspace .verified-check { display: none; }
 .sp-workspace .verified-context-inner > p { flex: 1 1 100%; font: 13px/1.6 var(--sp-font-text); }
 .sp-workspace .context-button { min-height: 44px; font: 600 12px/1.5 var(--sp-font-text); border-radius: 8px; padding: 8px 12px; }

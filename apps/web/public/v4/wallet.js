@@ -56,8 +56,8 @@
     const eyebrow = document.createElement('p'); eyebrow.className = 'v4-chain-eyebrow'; eyebrow.textContent = api.chain.name;
     const title = document.createElement('h2'); title.textContent = record.payment.status === 'refunded' ? 'Your attention bond is back.' : record.payment.status === 'locked' ? 'A hello, backed by a bond.' : 'Review your wallet bond.';
     const facts = document.createElement('dl');
-    const add = (label, value) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; facts.append(dt, dd); };
-    add('Refundable bond', api.money(record.payment.attentionBond)); add('AI evaluation fee', '0 · manual review'); add('Network gas', 'Paid separately · not refunded');
+    const add = (label, value) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; facts.append(dt, dd); return dd; };
+    const bondAmount = add('Refundable bond', api.money(record.payment.attentionBond)); add('AI evaluation fee', '0 · manual review'); add('Network gas', 'Paid separately · not refunded');
     if (record.chain?.expiresAt) add('Response deadline', new Date(record.chain.expiresAt * 1000).toLocaleString());
     const terms = document.createElement('p'); terms.textContent = 'The full bond returns to the sender when the recipient accepts or declines, or when a participant claims it after the deadline. Until the lock is confirmed, this introduction is not delivered.';
     const proof = document.createElement('div'); proof.className = 'v4-chain-proof';
@@ -94,10 +94,14 @@
       fund.id = 'fund-introduction'; fund.disabled = true;
       try {
         quote = await api.request('/introductions/' + record.id + '/funding-quote', {});
+        // A refreshed signed quote can have a different bond. Keep the visible
+        // facts, record snapshot and approval button on that same exact amount.
+        record.payment = { ...record.payment, attentionBond: quote.summary.attentionBond };
+        bondAmount.textContent = api.money(record.payment.attentionBond);
         add('Response window', quote.summary.timeoutSeconds < 3600 ? quote.summary.timeoutSeconds + ' seconds after lock' : Math.round(quote.summary.timeoutSeconds / 3600) + ' hours after lock');
         add('Quote valid until', new Date(quote.summary.expiresAt * 1000).toLocaleTimeString());
         record.revision = (await api.request('/introductions/' + record.id)).introduction.revision;
-        fund.textContent = 'Lock ' + api.money(quote.summary.attentionBond) + ' in wallet'; fund.disabled = false;
+        fund.textContent = 'Lock ' + api.money(record.payment.attentionBond) + ' in wallet'; fund.disabled = false;
       } catch (error) { fund.textContent = 'Wallet bond unavailable'; message.textContent = error.message; }
     }
     if (record.payment.status === 'pending') message.textContent = 'Your transaction was submitted. This page checks for confirmation automatically. Please do not send another payment.';

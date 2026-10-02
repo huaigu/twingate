@@ -29,6 +29,8 @@ The no-bond option remains available. Sample mode is explicitly opt-in with ?dem
 
 Signed EIP-712 quotes bind sender, recipient, profile ID, policy hash/version, original payload hash, fee, bond, TTL, quote expiry, nonce, chain ID and escrow address. The old unsigned lock entrypoint is removed.
 
+Draft bond estimates are recalculated when the first funding signature is issued or an expired signature is replaced. Current queue pressure, prior declines and unresolved limits apply. A still-valid signed quote retains its amount until expiry. The saved receipt and wallet approval display that signed amount consistently; a changed policy requires a newly reviewed introduction.
+
 The API prepares calldata; it does not broadcast participant transactions. The recipient cannot see an unpaid bonded draft. Confirmation checks the transaction sender, destination, exact calldata/value, successful canonical receipt and matching event. One chain lock can only bind to one application introduction. Application IDs are included in payload hashes, so identical text cannot reuse another lock.
 
 The chain determines the settlement state. API transition requests cannot fabricate a lock or recipient decision. Refund receipts include the actual transaction, block and amount. Background reconciliation runs every four seconds and can recover a mined lock even if the browser closes before reporting its hash. Log scans progress in 1,000-block batches. New profile/context data is not overwritten by reconciliation.

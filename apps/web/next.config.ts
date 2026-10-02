@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@signalpass/core'],
   outputFileTracingRoot: repoRoot,
   typedRoutes: false,
+  // Rewritten API calls must outlast the agent's bounded 60-second deadline.
+  // Next otherwise terminates upstream requests at its 30-second default.
+  experimental: { proxyTimeout: 65_000 },
   // V4 is a native multi-page HTML site. Rewrites keep stable public URLs and
   // leave the existing React/API implementation available outside these routes.
   async redirects() {
@@ -35,6 +38,7 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         { source: '/api/:path*', destination: (process.env.SIGNALPASS_API_ORIGIN ?? 'http://127.0.0.1:8789') + '/:path*' },
         { source: '/', destination: '/v4/index.html' },
+        { source: '/assistant', destination: '/v4/assistant.html' },
         { source: '/profile/import', destination: '/v4/profile.html' },
         { source: '/profile/review', destination: '/v4/profile.html?review=1' },
         { source: '/agent', destination: '/v4/agent.html' },

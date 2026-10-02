@@ -808,16 +808,26 @@
     ) ||
     directory.find((p) => p.name === saved.draft?.person) ||
     directory[api.demo ? 1 : 0] || { name: "", avatar: "alex", role: "", tags: ["Builder", "Collaboration"] };
+  const requestedAgentDraft = page === "compose"
+    ? new URLSearchParams(location.search).get("agentDraft")
+    : null;
+  let loadedAgentDraft = null;
   const persistDraft = () => {
     const previous =
-      state.draft?.person === candidate.name && state.draft.status !== "sent"
+      state.draft?.person === candidate.name && state.draft.status !== "sent" &&
+      (state.draft.agentDraftId || null) === requestedAgentDraft
         ? state.draft
         : {};
     state.draft = {
       ...previous,
       id: previous.id || crypto.randomUUID(),
       person: candidate.name,
+      recipientHandle: candidate.handle,
       avatar: candidate.avatar,
+      ...(loadedAgentDraft ? {
+        agentDraftId: loadedAgentDraft.id,
+        agentProfileVersion: loadedAgentDraft.profileVersion,
+      } : {}),
       fields: $$(".intro-field textarea").map((el) => el.value),
       goal: $("[name=intro-goal]:checked")?.value || "chat",
       status: "draft",
@@ -829,6 +839,53 @@
       $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary" href="/discover">Discover builders</a></div>';
       api.emptyState($(".compose-workspace .v4-live-empty"), { title: "Who would you like to meet?", description: "Choose an available profile before writing your introduction. Your message has not been sent.", action: "Discover builders", href: "/discover" });
       return;
+    }
+    // A hosted draft is scoped to this account, recipient and approved profile.
+    // Validate before exposing any editable/sending controls or generic fallback.
+    if (requestedAgentDraft !== null) {
+      const failHandoff = (message) => {
+        const container = $(".compose-workspace");
+        api.emptyState(container, {
+          title: "Let’s refresh this introduction.",
+          description: message + " Nothing has been sent.",
+          action: "Back to your agent",
+          href: "/assistant",
+        });
+      };
+      if (!api.live || !/^[0-9a-f-]{36}$/i.test(requestedAgentDraft)) {
+        failHandoff("This agent draft link is invalid. Open your live agent workspace and prepare a fresh draft.");
+        return;
+      }
+      if (!api.me?.profile || !api.me?.settings) {
+        api.emptyState($(".compose-workspace"), {
+          title: "Your approved profile comes first.",
+          description: "Sign in and review your profile before opening this personal introduction. Nothing has been sent.",
+          action: "Review your profile", href: "/profile/import",
+        });
+        return;
+      }
+      $(".compose-workspace").setAttribute("aria-busy", "true");
+      $$(".compose-workspace textarea,.compose-workspace button,.compose-workspace input").forEach((element) => { element.disabled = true; });
+      try {
+        const { draft } = await api.request("/agent/drafts/" + encodeURIComponent(requestedAgentDraft));
+        if (!draft || draft.id !== requestedAgentDraft || draft.recipientHandle !== requestedPerson ||
+            draft.recipientHandle !== candidate.handle || draft.profileVersion !== api.me.settings.version ||
+            !Number.isFinite(draft.expiresAt) || draft.expiresAt <= Date.now() / 1000 ||
+            !["whoAmI", "whyYou", "whatIOffer", "nextStep"].every((key) => typeof draft.intent?.[key] === "string" && draft.intent[key].trim())) {
+          throw Object.assign(new Error("This draft no longer matches the recipient or your approved profile."), { code: "agent_draft_stale" });
+        }
+        loadedAgentDraft = draft;
+      } catch (error) {
+        const messages = {
+          agent_draft_not_found: "This private draft is unavailable or has expired.",
+          agent_draft_stale: "This draft expired or a profile changed. Please prepare a fresh introduction.",
+          authentication_required: "Sign in to the account that prepared this draft.",
+        };
+        failHandoff(messages[error.code] || "We couldn’t validate this draft. Return to your agent and try again.");
+        return;
+      }
+      $(".compose-workspace").setAttribute("aria-busy", "false");
+      $$(".compose-workspace textarea,.compose-workspace button,.compose-workspace input").forEach((element) => { element.disabled = false; });
     }
     $("#intro-form").addEventListener("submit", (e) => e.preventDefault());
     const setStep = (n) =>
@@ -879,12 +936,22 @@
           "A new perspective",
       );
     });
-    if (
-      saved.draft?.person === candidate.name &&
-      Array.isArray(saved.draft.fields)
-    ) {
+    const sameSavedDraft = saved.draft?.person === candidate.name &&
+      (saved.draft.agentDraftId || null) === requestedAgentDraft &&
+      (!loadedAgentDraft || (saved.draft.recipientHandle === loadedAgentDraft.recipientHandle &&
+        saved.draft.agentProfileVersion === loadedAgentDraft.profileVersion)) &&
+      Array.isArray(saved.draft.fields);
+    if (loadedAgentDraft && sameSavedDraft && saved.draft.status === "sent") {
+      api.emptyState($(".compose-workspace"), {
+        title: "This introduction was already sent.",
+        description: "You can check the receipt for its latest status.",
+        action: "View your introductions", href: "/inbox",
+      });
+      return;
+    }
+    if (sameSavedDraft) {
       $$(".intro-field textarea").forEach((el, i) => {
-        el.value = saved.draft.fields[i] || el.value;
+        el.value = typeof saved.draft.fields[i] === "string" ? saved.draft.fields[i] : "";
       });
       if (saved.draft.goal) {
         const radio = $(`[name=intro-goal][value="${saved.draft.goal}"]`);
@@ -895,6 +962,12 @@
           );
         }
       }
+    } else if (loadedAgentDraft) {
+      // New AI source means a new human draft and a new delivery idempotency key.
+      state.draft = undefined;
+      state.sharedContext = false;
+      const fields = ["whoAmI", "whyYou", "whatIOffer", "nextStep"].map((key) => loadedAgentDraft.intent[key]);
+      $$(".intro-field textarea").forEach((el, i) => { el.value = fields[i]; });
     } else {
       const fields = [
         `Hi ${candidate.name}, your interest in ${candidate.tags[0]?.toLowerCase() || "your work"} caught my attention.`,
@@ -903,6 +976,13 @@
         `Would you be open to a short conversation? No agenda — just a shared curiosity.`,
       ];
       $$(".intro-field textarea").forEach((el, i) => (el.value = fields[i]));
+    }
+    if (loadedAgentDraft) {
+      const note = document.createElement("p");
+      note.className = "sp-draft-readiness";
+      note.setAttribute("role", "note");
+      note.textContent = "AI draft—review details before sending. Check personal claims and remove any untrue suggestion that you know them or follow their work. Using your profile with the agent does not grant permission to share it with this person.";
+      $(".intro-edit-section").prepend(note);
     }
     const showContext = () => {
       $(".verified-context-inner>p").textContent = state.sharedContext
@@ -922,6 +1002,7 @@
     const goal = $("[name=intro-goal]:checked").value;
     const oldId = state.draft?.id;
     state.draft = {
+      ...state.draft,
       fields,
       goal,
       person: candidate.name,
