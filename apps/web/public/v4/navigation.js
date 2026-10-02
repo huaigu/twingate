@@ -45,9 +45,13 @@
   });
   document.addEventListener("click", (event) => {
     if (
-      !event.target.closest(".v4-header") &&
+      !event.target.closest(".site-header") &&
       toggle?.getAttribute("aria-expanded") === "true"
     )
+      toggle.click();
+  });
+  menu?.addEventListener("click", (event) => {
+    if (event.target.closest("a[href]") && toggle?.getAttribute("aria-expanded") === "true")
       toggle.click();
   });
 })();
