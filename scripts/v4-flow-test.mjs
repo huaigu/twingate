@@ -196,19 +196,46 @@ for (const tags of [[], ['Monad'], ['Monad', 'Open source']]) {
   test(`compose initializes and persists a usable draft with ${tags.length} interests`, async () => {
     const elements = new Map();
     const element = selector => {
-      if (!elements.has(selector)) elements.set(selector, {
-        value: '', textContent: '', dataset: {}, style: { setProperty() {} },
-        classList: { add() {}, remove() {}, toggle() {} }, addEventListener() {},
-      });
+      if (!elements.has(selector)) {
+        const attributes = new Map();
+        elements.set(selector, {
+          value: '', textContent: '', dataset: {}, disabled: false, removed: false,
+          style: { setProperty() {} },
+          classList: { add() {}, remove() {}, toggle() {} }, addEventListener() {},
+          setAttribute(name, value) { attributes.set(name, String(value)); },
+          getAttribute(name) { return attributes.get(name) ?? null; },
+          hasAttribute(name) { return attributes.has(name); },
+          removeAttribute(name) { attributes.delete(name); },
+          remove() { this.removed = true; },
+          querySelectorAll() { return []; },
+        });
+      }
       return elements.get(selector);
     };
     const fields = Array.from({ length: 4 }, (_, i) => element('#intro-field-' + (i + 1)));
     const goal = element('goal'); goal.value = 'chat';
+    const workspace = element('.compose-workspace');
+    const loading = element('#compose-loading');
+    const controls = [...fields, goal, element('[data-action=approve-introduction]'), element('[data-action=toggle-context]')];
+    for (const control of controls) {
+      control.disabled = true;
+      control.setAttribute('data-compose-pending', '');
+    }
+    // Model the shipped static loading gate, rather than exposing controls before
+    // account and recipient hydration finishes.
+    workspace.setAttribute('inert', '');
+    workspace.setAttribute('aria-busy', 'true');
+    workspace.querySelectorAll = selector => selector === '[data-compose-pending]'
+      ? controls.filter(control => control.hasAttribute('data-compose-pending')) : [];
     const document = {
       body: { dataset: { page: 'compose' } },
       documentElement: { clientWidth: 1200, style: { setProperty() {} } },
       querySelector: selector => selector === '.scene' ? null : selector === '[name=intro-goal]:checked' ? goal : element(selector),
       querySelectorAll: selector => selector === '.intro-field textarea' ? fields : selector === '[name=intro-goal]' ? [goal] : [],
+      getElementById: id => {
+        const found = elements.get('#' + id);
+        return found && !found.removed ? found : null;
+      },
       addEventListener() {},
     };
     const localStorage = storage({ [walletKey]: JSON.stringify({ ...draft, profileApproved: false }) });
@@ -223,6 +250,10 @@ for (const tags of [[], ['Monad'], ['Monad', 'Open source']]) {
     await vm.runInContext(appSource, context);
     assert.equal(window.SignalPassView.mode, 'live');
     assert(fields.every(field => field.value.trim() && !field.value.includes('undefined')));
+    assert(controls.every(control => !control.disabled), 'Initialized compose controls become usable');
+    assert.equal(workspace.getAttribute('aria-busy'), 'false');
+    assert.equal(workspace.hasAttribute('inert'), false);
+    assert.equal(loading.removed, true);
     const saved = JSON.parse(localStorage.getItem(walletKey)).draft;
     assert.equal(saved.person, 'recipient');
     assert.equal(saved.status, 'draft');
