@@ -14,7 +14,7 @@ let chain, api;
 try {
   chain = await localChain({ directory, port: Number(process.env.CHAIN_TEST_RPC_PORT || 18547) }); processes.push(chain.node);
   const env = { ...chain.apiEnv, API_PORT: String(port), APP_ORIGIN: origin, SIGNALPASS_DB_PATH: join(directory, 'app.sqlite') };
-  const start = async () => { api = boot('pnpm', ['--filter', '@signalpass/api', 'start'], env); processes.push(api); await healthy(base + '/health', api); };
+  const start = async () => { api = boot(process.execPath, ['--import', 'tsx', 'src/index.ts'], env, join(root, 'services/api')); processes.push(api); await healthy(base + '/health', api); };
   await start();
   const request = async (user, path, body, expected = 200) => {
     const response = await fetch(base + path, { method: body === undefined ? 'GET' : 'POST', headers: { origin, 'content-type': 'application/json', ...(user ? { cookie: user.cookie, 'x-signalpass-csrf': user.csrf } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });

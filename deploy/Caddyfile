@@ -1,0 +1,15 @@
+{
+	# Outlast the application's bounded provider calls during planned restarts.
+	grace_period 75s
+}
+
+# One exact value configures both the browser auth origin and the TLS site.
+{$APP_ORIGIN} {
+	encode zstd gzip
+	reverse_proxy web:3000 {
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 70s
+		}
+	}
+}

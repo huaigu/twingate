@@ -1,0 +1,20 @@
+# Optional overlay; do not use until contracts and the signer are verified.
+# Paths refer to existing files OUTSIDE the repository on the deployment host.
+services:
+  api:
+    environment:
+      SIGNALPASS_CHAIN_CONFIG: /run/signalpass/chain.json
+      SIGNALPASS_QUOTE_SIGNER_KEY_FILE: /run/signalpass/quote-signer.key
+    volumes:
+      - type: bind
+        source: ${SIGNALPASS_CHAIN_MANIFEST_FILE:?Set an absolute manifest file path}
+        target: /run/signalpass/chain.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SIGNALPASS_CHAIN_SIGNER_FILE:?Set an absolute signer key file path}
+        target: /run/signalpass/quote-signer.key
+        read_only: true
+        bind:
+          create_host_path: false
