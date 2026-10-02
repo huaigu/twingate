@@ -6,6 +6,13 @@ const MAX_RESPONSE_BYTES = 128 * 1024
 const PROVIDER_ERROR = 'The personal agent could not complete this request. Please try again.'
 const CONFIG_ERROR = 'Invalid SignalPass agent configuration. Check the server environment settings.'
 
+export type AgentProviderErrorCode = 'agent_timeout' | 'agent_provider_busy' | 'agent_response_incomplete' | 'agent_unavailable'
+
+/** A bounded public category, never the provider's response, reason or private input. */
+export class AgentProviderError extends Error {
+  constructor(readonly code: AgentProviderErrorCode) { super(PROVIDER_ERROR) }
+}
+
 type GenerationRequest = Parameters<AgentModel['generate']>[0]
 type Fetch = typeof globalThis.fetch
 
@@ -89,18 +96,20 @@ class ResponsesAgentModel implements AgentModel {
   async generate(request: GenerationRequest): Promise<{ data: unknown; inputTokens: number; outputTokens: number }> {
     const controller = new AbortController()
     let timer: ReturnType<typeof setTimeout> | undefined
+    let timedOut = false
     try {
       const deadline = new Promise<never>((_resolve, reject) => {
         timer = setTimeout(() => {
+          timedOut = true
           controller.abort()
-          reject(new Error(PROVIDER_ERROR))
+          reject(new AgentProviderError('agent_timeout'))
         }, this.#timeoutMs)
       })
       return await Promise.race([this.#request(request, controller.signal), deadline])
-    } catch {
+    } catch (error) {
       // Raw provider errors can echo input, API keys, or private context. Never forward them.
       controller.abort()
-      throw new Error(PROVIDER_ERROR)
+      throw new AgentProviderError(timedOut ? 'agent_timeout' : error instanceof AgentProviderError ? error.code : 'agent_unavailable')
     } finally {
       if (timer) clearTimeout(timer)
     }
@@ -133,27 +142,30 @@ class ResponsesAgentModel implements AgentModel {
     })
     if (!response.ok) {
       await response.body?.cancel().catch(() => {})
-      throw new Error(PROVIDER_ERROR)
+      throw new AgentProviderError([429, 503].includes(response.status) ? 'agent_provider_busy' : 'agent_unavailable')
     }
     const payload = await boundedJson(response)
     if (!object(payload) || payload.status !== 'completed' || payload.error != null ||
-        payload.incomplete_details != null || !Array.isArray(payload.output)) throw new Error(PROVIDER_ERROR)
+        payload.incomplete_details != null || !Array.isArray(payload.output)) throw new AgentProviderError('agent_response_incomplete')
     const texts: string[] = []
     // Reasoning items can precede the answer. Do not assume output[0] is a message.
     for (const item of payload.output) {
-      if (!object(item)) throw new Error(PROVIDER_ERROR)
+      if (!object(item)) throw new AgentProviderError('agent_response_incomplete')
       if (item.type !== 'message') continue
       if (item.role !== 'assistant' || (item.status !== undefined && item.status !== 'completed') ||
-          !Array.isArray(item.content)) throw new Error(PROVIDER_ERROR)
+          !Array.isArray(item.content)) throw new AgentProviderError('agent_response_incomplete')
       for (const part of item.content) {
-        if (!object(part) || part.type !== 'output_text' || typeof part.text !== 'string') throw new Error(PROVIDER_ERROR)
+        if (!object(part) || part.type !== 'output_text' || typeof part.text !== 'string') throw new AgentProviderError('agent_response_incomplete')
         texts.push(part.text)
       }
     }
-    if (!texts.length) throw new Error(PROVIDER_ERROR)
+    if (!texts.length) throw new AgentProviderError('agent_response_incomplete')
     const usage = object(payload.usage) ? payload.usage : {}
+    let data: unknown
+    try { data = JSON.parse(texts.join('')) as unknown }
+    catch { throw new AgentProviderError('agent_response_incomplete') }
     return {
-      data: JSON.parse(texts.join('')) as unknown,
+      data,
       inputTokens: tokenCount(usage.input_tokens),
       outputTokens: tokenCount(usage.output_tokens),
     }

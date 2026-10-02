@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="/v4/polish.css" />
     <link rel="stylesheet" href="/v4/motion.css" />
     <link rel="stylesheet" href="/v4/experience.css" />
+    <link rel="stylesheet" href="/v4/connection.css" />
     <script defer src="/v4/client.js"></script>
     <script defer src="/v4/wallet.js"></script>
+    <script defer src="/v4/connection.js"></script>
     <script defer src="/v4/receipt.js"></script>
     <script defer src="/v4/navigation.js"></script>
     <script defer src="/v4/motion.js"></script>
@@ -49,6 +51,11 @@
       <p class="v4-receipt-label">YOUR INTRODUCTION</p>
       <h1 id="receipt-title">A thoughtful beginning.</h1>
       <p id="receipt-description">Loading your introduction…</p>
+      <div id="receipt-access" hidden>
+        <p id="receipt-access-description"></p>
+        <button type="button" class="button primary" id="receipt-reconnect">Connect wallet to continue</button>
+        <p id="receipt-access-error" role="alert"></p>
+      </div>
       <div id="receipt-body" hidden>
         <div class="v4-timeline">
           <span>Drafted</span><span>Approved by you</span

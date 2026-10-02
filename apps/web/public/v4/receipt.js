@@ -109,6 +109,25 @@ return;
 }
 const set = (id, text) => { document.getElementById(id).textContent = text; };
 const id = location.pathname.split('/')[2];
+let connection;
+const showUnavailable = error => {
+  connection?.destroy();
+  const signedOut = error.status === 401 || !api.me?.session;
+  set('receipt-title', signedOut ? 'Sign in to read your introduction.' : error.status === 409 ? 'This introduction is not accepted.' : 'This introduction is not available to this account.');
+  set('receipt-description', signedOut ? 'Connect the wallet you used for this introduction. You will return to this same receipt after signing in.' : error.message || 'Check the account you used, then try again.');
+  document.getElementById('receipt-body').hidden = true;
+  const access = document.getElementById('receipt-access'), button = document.getElementById('receipt-reconnect');
+  access.hidden = false;
+  set('receipt-access-description', signedOut ? 'Only the two participants can open this private receipt. Sign-in does not make a payment or share contact details.' : 'Your introduction stays private. If you are signed in with another wallet, sign out above and connect the wallet you used.');
+  button.textContent = signedOut ? 'Connect wallet to continue' : 'Try again';
+  button.disabled = false;
+  button.onclick = async () => {
+    button.disabled = true; set('receipt-access-error', '');
+    try { if (signedOut) await api.connect(); else location.reload(); }
+    catch (failure) { set('receipt-access-error', failure.message || 'Sign-in did not complete. Try again.'); button.disabled = false; }
+  };
+  document.getElementById('recipient-link').textContent = 'My inbox →';
+};
 try {
   if (api.error) throw api.error;
   const record = api.toRecord((await api.request('/introductions/' + encodeURIComponent(id))).introduction);
@@ -135,17 +154,15 @@ try {
     document.getElementById('receipt-body').append(form);
     form.onsubmit = async (event) => { event.preventDefault(); const button = form.querySelector('button'); button.disabled = true; try { await api.request('/introductions/' + id + '/reply', { text: form.querySelector('textarea').value.trim(), revision: record.revision }); location.reload(); } catch (error) { form.querySelector('#reply-error').textContent = error.message; button.disabled = false; } };
   }
+  connection = await api.connectionReceipt?.(record, showUnavailable);
   await api.chainReceipt?.(record);
   const timer = setInterval(async () => {
-    if (document.hidden || api.walletBusy || document.activeElement?.closest('#reply-form')) return;
+    if (document.hidden || api.walletBusy || api.connectionBusy || document.activeElement?.closest('#reply-form, #connection-panel') || document.querySelector('#connection-form:not([hidden]), #connection-preview:not([hidden])')) return;
     try { const latest = await api.request('/introductions/' + id); if (latest.introduction.revision !== record.revision) location.reload(); }
-    catch (error) { if ([401, 404].includes(error.status)) { clearInterval(timer); document.getElementById('receipt-body').hidden = true; } set('receipt-description', error.message + ' Last confirmed information is preserved.'); }
+    catch (error) { if ([401, 404].includes(error.status)) { clearInterval(timer); showUnavailable(error); } else set('receipt-description', error.message + ' Last confirmed information is preserved.'); }
   }, 5000);
-  window.addEventListener('pagehide', () => clearInterval(timer));
+  window.addEventListener('pagehide', () => { clearInterval(timer); connection?.destroy(); });
 } catch (error) {
-  set('receipt-title', error.status === 401 ? 'Sign in to read your introduction.' : 'This introduction is not available to this account.');
-  set('receipt-description', error.message || 'Reconnect and try again.');
-  document.getElementById('receipt-body').hidden = true;
-  document.getElementById('recipient-link').textContent = 'My inbox →';
+  showUnavailable(error);
 }
 })();

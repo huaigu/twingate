@@ -102,6 +102,16 @@
     const saved = await api.request('/me/profile', { handle, profile: state.profile, agent: state.agent, sourceLinks: state.sourceLinks, avatar: ['alex', 'maya', 'rohan', 'leo', 'beanie', 'none'].includes(state.widget.persona) ? state.widget.persona : 'alex' });
     api.me = { ...api.me, ...saved }; return saved;
   };
+  api.profileReturnPath = () => {
+    if (!api.live || !api.me?.session?.address || query.get('returnTo') !== 'assistant') return null;
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('signalpass-assistant-return') || 'null');
+      const age = Date.now() - saved?.createdAt;
+      if (saved?.owner !== api.me.session.address.toLowerCase() || typeof saved.goal !== 'string' || !saved.goal.trim() || saved.goal.length > 1200 || !Number.isFinite(saved.createdAt) || age < 0 || age > 24 * 60 * 60 * 1000) return null;
+      // The destination is a fixed product route, never a URL supplied by the caller.
+      return '/assistant?resume=1';
+    } catch { return null; }
+  };
   api.send = async (candidate, state, fields, idempotencyKey, settlement = 'offchain') => {
     if (!api.me) throw new Error(messages.authentication_required);
     if (!api.me.profile) throw new Error(messages.profile_required);
@@ -173,13 +183,21 @@
     detail.textContent = demo ? 'Sample people · no messages or payments' : api.error ? 'Connection unavailable. No new action was sent.' : api.me ? (api.chain?.enabled ? (api.chain.local ? 'Local EVM · DEV' : api.chain.name) + ' · manual review · AI fee 0' : 'Live introductions · no payments') : 'Free wallet sign-in · no payment';
     label.append(title, detail); if (api.error) label.classList.add('has-error'); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
     button.textContent = demo ? 'Open live product' : api.me ? 'Sign out' : 'Connect wallet';
-    button.onclick = async () => { button.disabled = true; try { if (demo) { location.href = '/?demo=0'; return; } if (api.me) { await api.request('/auth/logout', {}); location.reload(); } else await api.connect(); } catch (error) { label.textContent = error.message; label.classList.add('has-error'); button.disabled = false; } };
+    const clearAssistantReturn = () => { try { sessionStorage.removeItem('signalpass-assistant-return'); } catch {} };
+    button.onclick = async () => { button.disabled = true; try { if (demo) { location.href = '/?demo=0'; return; } if (api.me) { await api.request('/auth/logout', {}); clearAssistantReturn(); location.reload(); } else await api.connect(); } catch (error) { label.textContent = error.message; label.classList.add('has-error'); button.disabled = false; } };
     bar.append(label, button);
     const slot = document.getElementById('session-slot');
     if (slot) { slot.replaceChildren(bar); slot.setAttribute('aria-busy', 'false'); }
     else (header.closest('.viewport') || header.closest('.hero-page') || header).before(bar);
-    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { if (!demo) el.textContent = api.chain?.enabled ? api.chain.name + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · payments and AI matching not connected'; });
-    if (api.live) window.ethereum?.on?.('accountsChanged', async () => { if (api.me) await api.request('/auth/logout', {}).catch(() => {}); location.reload(); });
+    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { if (!demo) el.textContent = api.chain?.enabled ? api.chain.name + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · you approve every message'; });
+    if (api.live) window.ethereum?.on?.('accountsChanged', async (accounts) => {
+      // First-time wallet authorization can emit this event before sign-in.
+      // Keep that guest goal intact; a changed authenticated account must clear it.
+      if (!api.me || (Array.isArray(accounts) && accounts[0]?.toLowerCase() === api.me.session.address.toLowerCase())) return;
+      clearAssistantReturn();
+      await api.request('/auth/logout', {}).catch(() => {});
+      location.reload();
+    });
   };
   api.ready = (async () => {
     if (!demo) { try { await api.load(); } catch (error) { api.error = error; } }

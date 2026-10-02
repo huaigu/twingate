@@ -126,7 +126,9 @@ try {
   }
   assert.deepEqual(errors, []);
   await a.goto(origin + '/inbox', { waitUntil: 'networkidle' });
-  assert(await a.getByRole('link', { name: 'To Bob Builder · accepted', exact: true }).isVisible());
+  const continueConversation = a.getByRole('link', { name: 'To Bob Builder · Continue conversation →', exact: true });
+  assert(await continueConversation.isVisible());
+  assert.equal(await continueConversation.getAttribute('href'), new URL(receipt).pathname);
   await a.goto(origin + '/widget/create', { waitUntil: 'networkidle' });
   assert((await a.locator('#embed-code').innerText()).includes('alice'));
   await a.goto(origin + '/widget/preview', { waitUntil: 'networkidle' });

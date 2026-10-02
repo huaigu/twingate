@@ -8,7 +8,7 @@
       content="SignalPass — thoughtful introductions. A local interactive HTML prototype reconstructed from the supplied designs."
       name="description"
     />
-    <title>My agent · SignalPass</title>
+    <title>Profile &amp; privacy · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
     <link href="/v4/styles.css" rel="stylesheet" />
     <script defer src="/v4/client.js"></script>
@@ -41,7 +41,7 @@
             aria-label="Main navigation"
           >
             <a href="/profile/import">Your profile</a
-            ><a href="/agent" aria-current="page">My agent</a
+            ><a href="/assistant">My agent</a
             ><a href="/discover">Discover</a><a href="/inbox">Introductions</a
             ><a href="/widget/create">Your widget</a>
           </nav>
@@ -113,7 +113,7 @@
               >
                 <path d="m3 10 9-8 9 8v11h-7v-7h-4v7H3Z"></path></svg
               ><span>Home</span></a
-            ><a class="active" href="/agent"
+            ><a class="active" href="/agent" aria-current="page"
               ><svg
                 aria-hidden="true"
                 class="icon"
@@ -126,7 +126,7 @@
               >
                 <circle cx="12" cy="7" r="4"></circle>
                 <path d="M4 21v-2a8 8 0 0 1 16 0v2Z"></path></svg
-              ><span>My agent</span></a
+              ><span>Profile &amp; privacy</span></a
             ><a class="" href="/inbox"
               ><svg
                 aria-hidden="true"
@@ -176,8 +176,8 @@
             >
           </nav>
           <div class="agent-heading">
-            <h1 class="hero-title">Personal Agent</h1>
-            <p>Profile &amp; privacy settings. <a href="/assistant" style="display:inline-block;font-family:var(--sp-font-text);font-size:14px;color:var(--sp-violet);margin-left:12px;text-decoration:underline;text-underline-offset:4px">Open my Personal Agent →</a></p>
+            <h1 class="hero-title">Profile &amp; privacy</h1>
+            <p>Choose how people can find you. <a href="/assistant" style="display:inline-block;font-family:var(--sp-font-text);font-size:14px;color:var(--sp-violet);margin-left:12px;text-decoration:underline;text-underline-offset:4px">Open my agent →</a></p>
             <span aria-hidden="true" class="brush"></span>
           </div>
           <p class="scene-footer">MORE BUILDERS   A MORE OPEN TOMORROW</p>
@@ -294,8 +294,7 @@
                       <path d="M12 15v3" stroke="#f7f2e9"></path></svg
                     ><strong>Private</strong
                     ><span
-                      >Your profile is hidden. You can still match
-                      privately.</span
+                      >Your profile is hidden. You can still search for people.</span
                     ></label
                   >
                 </div>
@@ -555,12 +554,12 @@
                       ></path></svg
                   ></span>
                   <div class="text-block">
-                    <h2>Agent matching</h2>
-                    <p>Find your people, on your terms.</p>
+                    <h2>Appear in suggestions</h2>
+                    <p>Let people find your public profile.</p>
                   </div>
                   <label class="toggle-label"
                     ><input
-                      aria-label="Agent matching"
+                      aria-label="Appear in suggestions"
                       checked=""
                       id="matching-toggle"
                       role="switch"
@@ -570,17 +569,8 @@
                   >
                 </div>
                 <div class="matching-description">
-                  <h3>
-                    Your interests can be compared
-                    <span class="underlined-word"
-                      >privately<span aria-hidden="true" class="brush"></span
-                    ></span>
-                  </h3>
-                  <p>
-                    When this is on, we compare your interests with others to
-                    suggest relevant introductions. This happens privately on
-                    our servers — your interests are never shared.
-                  </p>
+                  <h3>Be considered for relevant introductions.</h3>
+                  <p>When your profile is public and this is on, your approved profile and interests can appear in other people's AI searches. Those details may be sent to SignalPass's AI provider. You can search for people with this off.</p>
                 </div>
                 <div class="green-banner">
                   <span class="round-icon green"
@@ -606,113 +596,23 @@
                       <path d="M12 15v3" stroke="#f7f2e9"></path></svg
                   ></span>
                   <div>
-                    <strong>No raw interests are shared</strong>
+                    <strong>Your own request is your choice</strong>
                     <p>
-                      Your data stays private. Matching uses only the sources
-                      you allow.
+                      Using your profile in your own AI request needs your consent in My agent. Sending an introduction always needs your approval.
                     </p>
                   </div>
                 </div>
               </section>
               <section class="paper data-settings">
                 <div class="section-heading">
-                  <span class="round-icon sage"
-                    ><svg
-                      aria-hidden="true"
-                      class="icon"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.65"
-                      viewbox="0 0 24 24"
-                    >
-                      <ellipse cx="12" cy="5" rx="9" ry="4"></ellipse>
-                      <path
-                        d="M3 5v14c0 5 18 5 18 0V5M3 12c0 5 18 5 18 0"
-                      ></path></svg
-                  ></span>
                   <div class="text-block">
-                    <h2>Allowed data sources</h2>
-                    <p>Choose what your agent can use for matching.</p>
+                    <h2>Where your agent gets context</h2>
+                    <p>Your goal and approved profile details.</p>
                   </div>
                 </div>
-                <div class="data-source-options">
-                  <label class="data-source"
-                    ><input
-                      checked=""
-                      name="data-source"
-                      type="checkbox"
-                      value="github"
-                    /><svg
-                      aria-hidden="true"
-                      class="icon"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.65"
-                      viewbox="0 0 24 24"
-                    >
-                      <path
-                        d="M12 1a11 11 0 0 0-3.48 21.43c.55.1.75-.24.75-.53v-2.06c-3.06.67-3.71-1.3-3.71-1.3-.5-1.28-1.23-1.62-1.23-1.62-1-.69.08-.67.08-.67 1.11.08 1.69 1.14 1.69 1.14.98 1.68 2.57 1.2 3.2.91.1-.71.39-1.2.7-1.47-2.45-.28-5.02-1.23-5.02-5.48 0-1.21.43-2.2 1.14-2.98-.12-.28-.5-1.41.11-2.94 0 0 .93-.3 3.03 1.13A10.5 10.5 0 0 1 12 6.2c.94 0 1.87.13 2.75.37 2.1-1.43 3.03-1.13 3.03-1.13.6 1.53.23 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.27-2.58 5.2-5.04 5.48.4.34.75 1.01.75 2.04v3.02c0 .3.2.64.76.53A11 11 0 0 0 12 1Z"
-                        fill="currentColor"
-                        stroke="none"
-                      ></path></svg
-                    ><span class="data-source-copy"
-                      ><strong>GitHub</strong
-                      ><small>Projects, repositories, languages</small></span
-                    ></label
-                  ><label class="data-source"
-                    ><input
-                      checked=""
-                      name="data-source"
-                      type="checkbox"
-                      value="x"
-                    /><svg
-                      aria-hidden="true"
-                      class="icon"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.65"
-                      viewbox="0 0 24 24"
-                    >
-                      <path d="M3 3h5l13 18h-5ZM3 21l7-8M14 10l7-7"></path></svg
-                    ><span class="data-source-copy"
-                      ><strong>X (Twitter)</strong
-                      ><small
-                        >Public posts and topics you engage with</small
-                      ></span
-                    ></label
-                  ><label class="data-source"
-                    ><input
-                      name="data-source"
-                      type="checkbox"
-                      value="links"
-                    /><svg
-                      aria-hidden="true"
-                      class="icon"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.65"
-                      viewbox="0 0 24 24"
-                    >
-                      <path
-                        d="m10 14 4-4M8 17l-1 1a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0M16 7l1-1a4 4 0 1 1 6 6l-5 5a4 4 0 0 1-6 0"
-                        transform="translate(0 0) scale(.95)"
-                      ></path></svg
-                    ><span class="data-source-copy"
-                      ><strong>Other public links</strong
-                      ><small
-                        >e.g. personal website, Farcaster, Lens</small
-                      ></span
-                    ></label
-                  >
-                </div>
+                <p>Public profiles and interests are visible in the directory. Public profiles that opt into suggestions can be considered by the agent.</p>
+                <p>Your private profile is included in your own request only when you select “Use my approved profile.” Links you add are saved as references; SignalPass does not fetch your posts or connect those accounts.</p>
+                <a class="button outline" href="/profile/import">Edit my approved context →</a>
               </section>
               <div class="agent-actions">
                 <button
@@ -726,8 +626,8 @@
                   data-action="save-agent"
                   type="button"
                 >
-                  Save agent settings</button
-                ><small>You can change these at any time.</small>
+                  Save settings</button
+                ><small data-settings-status>You can change these at any time.</small>
               </div>
             </div>
           </div>

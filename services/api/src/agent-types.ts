@@ -28,10 +28,24 @@ export interface AgentProfile {
   interests: string[]
 }
 export type AgentEvidenceField = 'building' | 'canOffer' | 'wantsToMeet' | 'interests'
+export interface AgentEvidence { field: AgentEvidenceField; quote: string }
+export interface AgentConnection {
+  /** The user's original goal, not an inferred personal claim. */
+  goal: string
+  recipientEvidence: AgentEvidence
+  /** Exact excerpt from the sender's approved offer, only with consent. */
+  senderEvidence: AgentEvidence | null
+  sharedInterests: string[]
+  basis: 'profile_evidence' | 'shared_interest_only'
+  /** A possible next step, never a claim that either person has agreed. */
+  suggestedFirstStep: string
+}
 export interface AgentMatch extends AgentProfile {
   reason: string
   caveat: string
-  evidence: Array<{ field: AgentEvidenceField; quote: string }>
+  evidence: AgentEvidence[]
+  /** Optional only for history written before the explanation upgrade. */
+  connection?: AgentConnection
 }
 export interface AgentRun {
   id: string
@@ -44,6 +58,10 @@ export interface AgentRun {
   eligibleCandidates: number
   consideredCandidates: number
   candidateLimit: number
+  /** Optional only for runs saved before refinement was supported. */
+  parentRunId?: string | null
+  clarifications?: Array<{ question: string | null; answer: string }>
+  modelCalled?: boolean
 }
 export interface AgentDraft {
   id: string

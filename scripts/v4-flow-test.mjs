@@ -121,6 +121,77 @@ test('invalid guest storage does not prevent successful sign-in', async () => {
   }
 });
 
+test('profile completion returns only to a fresh, same-account assistant goal', async () => {
+  const check = async (search, resume, owner = address, live = true) => {
+    const window = {};
+    const sessionStorage = storage({ 'signalpass-assistant-return': JSON.stringify(resume) });
+    vm.runInNewContext(clientSource, {
+      window, sessionStorage, localStorage: storage({}), URLSearchParams,
+      location: { search: search + '&demo=1', pathname: '/profile/import' },
+      document: { body: { dataset: { page: 'sources' } }, getElementById: () => null, querySelector: () => null, querySelectorAll: () => [] },
+    });
+    await window.SignalPass.ready;
+    window.SignalPass.live = live;
+    window.SignalPass.me = owner ? { session: { address: owner } } : null;
+    return window.SignalPass.profileReturnPath();
+  };
+  const resume = { owner: address, goal: 'Find a collaborator for Monad tooling', runId: 'test-run', handle: 'recipient', createdAt: Date.now() };
+  assert.equal(await check('?returnTo=assistant', resume), '/assistant?resume=1');
+  for (const search of ['', '?returnTo=https%3A%2F%2Fevil.example', '?returnTo=%2F%2Fevil.example', '?returnTo=%2Fassistant%3Fresume%3D1']) {
+    assert.equal(await check(search, resume), null);
+  }
+  assert.equal(await check('?returnTo=assistant', resume, null), null);
+  assert.equal(await check('?returnTo=assistant', resume, otherAddress), null);
+  assert.equal(await check('?returnTo=assistant', resume, address, false), null);
+  for (const unsafe of [null, {}, { ...resume, owner: null }, { ...resume, goal: '' }, { ...resume, goal: 'x'.repeat(1201) }, { ...resume, createdAt: Date.now() - 86400001 }, { ...resume, createdAt: Date.now() + 60000 }, { ...resume, createdAt: String(Date.now()) }]) {
+    assert.equal(await check('?returnTo=assistant', unsafe), null);
+  }
+});
+
+test('logout and wallet changes clear private return state without interrupting first sign-in', async () => {
+  const mounted = async ({ authenticated = true, failLogout = false } = {}) => {
+    const elements = [], handlers = {};
+    const node = () => {
+      const value = { dataset: {}, classList: { add() {} }, append() {}, replaceChildren() {}, setAttribute() {} };
+      elements.push(value); return value;
+    };
+    const header = node(), slot = node();
+    const sessionStorage = storage({ 'signalpass-assistant-return': 'private pending goal' });
+    let reloads = 0;
+    const window = { ethereum: { on: (name, listener) => { handlers[name] = listener; } } };
+    vm.runInNewContext(clientSource, {
+      window, sessionStorage, localStorage: storage({}), URLSearchParams, AbortSignal,
+      location: { search: '', pathname: '/assistant', reload: () => reloads++ },
+      document: { body: { dataset: { page: 'assistant' } }, getElementById: id => id === 'session-slot' ? slot : null, querySelector: () => header, querySelectorAll: () => [], createElement: node },
+      fetch: async path => {
+        let status = 200, data;
+        if (path === '/api/chain/config') data = { enabled: false };
+        else if (path === '/api/profiles') data = { profiles: [] };
+        else if (path === '/api/me') { status = authenticated ? 200 : 401; data = authenticated ? { session: { address, csrf: 'csrf' }, profile: null } : {}; }
+        else if (path === '/api/auth/logout') { status = failLogout ? 503 : 200; data = {}; }
+        else throw new Error('Unexpected request: ' + path);
+        return { ok: status < 400, status, json: async () => data };
+      },
+    });
+    await window.SignalPass.ready;
+    return { sessionStorage, handlers, button: elements.find(element => element.id === 'session-action'), reloads: () => reloads };
+  };
+  const guest = await mounted({ authenticated: false });
+  await guest.handlers.accountsChanged([address]);
+  assert.equal(guest.sessionStorage.getItem('signalpass-assistant-return'), 'private pending goal');
+  assert.equal(guest.reloads(), 0);
+  const signedIn = await mounted();
+  await signedIn.handlers.accountsChanged([address]);
+  assert.equal(signedIn.sessionStorage.getItem('signalpass-assistant-return'), 'private pending goal');
+  await signedIn.button.onclick();
+  assert.equal(signedIn.sessionStorage.getItem('signalpass-assistant-return'), null);
+  assert.equal(signedIn.reloads(), 1);
+  const changed = await mounted({ failLogout: true });
+  await changed.handlers.accountsChanged([otherAddress]);
+  assert.equal(changed.sessionStorage.getItem('signalpass-assistant-return'), null);
+  assert.equal(changed.reloads(), 1);
+});
+
 for (const tags of [[], ['Monad'], ['Monad', 'Open source']]) {
   test(`compose initializes and persists a usable draft with ${tags.length} interests`, async () => {
     const elements = new Map();
