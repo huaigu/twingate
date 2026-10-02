@@ -212,6 +212,12 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
  .preview-header .v4-session-bar { justify-content: space-between; }
 }
 @media (max-width: 420px) { .v4-brand,.brand-word { font-size: 24px; } .v4-brand,.brand { gap: 4px; } .v4-mark,.brand-mark { width: 24px; } }
+@media (max-width: 360px) {
+ .scene .v4-header.site-header { padding-inline: 16px; }
+ .v4-header .v4-brand { font-size: 20px; }
+ .v4-header .session-in-header .v4-session-bar .button { width: 84px; white-space: normal; justify-content: center; text-align: center; }
+ .v4-header .v4-menu-toggle { flex-basis: 44px; width: 44px; }
+}
 
 .sp-home .sp-home-hero { padding: 16px 0 38px; }
 .sp-home .sp-home-hero::after { display: none; }
