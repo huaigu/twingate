@@ -135,7 +135,11 @@ async function scenario(name, options, run) {
       fixture.profile = { ...profile, owner: fixture.account, handle: body.handle, displayName: body.profile.name, building: body.profile.bio, canOffer: body.profile.offer, wantsToMeet: body.profile.meet, interests: body.agent.interests };
       fixture.settings = { profile: body.profile, agent: body.agent, sourceLinks: body.sourceLinks, version: settings.version };
       data = { profile: fixture.profile, settings: fixture.settings };
-    } else if (apiPath === '/profiles') data = { profiles: [profile, recipient, ...(fixture.extraProfiles || [])] };
+    } else if (apiPath === '/profiles') {
+      if (fixture.holdProfiles) await fixture.holdProfiles;
+      if (fixture.profilesFailure) { status = 503; data = { error: 'service_unavailable' }; }
+      else data = { profiles: [profile, recipient, ...(fixture.extraProfiles || [])] };
+    }
     else if (apiPath === '/profiles/' + recipient.handle) data = { profile: recipient };
     else if (apiPath.startsWith('/agent/') && fixture.guest) { status = 401; data = { error: 'authentication_required' }; }
     else if (apiPath === '/agent/status') data = { enabled: !fixture.unconfigured, provider: fixture.unconfigured ? null : 'test-fixture', model: fixture.unconfigured ? null : 'fixture-model', remainingToday: fixture.exhausted ? 0 : 18, limit: 20, capabilities: ['discover', 'draft'] };
@@ -207,6 +211,78 @@ async function geometry(page, width) {
 try {
   browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH, args: ['--no-sandbox', '--no-zygote', '--disable-dev-shm-usage', '--disable-webgl'] } : {}) });
   console.log('Browser:', browser.version());
+
+  await scenario('slow initial API keeps composer locked until edits can be preserved and sent exactly', {}, async ({ page, fixture, calls }) => {
+    let release;
+    fixture.holdProfiles = new Promise(resolve => { release = resolve; });
+    await page.goto(origin + '/introductions/new/' + recipient.handle, { waitUntil: 'domcontentloaded' });
+    const workspace = page.locator('.compose-workspace');
+    assert.equal(await workspace.getAttribute('aria-busy'), 'true');
+    assert.equal(await workspace.evaluate(element => element.inert), true);
+    assert.equal(await page.locator('#compose-loading[role=status]').isVisible(), true);
+    assert.equal(await page.locator('#intro-field-1').isDisabled(), true);
+    assert.equal(await page.locator('[data-action=approve-introduction]').isDisabled(), true);
+    assert.equal(await page.locator('.compose-workspace input:not(:disabled),.compose-workspace textarea:not(:disabled),.compose-workspace button:not(:disabled)').count(), 0);
+    release(); fixture.holdProfiles = null;
+    const edit = 'I build a simulation harness for Monad builders.';
+    // Fill as soon as the real control enables; no extra app-ready wait can hide
+    // the regression where hydration overwrote a user's first keystrokes.
+    await page.locator('#intro-field-1').fill(edit);
+    assert.equal(await workspace.getAttribute('aria-busy'), 'false');
+    assert.equal(await workspace.evaluate(element => element.inert), false);
+    assert.equal(await page.locator('#compose-loading').count(), 0);
+    assert.equal(await page.locator('#intro-field-1').inputValue(), edit);
+    assert.equal(sends(calls).length, 0);
+    await page.locator('[data-action=approve-introduction]').click();
+    assert.match(await page.locator('#dialog-content').innerText(), /simulation harness/);
+    assert.equal(sends(calls).length, 0);
+    await page.locator('#dialog-confirm').click();
+    await page.waitForFunction(() => document.querySelector('#toast')?.textContent.includes('Could not complete'));
+    assert.equal(sends(calls).length, 1);
+    assert.equal(sends(calls)[0].body.intent.whoAmI, edit);
+  });
+
+  await scenario('composer load failure exposes a usable retry and recovers without a stuck loading gate', {}, async ({ page, fixture, calls }) => {
+    fixture.profilesFailure = true;
+    await page.goto(origin + '/introductions/new/' + recipient.handle);
+    await page.getByRole('heading', { name: 'A moment to reconnect.' }).waitFor();
+    assert.equal(await page.locator('.compose-workspace').evaluate(element => element.inert), false);
+    assert.equal(await page.locator('.compose-workspace').getAttribute('aria-busy'), 'false');
+    assert.equal(await page.locator('#compose-loading').count(), 0);
+    assert.equal(await page.locator('.compose-workspace textarea').count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Try again', exact: true }).isEnabled(), true);
+    assert.equal(await page.getByRole('button', { name: 'Sign out', exact: true }).isEnabled(), true);
+    fixture.profilesFailure = false;
+    await page.getByRole('button', { name: 'Try again', exact: true }).click();
+    await page.locator('#intro-field-1').fill('My edited introduction after retry.');
+    assert.equal(await page.locator('#intro-field-1').inputValue(), 'My edited introduction after retry.');
+    assert.equal(await page.locator('#compose-loading').count(), 0);
+    assert.equal(sends(calls).length, 0);
+  });
+
+  await scenario('public people directory wraps its prompt at narrow mobile widths', { width: 390 }, async ({ page }) => {
+    await page.goto(origin + '/discover');
+    await page.locator('[data-person=' + recipient.handle + ']').waitFor();
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      await geometry(page, width);
+      const heading = await page.locator('.discovery-query h2').evaluate(element => ({ scroll: element.scrollWidth, width: element.clientWidth }));
+      assert(heading.scroll <= heading.width + 1, 'The search prompt must wrap inside its panel at ' + width);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.screenshot({ path: path.join(output, 'discover-390.png'), fullPage: true });
+  });
+
+  await scenario('explicit sample composer unlocks and keeps edited text in review without a live send', {}, async ({ page, calls }) => {
+    await page.goto(origin + '/introductions/new/Maya?demo=1');
+    const edit = 'A sample introduction I edited myself.';
+    await page.locator('#intro-field-1').fill(edit);
+    assert.equal(await page.locator('.compose-workspace').evaluate(element => element.inert), false);
+    assert.equal(await page.locator('#compose-loading').count(), 0);
+    await page.locator('[data-action=approve-introduction]').click();
+    assert.match(await page.locator('#dialog-content').innerText(), /A sample introduction I edited myself/);
+    assert.equal(sends(calls).length, 0);
+  });
 
   await scenario('goal → evidence → draft → editable composer → explicit confirmation', { draft: { ...makeDraft(), notes: [] } }, async ({ page, calls }) => {
     assert.equal(await page.locator('#agent-use-profile').isChecked(), false);
@@ -571,6 +647,9 @@ try {
       await page.getByRole('heading', { name: 'Let’s refresh this introduction.' }).waitFor();
       assert.equal(await page.locator('.compose-workspace textarea,.compose-workspace [data-action=approve-introduction]').count(), 0);
       assert.match(await page.locator('.compose-workspace').innerText(), /Nothing has been sent/);
+      assert.equal(await page.locator('.compose-workspace').evaluate(element => element.inert), false);
+      assert.equal(await page.locator('#compose-loading').count(), 0);
+      assert.equal(await page.getByRole('link', { name: 'Back to your agent', exact: true }).isVisible(), true);
       assert.equal(sends(calls).length, 0);
     });
   }

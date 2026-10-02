@@ -53,7 +53,8 @@
         </header>
         <main id="main-content">
           <div class="sp-page-heading compose-heading"><div><p class="sp-eyebrow">A PERSONAL INTRODUCTION</p><h1>A good hello starts with you.</h1><p class="sp-page-description">Make it personal. Review your words and shared context before anything is sent.</p></div><ol class="compose-steps"><li><span>1</span>Choose</li><li class="active"><span>2</span>Write</li><li><span>3</span>Review</li></ol></div>
-          <div class="compose-workspace">
+          <p id="compose-loading" class="sp-draft-readiness" role="status">Loading your introduction…</p>
+          <div class="compose-workspace" inert aria-busy="true">
             <section class="paper introduction-composer">
               <div class="composer-top">
                 <span aria-hidden="true" class="logo-mark"><i></i><b></b></span>
@@ -83,7 +84,7 @@
                   <h3>What’s your goal for this introduction?</h3>
                   <div class="compose-goals">
                     <label class="compose-goal selected"
-                      ><input
+                      ><input disabled data-compose-pending
                         checked=""
                         name="intro-goal"
                         type="radio"
@@ -105,7 +106,7 @@
                         >Chat</span
                       ><small>Have a thoughtful<br />conversation</small></label
                     ><label class="compose-goal"
-                      ><input
+                      ><input disabled data-compose-pending
                         name="intro-goal"
                         type="radio"
                         value="collaborate"
@@ -127,7 +128,7 @@
                         >Collaborate</span
                       ><small>Explore working<br />together</small></label
                     ><label class="compose-goal"
-                      ><input
+                      ><input disabled data-compose-pending
                         name="intro-goal"
                         type="radio"
                         value="learn"
@@ -159,7 +160,7 @@
                       ><span class="field-number">1</span>A personal note</label
                     >
                     <div>
-                      <textarea
+                      <textarea disabled data-compose-pending
                         id="intro-field-1"
                         maxlength="600"
                         name="field-1"
@@ -188,7 +189,7 @@ Hi Alex, I’ve been following your work and really appreciate your perspective 
                       explore?</label
                     >
                     <div>
-                      <textarea
+                      <textarea disabled data-compose-pending
                         id="intro-field-2"
                         maxlength="600"
                         name="field-2"
@@ -217,7 +218,7 @@ I’d love to hear more about your experience building on Monad and where you se
                       bring?</label
                     >
                     <div>
-                      <textarea
+                      <textarea disabled data-compose-pending
                         id="intro-field-3"
                         maxlength="600"
                         name="field-3"
@@ -246,7 +247,7 @@ I work on developer tools and can share some lessons from our recent build.</tex
                       topics?</label
                     >
                     <div>
-                      <textarea
+                      <textarea disabled data-compose-pending
                         id="intro-field-4"
                         maxlength="600"
                         name="field-4"
@@ -452,7 +453,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                     You both have publicly available work on Monad.<br />This
                     helps build trust. You can choose to hide this.
                   </p>
-                  <button
+                  <button disabled data-compose-pending
                     aria-expanded="false"
                     class="context-button"
                     data-action="toggle-context"
@@ -474,7 +475,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                 </div>
               </div>
               <div class="approve-actions">
-                <button
+                <button disabled data-compose-pending
                   class="button primary"
                   data-action="approve-introduction"
                   type="button"
@@ -494,7 +495,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                 ><small>You approve before anything is shared</small>
               </div>
               <div class="introduction-fees">
-                <button data-fee="evaluation" type="button">
+                <button disabled data-compose-pending data-fee="evaluation" type="button">
                   <svg
                     aria-hidden="true"
                     class="icon"
@@ -520,7 +521,7 @@ Would you be open to a 20 minute chat about community tools and onboarding?</tex
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M12 10v7M12 6v.1"></path>
                   </svg></button
-                ><button data-fee="bond" type="button">
+                ><button disabled data-compose-pending data-fee="bond" type="button">
                   <svg
                     aria-hidden="true"
                     class="icon"

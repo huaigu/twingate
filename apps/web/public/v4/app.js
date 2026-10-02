@@ -2,8 +2,21 @@
    No external identity, model, messaging or payment service is impersonated. */
 (async () => {
   const api = window.SignalPass;
+  const composeWorkspace = document.querySelector(".compose-workspace");
+  const finishComposeLoading = () => {
+    if (!composeWorkspace) return;
+    // Only release the static loading gate. Replacement error/empty-state
+    // controls and later action-specific disabled states remain untouched.
+    composeWorkspace.querySelectorAll("[data-compose-pending]").forEach((element) => {
+      element.disabled = false;
+      element.removeAttribute("data-compose-pending");
+    });
+    composeWorkspace.removeAttribute("inert");
+    composeWorkspace.setAttribute("aria-busy", "false");
+    document.getElementById("compose-loading")?.remove();
+  };
   await api.ready;
-  if (api.error) return;
+  if (api.error) { finishComposeLoading(); return; }
 
   "use strict";
   const $ = (q, root = document) => root.querySelector(q);
@@ -846,6 +859,7 @@
     if (api.live && (!candidate.handle || (requestedPerson && candidate.handle !== requestedPerson))) {
       $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary" href="/discover">Discover builders</a></div>';
       api.emptyState($(".compose-workspace .v4-live-empty"), { title: "Who would you like to meet?", description: "Choose an available profile before writing your introduction. Your message has not been sent.", action: "Discover builders", href: "/discover" });
+      finishComposeLoading();
       return;
     }
     // A hosted draft is scoped to this account, recipient and approved profile.
@@ -859,6 +873,7 @@
           action: "Back to your agent",
           href: "/assistant",
         });
+        finishComposeLoading();
       };
       if (!api.live || !/^[0-9a-f-]{36}$/i.test(requestedAgentDraft)) {
         failHandoff("This agent draft link is invalid. Open your live agent workspace and prepare a fresh draft.");
@@ -870,6 +885,7 @@
           description: "Sign in and review your profile before opening this personal introduction. Nothing has been sent.",
           action: "Review your profile", href: "/profile/import",
         });
+        finishComposeLoading();
         return;
       }
       $(".compose-workspace").setAttribute("aria-busy", "true");
@@ -955,6 +971,7 @@
         description: "You can check the receipt for its latest status.",
         action: "View your introductions", href: "/inbox",
       });
+      finishComposeLoading();
       return;
     }
     if (sameSavedDraft) {
@@ -1511,4 +1528,5 @@
       );
   }
   window.SignalPassView = Object.freeze({ version: "4.1.0", page, mode: api.demo ? "demo" : "live" });
+  finishComposeLoading();
 })();

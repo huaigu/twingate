@@ -48,7 +48,7 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
 .sp-workspace .paper::before, .sp-workspace .paper::after { display: none; }
 .sp-workspace .button { min-height: 48px; padding: 12px 20px; font: 600 14px/1.4 var(--sp-font-text); border-radius: 10px; }
 .sp-workspace .discovery-query { width: 100%; padding: 26px 28px; }
-.sp-workspace .discovery-query h2 { font: 24px/1.25 var(--sp-font-display); letter-spacing: -.4px; margin: 0 0 16px; }
+.sp-workspace .discovery-query h2 { font: 24px/1.25 var(--sp-font-display); letter-spacing: -.4px; margin: 0 0 16px; white-space: normal; }
 .sp-workspace .discovery-query input { height: 52px; width: 100%; border-radius: 10px; background: #f5f1e9; border: 1px solid #ddd5df; font: 15px/1.5 var(--sp-font-text); padding: 13px 16px; }
 .sp-workspace .discovery-controls { margin-top: 16px; gap: 16px; }
 .sp-workspace .goal-pill { font: 13px/1.4 var(--sp-font-text); min-height: 44px; border-radius: 8px; padding: 10px 14px; gap: 8px; }
