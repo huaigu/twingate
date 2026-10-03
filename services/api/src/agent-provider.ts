@@ -1,8 +1,11 @@
+import { closeSync, constants, fstatSync, openSync, readSync } from 'node:fs'
 import type { AgentModel, HostedAgentOptions } from './agent-types.js'
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1'
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
+const TOKENRHYTHM_BASE_URL = 'https://tokenrhythm.studio/v1'
 const MAX_RESPONSE_BYTES = 128 * 1024
+const MAX_KEY_FILE_BYTES = 8192
 const PROVIDER_ERROR = 'The personal agent could not complete this request. Please try again.'
 const CONFIG_ERROR = 'Invalid SignalPass agent configuration. Check the server environment settings.'
 
@@ -26,18 +29,19 @@ export interface OpenAIResponsesAgentModelOptions {
 }
 
 export type OpenRouterResponsesAgentModelOptions = OpenAIResponsesAgentModelOptions
+export type TokenRhythmChatAgentModelOptions = OpenAIResponsesAgentModelOptions
 
 function object(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-function responseEndpoint(baseUrl: string): string {
+function responseEndpoint(baseUrl: string, operation = 'responses'): string {
   try {
     const url = new URL(baseUrl)
     const loopback = url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '[::1]'
     if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && loopback)) ||
         url.username || url.password || /[?#]/.test(baseUrl)) throw new Error(CONFIG_ERROR)
-    url.pathname = url.pathname.replace(/\/+$/, '') + '/responses'
+    url.pathname = url.pathname.replace(/\/+$/, '') + '/' + operation
     return url.href
   } catch {
     // Do not put URLs (which might contain credentials) into errors.
@@ -190,6 +194,116 @@ export class OpenRouterResponsesAgentModel extends ResponsesAgentModel {
   }
 }
 
+/** Explicit Chat Completions integration; no tool execution, retries or fallback. */
+export class TokenRhythmChatAgentModel implements AgentModel {
+  readonly provider = 'tokenrhythm'
+  readonly model: string
+  readonly #apiKey: string
+  readonly #endpoint: string
+  readonly #fetch: Fetch
+  readonly #timeoutMs: number
+
+  constructor(options: TokenRhythmChatAgentModelOptions) {
+    if (!options.apiKey.trim() || !options.model.trim() || /[\r\n]/.test(options.apiKey)) throw new Error(CONFIG_ERROR)
+    this.#apiKey = options.apiKey.trim()
+    this.model = options.model.trim()
+    this.#endpoint = responseEndpoint(options.baseUrl ?? TOKENRHYTHM_BASE_URL, 'chat/completions')
+    this.#fetch = options.fetch ?? globalThis.fetch
+    this.#timeoutMs = options.timeoutMs ?? 45_000
+    if (!Number.isSafeInteger(this.#timeoutMs) || this.#timeoutMs < 1) throw new Error(CONFIG_ERROR)
+  }
+
+  async generate(request: GenerationRequest): Promise<{ data: unknown; inputTokens: number; outputTokens: number }> {
+    const controller = new AbortController()
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let timedOut = false
+    try {
+      const deadline = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => {
+          timedOut = true
+          controller.abort()
+          reject(new AgentProviderError('agent_timeout'))
+        }, this.#timeoutMs)
+      })
+      return await Promise.race([this.#request(request, controller.signal), deadline])
+    } catch (error) {
+      controller.abort()
+      throw new AgentProviderError(timedOut ? 'agent_timeout' : error instanceof AgentProviderError ? error.code : 'agent_unavailable')
+    } finally {
+      if (timer) clearTimeout(timer)
+    }
+  }
+
+  async #request(request: GenerationRequest, signal: AbortSignal) {
+    const response = await this.#fetch(this.#endpoint, {
+      method: 'POST',
+      headers: { authorization: 'Bearer ' + this.#apiKey, 'content-type': 'application/json' },
+      redirect: 'error',
+      signal,
+      body: JSON.stringify({
+        model: this.model,
+        messages: [
+          { role: 'system', content: request.instructions },
+          { role: 'user', content: JSON.stringify(request.input) },
+        ],
+        stream: false,
+        store: false,
+        max_tokens: 2400,
+        response_format: { type: 'json_schema', json_schema: { name: 'signalpass_' + request.operation, strict: true, schema: request.schema } },
+      }),
+    })
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => {})
+      throw new AgentProviderError([429, 503].includes(response.status) ? 'agent_provider_busy' : 'agent_unavailable')
+    }
+    const payload = await boundedJson(response)
+    if (!object(payload) || payload.error != null || !Array.isArray(payload.choices) || payload.choices.length !== 1) throw new AgentProviderError('agent_response_incomplete')
+    const choice = payload.choices[0]
+    if (!object(choice) || choice.index !== 0 || choice.finish_reason !== 'stop' || !object(choice.message)) throw new AgentProviderError('agent_response_incomplete')
+    const message = choice.message
+    if (message.role !== 'assistant' || typeof message.content !== 'string' || !message.content.trim() ||
+        message.refusal != null || message.tool_calls != null || message.function_call != null) throw new AgentProviderError('agent_response_incomplete')
+    let data: unknown
+    try { data = JSON.parse(message.content) as unknown }
+    catch { throw new AgentProviderError('agent_response_incomplete') }
+    const usage = object(payload.usage) ? payload.usage : {}
+    return { data, inputTokens: tokenCount(usage.prompt_tokens), outputTokens: tokenCount(usage.completion_tokens) }
+  }
+}
+
+/** Read only an explicitly configured, owner-protected regular file, with bounded allocation. */
+function configuredApiKey(env: Record<string, string | undefined>): string {
+  const direct = env.SIGNALPASS_AGENT_API_KEY ?? ''
+  const path = env.SIGNALPASS_AGENT_API_KEY_FILE?.trim()
+  if (!path) return direct
+  if (direct.trim()) throw new Error(CONFIG_ERROR)
+  let fd: number | undefined
+  try {
+    // NOFOLLOW prevents a swapped symlink; NONBLOCK avoids hanging on a FIFO.
+    fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK)
+    const info = fstatSync(fd)
+    const uid = process.getuid?.()
+    if (!info.isFile() || info.size > MAX_KEY_FILE_BYTES ||
+        (info.mode & 0o077) !== 0 || (uid !== undefined && info.uid !== uid && info.uid !== 0)) throw new Error(CONFIG_ERROR)
+    const buffer = Buffer.alloc(MAX_KEY_FILE_BYTES + 1)
+    let bytes = 0
+    while (bytes < buffer.length) {
+      const count = readSync(fd, buffer, bytes, buffer.length - bytes, null)
+      if (!count) break
+      bytes += count
+    }
+    if (bytes > MAX_KEY_FILE_BYTES) throw new Error(CONFIG_ERROR)
+    const key = new TextDecoder('utf-8', { fatal: true }).decode(buffer.subarray(0, bytes)).trim()
+    if (!key || /[\r\n]/.test(key)) throw new Error(CONFIG_ERROR)
+    return key
+  } catch {
+    // Neither the filesystem path nor key material belongs in diagnostics.
+    throw new Error(CONFIG_ERROR)
+  } finally {
+    if (fd !== undefined) closeSync(fd)
+  }
+}
+
 function dailyLimit(value: string | undefined, fallback: number, max: number): number {
   if (value === undefined) return fallback
   if (!/^\d+$/.test(value.trim())) throw new Error(CONFIG_ERROR)
@@ -210,15 +324,15 @@ function configuredTimeout(value: string | undefined): number | undefined {
 export function configuredHostedAgent(env: Record<string, string | undefined> = process.env): HostedAgentOptions {
   const provider = env.SIGNALPASS_AGENT_PROVIDER?.trim()
   if (!provider) return {}
-  if (provider !== 'openai' && provider !== 'openrouter') throw new Error(CONFIG_ERROR)
+  if (provider !== 'openai' && provider !== 'openrouter' && provider !== 'tokenrhythm') throw new Error(CONFIG_ERROR)
   const options = {
-    apiKey: env.SIGNALPASS_AGENT_API_KEY ?? '',
+    apiKey: configuredApiKey(env),
     model: env.SIGNALPASS_AGENT_MODEL ?? '',
     baseUrl: env.SIGNALPASS_AGENT_BASE_URL?.trim() || undefined,
     timeoutMs: configuredTimeout(env.SIGNALPASS_AGENT_TIMEOUT_MS),
   }
   return {
-    model: provider === 'openrouter' ? new OpenRouterResponsesAgentModel(options) : new OpenAIResponsesAgentModel(options),
+    model: provider === 'openrouter' ? new OpenRouterResponsesAgentModel(options) : provider === 'tokenrhythm' ? new TokenRhythmChatAgentModel(options) : new OpenAIResponsesAgentModel(options),
     dailyUserLimit: dailyLimit(env.SIGNALPASS_AGENT_DAILY_USER_LIMIT, 20, 1000),
     dailyGlobalLimit: dailyLimit(env.SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT, 200, 10_000),
   }

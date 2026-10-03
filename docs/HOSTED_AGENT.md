@@ -4,7 +4,7 @@ SignalPass supplies the model connection and private workspace. Users sign in, d
 
 ## Implemented scope
 
-`/assistant` provides two bounded operations: discover people and draft an introduction. It is not an autonomous background agent. OpenAI and the free-model OpenRouter test adapter use Responses with strict structured output; `AgentModel` keeps the workflow independent of either provider.
+`/assistant` provides two bounded operations: discover people and draft an introduction. It is not an autonomous background agent. OpenAI and the free-model OpenRouter adapter use Responses; TokenRhythm uses Chat Completions. All request a strict JSON schema, and the application independently validates the returned fields and evidence. `AgentModel` keeps the workflow independent of the provider.
 
 1. A signed-in user enters a goal. Using their approved profile is an unchecked, explicit option.
 2. The server filters public, approved profiles that allow matching and are open to introductions, excluding the requester. Goal terms select at most 40 candidates; the model can recommend at most three of those supplied handles. This is a bounded shortlist, not an exhaustive semantic search.
@@ -31,17 +31,18 @@ Never put the key in frontend variables, source control or the user interface. A
 
 | Setting | Default / constraint |
 | --- | --- |
-| `SIGNALPASS_AGENT_PROVIDER` | Empty disables AI; accepts `openai` or `openrouter`. |
-| `SIGNALPASS_AGENT_API_KEY` | Required dedicated server-side key when enabled. |
+| `SIGNALPASS_AGENT_PROVIDER` | Empty disables AI; accepts `openai`, `openrouter` or `tokenrhythm`. |
+| `SIGNALPASS_AGENT_API_KEY` | Dedicated server-side key; use this or the protected key-file setting. |
+| `SIGNALPASS_AGENT_API_KEY_FILE` | Alternative regular, owner-only key file (0400/0600), owned by root or the API user, at most 8 KiB. Do not also set a nonempty direct key. A systemd credential mount is supported. |
 | `SIGNALPASS_AGENT_MODEL` | Required explicit model supporting structured output. OpenRouter accepts only a named `vendor/model:free` variant; router aliases and paid models are rejected. |
-| `SIGNALPASS_AGENT_BASE_URL` | Empty selects `https://api.openai.com/v1` or `https://openrouter.ai/api/v1`. HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
-| `SIGNALPASS_AGENT_TIMEOUT_MS` | Optional integer 1000–60000; blank defaults to 15000 for OpenAI and 45000 for OpenRouter. |
+| `SIGNALPASS_AGENT_BASE_URL` | Empty selects `https://api.openai.com/v1`, `https://openrouter.ai/api/v1` or `https://tokenrhythm.studio/v1`. HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
+| `SIGNALPASS_AGENT_TIMEOUT_MS` | Optional integer 1000–60000; blank defaults to 15000 for OpenAI and 45000 for OpenRouter/TokenRhythm. |
 | `SIGNALPASS_AGENT_DAILY_USER_LIMIT` | 20 inference attempts per account per UTC day; allowed 1–1000. |
 | `SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT` | 200 inference attempts per UTC day across accounts; allowed 1–10000. |
 
 Attempts include provider failures. SQLite reserves quota before inference; clearing history and restarting the API do not reset it. Inference is limited to one concurrent call per account and two globally. Leases expire after 120 seconds if the process dies. These are usage bounds, not a dollar spending ceiling; configure a provider project budget as appropriate for deployment. Wallet accounts are not unique-human identities.
 
-The provider has a bounded deadline (15 seconds for OpenAI, 45 seconds for OpenRouter by default), a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Browser discovery/draft requests and the Next API proxy allow up to 65 seconds for a configured provider deadline of at most 60 seconds; other browser API requests retain their 18-second timeout. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Exact source quotes are checked. A conservative draft guard rejects recognizable unsupported familiarity, quantitative career/scale claims, credentials and completed achievements against supplied context. This closes the observed invented-familiarity case; it is not general fact verification, may reject some legitimate paraphrases, and does not cover every language or possible claim. The draft and composer still require the sender to review personal claims. Safe timeout, capacity and incomplete-response categories support deliberate retry or manual composition while preserving existing work; no raw provider response is returned. Test model compatibility with the exact schema before a public demo.
+The provider has a bounded deadline (15 seconds for OpenAI, 45 seconds for OpenRouter/TokenRhythm by default), a 2,400 output-token ceiling, a 128 KiB response cap and no automatic retries. Browser discovery/draft requests and the Next API proxy allow up to 65 seconds for a configured provider deadline of at most 60 seconds; other browser API requests retain their 18-second timeout. Refusals, incomplete responses, invalid JSON, unsupported handles, fabricated quotes and schema violations fail closed. Exact source quotes are checked. A conservative draft guard rejects recognizable unsupported familiarity, quantitative career/scale claims, credentials and completed achievements against supplied context. This closes the observed invented-familiarity case; it is not general fact verification, may reject some legitimate paraphrases, and does not cover every language or possible claim. The draft and composer still require the sender to review personal claims. Safe timeout, capacity and incomplete-response categories support deliberate retry or manual composition while preserving existing work; no raw provider response is returned. Test model compatibility with the exact schema before a public demo.
 
 ### Free OpenRouter acceptance test
 
@@ -59,7 +60,13 @@ pnpm agent:live:test
 
 This command uses two temporary signed identities and fictional approved profiles in an in-memory database. It makes at most two model requests through the real discovery/draft routes, checks source evidence and ownership, and verifies that no introduction was sent. It does not load production profiles, use funded wallets or persist test history. Missing credentials, unsupported outputs and inference failures exit nonzero; fixture success cannot be mistaken for live success. It is a functional acceptance check, not a model-quality benchmark.
 
-For clarification and SQLite persistence coverage, run `pnpm agent:live:persistence:test` with the same explicit test settings. This separate check makes at most three provider calls using a fictional private sender and public opted-in recipient. It checks authentication, consent, exact evidence, ownership, API re-instantiation on the same temporary database, and history deletion without a quota reset. It removes the temporary database on completion or failure and never accesses the deployed database or chain. The [October 3 acceptance report](reports/signalpass-hosted-agent-live-2026-10-03.md) records the measured results. Passing either command does not enable AI on the public application.
+For clarification and SQLite persistence coverage, run `pnpm agent:live:persistence:test` with the same explicit test settings. It also supports the official TokenRhythm endpoint with `SIGNALPASS_AGENT_PROVIDER=tokenrhythm` and `SIGNALPASS_AGENT_MODEL=deepseek-v4-flash`. This separate check makes at most three provider calls using a fictional private sender and public opted-in recipient. It checks authentication, consent, exact evidence, ownership, API re-instantiation on the same temporary database, and history deletion without a quota reset. It removes the temporary database on completion or failure and never accesses the deployed database or chain. The [October 3 acceptance report](reports/signalpass-hosted-agent-live-2026-10-03.md) records the OpenRouter results. Passing either command does not enable AI on the public application.
+
+### TokenRhythm setup
+
+Use `SIGNALPASS_AGENT_PROVIDER=tokenrhythm`, `SIGNALPASS_AGENT_MODEL=deepseek-v4-flash` and the authorized server-side credential. The default endpoint is `https://tokenrhythm.studio/v1/chat/completions`. The adapter requests one non-streamed strict-schema result, caps output at 2,400 tokens, and rejects incomplete, refused, tool-call or malformed results without retries. It requests `store:false`; this is not a guarantee about provider retention or billing.
+
+For the planned public pilot, the site-wide limit is 200 inference attempts per UTC day, with 20 per account. The application reserves attempts in SQLite before calling the provider, including failed calls. The quota is a request limit, not a financial spending cap. Profiles are included only under the consent and public-matching rules below. See the [TokenRhythm activation report](reports/signalpass-tokenrhythm-2026-10-03.md) for verification and deployment status.
 
 References: [OpenRouter quickstart](https://openrouter.ai/docs/quickstart), [free variants](https://openrouter.ai/docs/guides/routing/model-variants/free), and [provider routing constraints](https://openrouter.ai/docs/guides/routing/provider-selection).
 

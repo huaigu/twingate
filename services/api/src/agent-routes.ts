@@ -74,7 +74,9 @@ function unsupportedDraftClaim(intent: z.infer<typeof introductionIntentSchema>,
   if (quantifiedClaims.some((claim) => !personalSource.includes(claim))) return true
   const credentials = personalText.match(/\b(?:ph\.?d\.?|mba|cfa|certified|licensed|award-winning|ex-google|ex-meta|ex-microsoft|senior engineer|principal engineer|staff engineer)\b/g) ?? []
   if (credentials.some((claim) => !personalSource.includes(claim))) return true
-  const employers = personalText.matchAll(/\b(?:i(?:'m| am)|i (?:work|worked|have worked)|we (?:work|worked))[^.!?;]{0,50}?\b(?:at|for) ([a-z][a-z0-9-]*)/g)
+  // A product built "for first-time users" describes its audience, not an
+  // employer. Require an employment verb or a recognizable role at a company.
+  const employers = personalText.matchAll(/\b(?:(?:i|we) (?:work|worked|have worked|had worked)|i(?:'m| am) (?:(?:currently )?(?:working|employed)|(?:(?:an?|the) )?(?:[a-z][a-z-]* ){0,3}(?:engineer|developer|designer|researcher|manager|founder|co-founder|cofounder|employee|intern|consultant|analyst|architect|scientist|auditor|director|recruiter|ceo|cto|cfo))) (?:at|for) ([a-z][a-z0-9-]*)/g)
   for (const match of employers) if (!personalSource.includes(match[1]!)) return true
   // Completed achievements and past employment are stronger than an offer or
   // interest. Compare exact substantive clauses while allowing a bio fragment
@@ -109,8 +111,8 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
   `)
 
   const day = () => new Date().toISOString().slice(0, 10)
-  const attempts = (owner: string) => Number(store.db.prepare('SELECT attempts FROM agent_usage WHERE day = ? AND owner = ?').get(day(), owner)?.attempts ?? 0)
-  const remaining = (owner: string) => Math.max(0, Math.min(userLimit - attempts(owner), globalLimit - attempts('*')))
+  const attempts = (owner: string, utcDay: string) => Number(store.db.prepare('SELECT attempts FROM agent_usage WHERE day = ? AND owner = ?').get(utcDay, owner)?.attempts ?? 0)
+  const remaining = (owner: string, utcDay = day()) => Math.max(0, Math.min(userLimit - attempts(owner, utcDay), globalLimit - attempts('*', utcDay)))
   const requireModel = () => { if (!model) throw new AgentError('agent_not_configured', 503); return model }
   const prune = (owner: string) => {
     const records = store.db.prepare(`SELECT collection, key, COALESCE(json_extract(value, '$.run.createdAt'), json_extract(value, '$.draft.createdAt')) AS created_at FROM documents WHERE collection IN ('agent_runs', 'agent_drafts') AND json_extract(value, '$.owner') = ? ORDER BY rowid DESC`).all(owner)
@@ -145,7 +147,8 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
     const today = day()
     store.db.prepare('DELETE FROM agent_usage WHERE day < ?').run(today)
     store.db.prepare('DELETE FROM agent_inflight WHERE expires_at <= ?').run(now())
-    if (remaining(owner) <= 0) throw new AgentError('agent_budget_exhausted', 429)
+    // Use one UTC date for both limit checks and the reservation, even at midnight.
+    if (remaining(owner, today) <= 0) throw new AgentError('agent_budget_exhausted', 429)
     const active = Number(store.db.prepare('SELECT count(*) AS n FROM agent_inflight').get()?.n ?? 0)
     const owned = store.db.prepare('SELECT id FROM agent_inflight WHERE owner = ?').get(owner)
     if (owned || active >= maxConcurrent) throw new AgentError('agent_busy', 429)
