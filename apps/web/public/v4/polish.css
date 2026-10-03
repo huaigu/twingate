@@ -106,7 +106,7 @@ dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
   .v4-session-bar .button { min-height: 44px; padding: 10px 13px; font-size: 13px; }
   .agent-actions .button { font-size: 14px; padding: 12px; white-space: normal; }
   .source-actions .button { font-family: var(--sp-sans); font-size: 14px; }
-  .dialog-input, .intro-field textarea, .widget-fields input { font-size: 16px; }
+  .dialog-input, .intro-field textarea, .widget-editor input, .widget-editor select { font-size: 16px; }
   .v4-empty-state { display: flex; flex-direction: column; text-align: center; padding: 24px 20px; gap: 12px; }
   .v4-empty-art { width: 152px; height: 152px; }
   .v4-empty-state h2 { font-size: 26px; }
