@@ -197,9 +197,10 @@
     $('#agent-refine-hint').textContent = `Your original goal stays the same. This answer adds context to a new search (${clarifications.length} of 3 answers used).`;
     renderSelection(); persistResume(); if (focus) focusSection($('#agent-results'));
   }
-  function renderDraft(draft, focus = false) {
+  function renderDraft(draft, focus = false, fromHistory = false) {
     if (!validId(draft.id) || !validHandle(draft.recipientHandle)) throw new Error('Invalid draft');
-    currentDraft = draft; $('#agent-draft-panel').hidden = false; $('#agent-preserved-draft').hidden = true;
+    currentDraft = draft; $('#agent-draft-panel').hidden = false; $('#agent-preserved-draft').hidden = !fromHistory;
+    if (fromHistory) $('#agent-preserved-draft').textContent = 'Saved draft for ' + (text(draft.recipientName) || draft.recipientHandle) + '. Original goal: “' + text(draft.goal) + '”. Opening this draft does not change your current search or selected person. Review it below, or use Prepare introduction for your selected person.';
     $('#draft-heading').textContent = 'A hello to ' + (text(draft.recipientName) || draft.recipientHandle) + '.';
     const fields = $('#agent-draft-fields'); fields.replaceChildren();
     Object.entries(fieldLabels).forEach(([key, label]) => { const field = node('div', 'assistant-draft-field'); field.append(node('h3', '', label), node('p', '', text(draft.intent?.[key]))); fields.append(field); });
@@ -219,7 +220,7 @@
         if (busy) return; clearErrors();
         if (kind === 'goal') { $('#agent-goal').value = text(record.goal); currentDraft = null; $('#agent-draft-panel').hidden = true; renderRun(record, true); return; }
         busy = true; updateControls(); progress('Checking your saved draft…');
-        try { const result = await api.request('/agent/drafts/' + encodeURIComponent(record.id)); renderDraft(result.draft, true); progress('Saved draft ready to review.'); }
+        try { const result = await api.request('/agent/drafts/' + encodeURIComponent(record.id)); renderDraft(result.draft, true, true); progress('Saved draft ready to review.'); }
         catch (error) { showError(error); progress(); }
         finally { busy = false; updateControls(); }
       }, '');

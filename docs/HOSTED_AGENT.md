@@ -59,6 +59,8 @@ pnpm agent:live:test
 
 This command uses two temporary signed identities and fictional approved profiles in an in-memory database. It makes at most two model requests through the real discovery/draft routes, checks source evidence and ownership, and verifies that no introduction was sent. It does not load production profiles, use funded wallets or persist test history. Missing credentials, unsupported outputs and inference failures exit nonzero; fixture success cannot be mistaken for live success. It is a functional acceptance check, not a model-quality benchmark.
 
+For clarification and SQLite persistence coverage, run `pnpm agent:live:persistence:test` with the same explicit test settings. This separate check makes at most three provider calls using a fictional private sender and public opted-in recipient. It checks authentication, consent, exact evidence, ownership, API re-instantiation on the same temporary database, and history deletion without a quota reset. It removes the temporary database on completion or failure and never accesses the deployed database or chain. The [October 3 acceptance report](reports/signalpass-hosted-agent-live-2026-10-03.md) records the measured results. Passing either command does not enable AI on the public application.
+
 References: [OpenRouter quickstart](https://openrouter.ai/docs/quickstart), [free variants](https://openrouter.ai/docs/guides/routing/model-variants/free), and [provider routing constraints](https://openrouter.ai/docs/guides/routing/provider-selection).
 
 ## Data and consent

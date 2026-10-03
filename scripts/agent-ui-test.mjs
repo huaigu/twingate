@@ -546,6 +546,49 @@ try {
     assert.equal(sends(calls).length, 0);
   });
 
+  await scenario('historical draft keeps its recipient explicit without replacing the active search or selection', {
+    extraProfiles: [secondRecipient],
+    drafts: [{ ...makeDraft(), recipientHandle: secondRecipient.handle, recipientName: secondRecipient.displayName, goal: 'Find a reviewer for accessible mobile navigation.' }],
+  }, async ({ page, calls, fixture }) => {
+    await discover(page);
+    await page.locator('.assistant-select-match[data-handle="' + recipient.handle + '"]').click();
+    const editedGoal = goal + ' Prioritize first-time users.';
+    const answer = 'Keep the wallet connection step in focus.';
+    await page.locator('#agent-goal').fill(editedGoal);
+    await page.locator('#agent-refine-answer').fill(answer);
+    await page.locator('#agent-draft-consent').check();
+    const inferenceCount = calls.filter(call => call.path === '/agent/discover' || call.path === '/agent/draft').length;
+    await page.getByRole('button', { name: 'Draft for ' + secondRecipient.displayName, exact: true }).click();
+    await page.locator('#agent-draft-panel').waitFor({ state: 'visible' });
+    const context = page.locator('#agent-preserved-draft');
+    assert.equal(await context.isVisible(), true, 'Opening a historical draft must expose its original context');
+    assert((await context.innerText()).includes('Saved draft for ' + secondRecipient.displayName));
+    assert((await context.innerText()).includes(fixture.drafts[0].goal));
+    assert.match(await context.innerText(), /does not change your current search or selected person/);
+    assert.equal(await page.locator('#agent-goal').inputValue(), editedGoal);
+    assert.equal(await page.locator('#results-goal').innerText(), goal);
+    assert.equal(await page.locator('#agent-refine-answer').inputValue(), answer);
+    assert.equal(await page.locator('.assistant-select-match[data-handle="' + recipient.handle + '"]').getAttribute('aria-pressed'), 'true');
+    assert((await page.locator('#agent-selected-heading').innerText()).includes(recipient.displayName));
+    assert.equal(await page.locator('#agent-draft-consent').isChecked(), true);
+    assert((await page.locator('#draft-heading').innerText()).includes(secondRecipient.displayName));
+    assert.equal(await page.locator('#agent-draft-handoff').getAttribute('href'), '/introductions/new/' + secondRecipient.handle + '?agentDraft=' + draftId);
+    assert.equal(calls.filter(call => call.path === '/agent/discover' || call.path === '/agent/draft').length, inferenceCount, 'Reopening history never starts inference');
+    assert.equal(sends(calls).length, 0);
+    await page.locator('#agent-draft-handoff').click();
+    await page.waitForURL('**/introductions/new/' + secondRecipient.handle + '?agentDraft=' + draftId);
+    await page.waitForFunction(expected => document.querySelector('#intro-field-1')?.value === expected, fixture.drafts[0].intent.whoAmI);
+    // The composer labels recipients by their unique handle; displayName is
+    // separate directory data used by the assistant and public profile cards.
+    assert.equal(await page.locator('.intro-portrait.them h3').innerText(), secondRecipient.handle);
+    assert.equal(await page.evaluate(handle => window.SignalPass.directory.find(person => person.handle === handle)?.displayName, secondRecipient.handle), secondRecipient.displayName);
+    const imported = await page.evaluate(key => JSON.parse(localStorage.getItem(key)).draft, 'signalpass-v4-draft-' + address);
+    assert.equal(imported.recipientHandle, secondRecipient.handle);
+    assert.equal(imported.agentDraftId, draftId);
+    assert.equal(await page.locator('#intro-field-2').inputValue(), fixture.drafts[0].intent.whyYou);
+    assert.equal(sends(calls).length, 0, 'Reviewing the historical draft never sends an introduction');
+  });
+
   await scenario('wallet changes never restore the previous account’s goal or selection', {}, async ({ page, fixture }) => {
     const privateGoal = 'ACCOUNT_A_PRIVATE_GOAL: find a wallet onboarding reviewer for my unannounced idea.';
     await page.locator('#agent-goal').fill(privateGoal);
