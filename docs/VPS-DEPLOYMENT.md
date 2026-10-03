@@ -8,7 +8,7 @@ Initially deployed on 2026-10-02 to the authorized OpenCloudOS 9.2 VPS; status u
 
 - **Settlement:** Monad Mainnet, chain `143`, using [the deployed manifest](../deployments/monad-mainnet.json). Real profile registration, lock, acceptance, decline and full bond refunds passed. Expiry refunds are verified in the local EVM suite only. See [the mainnet deployment report](reports/signalpass-mainnet-deployment-2026-10-03.md) for transaction evidence and pilot terms.
 - **Hosted agent:** TokenRhythm `deepseek-v4-flash` is enabled following operator approval. Limits are 200 inference attempts per site and 20 per account per UTC day. Failed attempts count; restart and history clearing do not reset quota. SignalPass sponsors these requests; limits do not establish a provider cost or monetary cap. See [activation and public acceptance](reports/signalpass-tokenrhythm-2026-10-03.md).
-- **Current release:** `/opt/signalpass/releases/tokenrhythm-20261003`. It retains the existing SQLite data, mainnet contracts, quote signer and assistant frontend. The prior release remains available for recovery.
+- **Current release:** `/opt/signalpass/releases/status-readiness-20261003-v3`. The October 3 status-page update retains the existing API, SQLite data, mainnet contracts, quote signer and hosted-agent configuration. The prior release remains available for recovery. See [readiness deployment evidence](reports/signalpass-submission-readiness-2026-10-03.md).
 - **Public browser journey:** two independently signed-in fictional accounts completed real AI → edited introduction → separate send review → acceptance → explicit contact sharing on the HTTPS site. The [Chromium rehearsal](reports/signalpass-public-journey-2026-10-03.md) used the no-bond option and made no MON transaction; mainnet settlement and the three-call agent/restart check remain separate evidence.
 
 ## Runtime
@@ -32,6 +32,12 @@ Use `systemctl status signalpass-api signalpass-web signalpass-tunnel` for servi
 `signalpass-backup.timer` makes a consistent SQLite backup daily at 03:15 UTC plus up to five minutes of jitter. `/opt/signalpass/backup.py` uses SQLite's online backup API and verifies each copy. Backups are mode 0600 in `/var/lib/signalpass-backups`, retained for 14 days. Run `systemctl start signalpass-backup` before upgrades. An isolated restore and integrity check passed. These backups are on the same VPS; off-host disaster recovery is not configured.
 
 For upgrades, build on a separate machine to avoid memory pressure: Next standalone output with the API rewrite fixed to `http://127.0.0.1:8789`, plus a Node ESM API bundle with Node builtins external. Include Next public/static files. Verify the archive checksum, install into a new release directory, retain the previous release, switch `/opt/signalpass/current`, and restart the API/web services. Never replace the database directory. Schema-changing rollbacks require a compatible database backup.
+
+## Product demo media
+
+Keep the approved demo MP4s, English subtitle files, poster and watch page in `/opt/signalpass/shared/media`. Copy that directory's contents into each new release's `web/apps/web/public/media` **before starting its web process**. The deployed Next production server scans public filenames at startup, so adding a new media filename requires a web-process restart. Media updates do not require an API or tunnel restart.
+
+The watch page source is [docs/demo/index.html](demo/index.html). Its dated media URLs keep video, poster and subtitle versions together. Before switching or restarting the web service, verify the staged page, correct content types, matching file checksums and HTTP byte-range responses for both videos. After activation, check the public page, video ranges, `/api/health` and `/api/ready`. Do not place recording journals, sessions, wallet keys or private runtime data under `public/media`.
 
 ## Verification record
 
