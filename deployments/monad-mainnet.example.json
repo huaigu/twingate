@@ -1,0 +1,11 @@
+{
+  "chainId": 143,
+  "name": "Monad Mainnet",
+  "rpcUrl": "https://rpc.monad.xyz",
+  "walletRpcUrl": "https://rpc.monad.xyz",
+  "explorerUrl": "https://monadvision.com",
+  "registry": "0x0000000000000000000000000000000000000000",
+  "escrow": "0x0000000000000000000000000000000000000000",
+  "receipt": "0x0000000000000000000000000000000000000000",
+  "confirmations": 3
+}

@@ -32,7 +32,7 @@ async function main() {
   console.log('PASS assistant route and its required scripts/styles');
   const chain = await (await get('/api/chain/config')).json();
   if (chain.enabled) {
-    assert(chain.chainId === 10143 || (local && chain.chainId === 31337), 'Unexpected chain: a public demo must not present local EVM as a deployed Monad network.');
+    assert([10143, 143].includes(chain.chainId) || (local && chain.chainId === 31337), 'Unexpected chain: a public demo must not present local EVM as a deployed Monad network.');
     assert(chain.evaluationMode === 'manual' && chain.evaluationFee === '0', 'Expected manual-review chain flow with zero AI evaluation fee.');
     console.log(`PASS configured chain is ${chain.chainId}; contract/RPC validity requires separate chain:preflight`);
   } else console.log('PASS chain is disabled; this deployment is the no-payment flow');

@@ -28,6 +28,7 @@
     "chain:test": "node scripts/chain-test.mjs",
     "chain:verify": "node scripts/chain-test.mjs --browser",
     "chain:preflight": "node scripts/chain-preflight.mjs",
+    "chain:estimate": "node scripts/chain-estimate.mjs",
     "verify:all": "pnpm verify && pnpm chain:verify && pnpm build",
     "motion:verify": "node scripts/motion-verify.mjs",
     "motion:record": "node scripts/motion-verify.mjs --record"

@@ -8,7 +8,7 @@
     return (n / 10n ** 18n).toString() + (fraction ? '.' + fraction : '') + ' ' + (api.chain?.currency || 'MON');
   };
   api.walletTransaction = async transaction => {
-    if (!api.chain?.enabled || ![31337, 10143].includes(api.chain.chainId)) throw new Error('Unsupported settlement network.');
+    if (!api.chain?.enabled || ![31337, 10143, 143].includes(api.chain.chainId)) throw new Error('Unsupported settlement network.');
     if (!window.ethereum?.request) throw new Error('Open SignalPass in a browser with an Ethereum wallet.');
     const provider = window.ethereum;
     const [address] = await provider.request({ method: 'eth_requestAccounts' });
@@ -25,7 +25,19 @@
     }
     if (await provider.request({ method: 'eth_chainId' }) !== chainId) throw new Error('Switch your wallet to ' + api.chain.name + '.');
     const { from, to, data, value } = transaction;
-    return provider.request({ method: 'eth_sendTransaction', params: [{ from, to, data, value }] });
+    let request = { from, to, data, value };
+    if (api.chain.chainId === 143) {
+      // Monad charges the submitted gas limit, including unused gas. Refuse a
+      // failed estimate instead of relying on a wallet's potentially huge fallback.
+      let estimate;
+      try { estimate = await provider.request({ method: 'eth_estimateGas', params: [request] }); }
+      catch { throw new Error('Could not estimate mainnet gas. No transaction was sent. Check your MON balance and refresh the quote before trying again.'); }
+      if (typeof estimate !== 'string' || !/^0x[0-9a-f]+$/i.test(estimate) || BigInt(estimate) <= 0n) throw new Error('Your wallet returned an invalid gas estimate. No transaction was sent. Please retry.');
+      const gas = (BigInt(estimate) * 120n + 99n) / 100n;
+      if (gas > 30_000_000n) throw new Error('The estimated mainnet gas limit exceeds the 30 million safety limit. No transaction was sent. Refresh the quote or try again later.');
+      request = { ...request, gas: '0x' + gas.toString(16) };
+    }
+    return provider.request({ method: 'eth_sendTransaction', params: [request] });
   };
   api.waitWalletReceipt = async hash => {
     for (let i = 0; i < 90; i++) {
@@ -53,11 +65,11 @@
   api.chainReceipt = async record => {
     if (record.settlement !== 'onchain') return;
     const panel = document.createElement('section'); panel.className = 'v4-chain-card'; panel.id = 'chain-receipt';
-    const eyebrow = document.createElement('p'); eyebrow.className = 'v4-chain-eyebrow'; eyebrow.textContent = api.chain.name;
+    const eyebrow = document.createElement('p'); eyebrow.className = 'v4-chain-eyebrow'; eyebrow.textContent = api.chainLabel();
     const title = document.createElement('h2'); title.textContent = record.payment.status === 'refunded' ? 'Your attention bond is back.' : record.payment.status === 'locked' ? 'A hello, backed by a bond.' : 'Review your wallet bond.';
     const facts = document.createElement('dl');
     const add = (label, value) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; facts.append(dt, dd); return dd; };
-    const bondAmount = add('Refundable bond', api.money(record.payment.attentionBond)); add('AI evaluation fee', '0 · manual review'); add('Network gas', 'Paid separately · not refunded');
+    const bondAmount = add('Refundable bond', api.money(record.payment.attentionBond)); add('AI evaluation fee', '0 · manual review'); add('Network gas', (api.chain.chainId === 143 ? 'Real MON · ' : '') + 'Paid separately · not refunded');
     if (record.chain?.expiresAt) add('Response deadline', new Date(record.chain.expiresAt * 1000).toLocaleString());
     const terms = document.createElement('p'); terms.textContent = 'The full bond returns to the sender when the recipient accepts or declines, or when a participant claims it after the deadline. Until the lock is confirmed, this introduction is not delivered.';
     const proof = document.createElement('div'); proof.className = 'v4-chain-proof';
@@ -80,7 +92,7 @@
         if (api.walletBusy || !quote) return;
         api.walletBusy = true;
         try {
-          message.textContent = 'Confirm the bond and network gas in your wallet.';
+          message.textContent = api.chain.chainId === 143 ? 'Confirm the real MON bond and network gas on Monad Mainnet in your wallet.' : 'Confirm the bond and network gas in your wallet.';
           const hash = await api.walletTransaction(quote.transaction);
           fund.dataset.submitted = 'true';
           fund.disabled = true; message.textContent = 'Transaction submitted. Waiting for chain confirmation…';
@@ -117,7 +129,7 @@
     if (api.demo || api.error || !api.chain?.enabled || !api.me || document.body.dataset.page !== 'agent') return;
     const panel = document.createElement('section'); panel.className = 'v4-chain-card v4-chain-settings';
     panel.innerHTML = '<p class="v4-chain-eyebrow"></p><h2>Make your inbox bond-ready.</h2><p>Save your profile first, then sync its approved hash and introduction policy. Each update requires your wallet. Your profile text stays offchain.</p><p id="profile-chain-status" role="status">Checking your profile…</p><div class="v4-chain-actions"><button class="button primary" id="sync-chain-profile" type="button">Review profile sync</button></div>';
-    panel.querySelector('.v4-chain-eyebrow').textContent = api.chain.name;
+    panel.querySelector('.v4-chain-eyebrow').textContent = api.chainLabel();
     document.querySelector('.agent-workspace').append(panel);
     const status = panel.querySelector('#profile-chain-status'), sync = panel.querySelector('#sync-chain-profile');
     const refresh = async () => { try { const state = await api.request('/chain/profile'); status.textContent = state.synced ? 'Profile and policy confirmed on chain. Your inbox can receive bonded introductions.' : state.reason === 'publish_before_registering' ? 'Set your approved profile to public or unlisted before registering.' : 'Your approved profile needs ' + state.transactions.length + ' wallet transaction(s).'; sync.disabled = state.synced || state.reason === 'publish_before_registering'; } catch (error) { status.textContent = error.message; } };
@@ -128,7 +140,7 @@
         if (!plan.transactions.length) { await refresh(); return; }
         const dialog = api.accountDialog(); dialog.replaceChildren();
         const h = document.createElement('h2'); h.textContent = 'Confirm your profile sync';
-        const p = document.createElement('p'); p.textContent = plan.transactions.map(tx => tx.label).join(' → ') + '. No AI fee. Each transaction costs network gas.';
+        const p = document.createElement('p'); p.textContent = plan.transactions.map(tx => tx.label).join(' → ') + '. No AI fee. Each transaction costs network gas' + (api.chain.chainId === 143 ? ' in real MON on Monad Mainnet.' : '.');
         const actions = document.createElement('div'); actions.className = 'dialog-actions';
         const cancel = document.createElement('button'); cancel.className = 'button outline'; cancel.textContent = 'Cancel'; cancel.onclick = () => dialog.close();
         const confirm = document.createElement('button'); confirm.className = 'button primary'; confirm.textContent = 'Continue in wallet'; confirm.id = 'confirm-profile-sync';

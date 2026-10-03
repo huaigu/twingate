@@ -15,6 +15,7 @@ import { DEFAULT_PRICING } from '@signalpass/core'
 import { installAgentRoutes } from './agent-routes.js'
 import type { HostedAgentOptions } from './agent-types.js'
 import { installConnectionRoutes } from './connection-routes.js'
+import { profilePolicyDefaults } from './pilot.js'
 
 const address = z.string().refine((v) => isAddress(v, { strict: false })).transform((v) => v.toLowerCase() as Address)
 const now = () => Math.floor(Date.now() / 1000)
@@ -33,8 +34,9 @@ const submissionSchema = introductionSubmissionSchema.omit({ sender: true }).ext
 })
 const revisionSchema = z.object({ revision: z.number().int().positive() })
 
-export function createApp(options: { databasePath?: string; origin: string; evaluatorUrl?: string; chain?: ChainService; agent?: HostedAgentOptions }) {
+export function createApp(options: { databasePath?: string; origin: string; evaluatorUrl?: string; chain?: ChainService; agent?: HostedAgentOptions; pilotMode?: boolean }) {
   const store = createStore(options.databasePath)
+  const policyDefaults = profilePolicyDefaults(options.pilotMode ?? options.chain?.pilotMode ?? false)
   const auth = createAuth(store.db, options.origin)
   const app = new Hono<{ Variables: { session: Session } }>()
   app.use('*', cors({ origin: options.origin, credentials: true, allowHeaders: ['Content-Type', 'X-SignalPass-CSRF'], allowMethods: ['GET', 'POST', 'OPTIONS'] }))
@@ -91,7 +93,8 @@ export function createApp(options: { databasePath?: string; origin: string; eval
     if (existing && existing.handle !== input.handle) return c.json({ error: 'handle_cannot_change' }, 409)
     const version = hashDocument({ profile: input.profile, interests: input.agent.interests })
     const settings: ProfileSettings = { profile: input.profile, agent: input.agent, sourceLinks: input.sourceLinks, avatar: input.avatar, version }
-    const policy: GatePolicy = { version: (existing?.policyVersion ?? 0) + 1, topics: input.agent.interests, availability: 'open', desiredNextStep: input.profile.meet, baseBond: 2_000_000_000_000_000n, unresolvedLimit: 3, timeoutSeconds: 259200 }
+    const existingPolicy = existing && store.policies.get(existing.handle)
+    const policy: GatePolicy = { version: (existing?.policyVersion ?? 0) + 1, topics: input.agent.interests, availability: 'open', desiredNextStep: input.profile.meet, baseBond: existingPolicy?.baseBond ?? policyDefaults.baseBond, unresolvedLimit: 3, timeoutSeconds: existingPolicy?.timeoutSeconds ?? policyDefaults.timeoutSeconds }
     transaction(store.db, () => {
       store.profiles.set(input.handle, { profileId: existing?.profileId ?? BigInt(store.profiles.size + 1), owner, handle: input.handle, displayName: input.profile.name, building: input.profile.bio, wantsToMeet: input.profile.meet, canOffer: input.profile.offer, availability: 'open', policyVersion: policy.version, policyHash: hashDocument(policy), persona: null, createdAt: existing?.createdAt ?? now() })
       store.policies.set(input.handle, policy); store.settings.set(owner, settings)

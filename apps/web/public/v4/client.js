@@ -11,6 +11,7 @@
   let demo = query.get('demo') === '1';
   try { demo ||= sessionStorage.getItem('signalpass-demo') === '1'; } catch {}
   const api = window.SignalPass = { demo, live: !demo, me: null, directory: [], inbox: [], outbox: [], error: null };
+  api.chainLabel = () => api.chain?.chainId === 143 ? 'Monad Mainnet' + (api.chain.pilotMode ? ' · pilot' : '') + ' · real MON' : api.chain?.local ? 'Local EVM · DEV' : api.chain?.name;
   const escape = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const messages = {
     authentication_required: 'Connect your wallet to continue.',
@@ -180,7 +181,7 @@
     const title = document.createElement('strong'), detail = document.createElement('small');
     const button = document.createElement('button'); button.type = 'button'; button.className = 'button outline'; button.id = 'session-action';
     title.textContent = demo ? 'Sample mode' : api.error ? 'Let’s reconnect.' : api.me ? (api.me.profile?.displayName || api.me.session.address.slice(0, 8)) : 'Your next connection starts here.';
-    detail.textContent = demo ? 'Sample people · no messages or payments' : api.error ? 'Connection unavailable. No new action was sent.' : api.me ? (api.chain?.enabled ? (api.chain.local ? 'Local EVM · DEV' : api.chain.name) + ' · manual review · AI fee 0' : 'Live introductions · no payments') : 'Free wallet sign-in · no payment';
+    detail.textContent = demo ? 'Sample people · no messages or payments' : api.error ? 'Connection unavailable. No new action was sent.' : api.me ? (api.chain?.enabled ? api.chainLabel() + ' · manual review · AI fee 0' : 'Live introductions · no payments') : (api.chain?.enabled && api.chain.chainId === 143 ? 'Free wallet sign-in · mainnet bonds use real MON' : 'Free wallet sign-in · no payment');
     label.append(title, detail); if (api.error) label.classList.add('has-error'); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
     button.textContent = demo ? 'Open live product' : api.me ? 'Sign out' : 'Connect wallet';
     const clearAssistantReturn = () => { try { sessionStorage.removeItem('signalpass-assistant-return'); } catch {} };
@@ -189,7 +190,7 @@
     const slot = document.getElementById('session-slot');
     if (slot) { slot.replaceChildren(bar); slot.setAttribute('aria-busy', 'false'); }
     else (header.closest('.viewport') || header.closest('.hero-page') || header).before(bar);
-    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { if (!demo) el.textContent = api.chain?.enabled ? api.chain.name + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · you approve every message'; });
+    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { if (!demo) el.textContent = api.chain?.enabled ? api.chainLabel() + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · you approve every message'; });
     if (api.live) window.ethereum?.on?.('accountsChanged', async (accounts) => {
       // First-time wallet authorization can emit this event before sign-in.
       // Keep that guest goal intact; a changed authenticated account must clear it.

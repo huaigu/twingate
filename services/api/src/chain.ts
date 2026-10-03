@@ -7,13 +7,14 @@ import {
 import { privateKeyToAccount } from 'viem/accounts'
 import { profileRegistryAbi, introductionEscrowAbi, LOCK_INTRODUCTION_TYPES, escrowDomain, type LockIntroductionMessage, type BuilderProfile, type GatePolicy, type IntroductionState } from '@signalpass/core'
 import { hashDocument, type StoredIntroduction } from './store.js'
+import { profilePolicyDefaults } from './pilot.js'
 
 export class ChainError extends Error {
   constructor(readonly code: string, readonly status = 409) { super(code) }
 }
 const addressSchema = z.string().regex(/^0x[0-9a-fA-F]{40}$/).transform(v => v as Address)
 export const chainConfigSchema = z.object({
-  chainId: z.union([z.literal(31337), z.literal(10143)]),
+  chainId: z.union([z.literal(31337), z.literal(10143), z.literal(143)]),
   rpcUrl: z.string().url(), walletRpcUrl: z.string().url().optional(),
   registry: addressSchema, escrow: addressSchema, receipt: addressSchema,
   name: z.string().min(1).max(80), explorerUrl: z.string().url().optional(),
@@ -29,6 +30,7 @@ export interface ChainAttachment {
   expiresAt?: number; actionTransactionHash?: Hex;
   refund?: { amount: string; transactionHash: Hex; blockNumber: string };
   lastCheckedAt?: number; scanFromBlock?: string;
+  refundScanToBlock?: string; refundPending?: boolean;
 }
 const terminalStates = new Set(['accepted', 'declined', 'expired', 'withdrawn'])
 const chainStates: IntroductionState[] = ['quoted', 'locked', 'evaluating', 'needs_context', 'ready_for_review', 'accepted', 'declined', 'expired', 'withdrawn']
@@ -38,16 +40,18 @@ const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
 export class ChainService {
   readonly client: PublicClient
   private readonly signer
-  constructor(readonly config: ChainConfig, quoteSignerKey: Hex) {
+  constructor(readonly config: ChainConfig, quoteSignerKey: Hex, readonly pilotMode = false) {
     this.client = createPublicClient({ transport: http(config.rpcUrl, { timeout: 8000, retryCount: 0 }), cacheTime: 0 })
     this.signer = privateKeyToAccount(quoteSignerKey)
   }
   publicConfig() {
+    const defaults = profilePolicyDefaults(this.pilotMode)
     return { enabled: true, chainId: this.config.chainId, name: this.config.name,
       currency: this.config.chainId === 31337 ? 'DEV' : 'MON', local: this.config.chainId === 31337,
       registry: this.config.registry, escrow: this.config.escrow, receipt: this.config.receipt,
       walletRpcUrl: this.config.walletRpcUrl, explorerUrl: this.config.explorerUrl,
-      evaluationMode: 'manual', evaluationFee: '0', confirmations: this.config.confirmations }
+      evaluationMode: 'manual', evaluationFee: '0', confirmations: this.config.confirmations,
+      pilotMode: this.pilotMode, newProfileDefaults: { baseBond: defaults.baseBond.toString(), timeoutSeconds: defaults.timeoutSeconds } }
   }
   async ready() {
     if (await this.client.getChainId() !== this.config.chainId) throw new ChainError('wrong_rpc_network', 503)
@@ -103,13 +107,24 @@ export class ChainService {
   quoteSummary(quote: SignedLockQuote) {
     return { evaluationFee: '0', attentionBond: quote.message.attentionBond.toString(), amount: formatEther(quote.message.attentionBond), expiresAt: Number(quote.message.quoteExpiresAt), timeoutSeconds: Number(quote.message.ttl), currency: this.config.chainId === 31337 ? 'DEV' : 'MON', mode: 'manual', payloadHash: quote.message.payloadHash }
   }
+  private async confirmedHead() {
+    // Monad's latest head is proposed. Value is credited only below finality;
+    // configured confirmations add a further delay to that finalized head.
+    const head = this.config.chainId === 31337
+      ? await this.client.getBlockNumber()
+      : (await this.client.getBlock({ blockTag: 'finalized' })).number
+    if (head === null) throw new ChainError('chain_unavailable', 503)
+    const confirmed = head + 1n - BigInt(this.config.confirmations)
+    return confirmed > 0n ? confirmed : 0n
+  }
+  private get logPageSize() { return this.config.chainId === 31337 ? 1000n : 100n }
   private async receipt(hash: Hex) {
     try {
       const receipt = await this.client.getTransactionReceipt({ hash })
       if (receipt.status !== 'success') throw new ChainError('transaction_reverted')
-      const [block, latest] = await Promise.all([this.client.getBlock({ blockNumber: receipt.blockNumber }), this.client.getBlockNumber()])
+      const [block, confirmedHead] = await Promise.all([this.client.getBlock({ blockNumber: receipt.blockNumber }), this.confirmedHead()])
       if (block.hash !== receipt.blockHash) throw new ChainError('transaction_not_canonical')
-      if (latest + 1n < receipt.blockNumber + BigInt(this.config.confirmations)) return null
+      if (receipt.blockNumber > confirmedHead) return null
       return receipt
     } catch (error) {
       if (error instanceof ChainError) throw error
@@ -125,14 +140,20 @@ export class ChainService {
     const expected = this.fundingTransaction(quote)
     if (!same(tx.from, quote.message.sender) || !tx.to || !same(tx.to, this.config.escrow) || tx.input !== expected.data || tx.value !== BigInt(expected.value)) throw new ChainError('transaction_does_not_match_approval')
     const id = keccak256(encodePacked(['address', 'address', 'uint256', 'uint256', 'uint256'], [quote.message.sender, quote.message.recipient, quote.message.recipientProfileId, quote.message.nonce, BigInt(this.config.chainId)]))
+    let expiresAt: bigint | undefined
     const matched = receipt.logs.some(log => {
       if (!same(log.address, this.config.escrow)) return false
-      try { const event = decodeEventLog({ abi: introductionEscrowAbi, data: log.data, topics: log.topics, eventName: 'IntroductionLocked' }); return event.args.id === id && same(event.args.sender, quote.message.sender) && same(event.args.recipient, quote.message.recipient) && event.args.attentionBond === quote.message.attentionBond && event.args.evaluationFee === 0n } catch { return false }
+      try {
+        const event = decodeEventLog({ abi: introductionEscrowAbi, data: log.data, topics: log.topics, eventName: 'IntroductionLocked' })
+        if (event.args.id !== id || !same(event.args.sender, quote.message.sender) || !same(event.args.recipient, quote.message.recipient) || event.args.recipientProfileId !== quote.message.recipientProfileId || event.args.attentionBond !== quote.message.attentionBond || event.args.evaluationFee !== 0n) return false
+        expiresAt = event.args.expiresAt
+        return true
+      } catch { return false }
     })
-    if (!matched) throw new ChainError('lock_event_missing')
-    const record = await this.client.readContract({ address: this.config.escrow, abi: introductionEscrowAbi, functionName: 'getIntroduction', args: [id], blockNumber: receipt.blockNumber })
-    if (record.payloadHash !== quote.message.payloadHash || record.policyHash !== quote.message.policyHash || BigInt(record.policyVersion) !== quote.message.policyVersion) throw new ChainError('chain_payload_mismatch')
-    return { introductionId: id, confirmedBlock: receipt.blockNumber.toString(), expiresAt: Number(record.expiresAt) }
+    if (!matched || expiresAt === undefined) throw new ChainError('lock_event_missing')
+    // Exact successful calldata authenticates the immutable payload/policy;
+    // its escrow event supplies the deadline. Old state may already be pruned.
+    return { introductionId: id, confirmedBlock: receipt.blockNumber.toString(), expiresAt: Number(expiresAt) }
   }
   async sync(intro: StoredIntroduction): Promise<{ chain: ChainAttachment; state: IntroductionState } | null> {
     const current = intro.chain
@@ -152,10 +173,11 @@ export class ChainService {
     if (!verified) {
       const q = current.quote.message
       const expectedId = keccak256(encodePacked(['address', 'address', 'uint256', 'uint256', 'uint256'], [q.sender, q.recipient, q.recipientProfileId, q.nonce, BigInt(this.config.chainId)]))
-      const latest = await this.client.getBlockNumber()
+      const latest = await this.confirmedHead()
       const from = BigInt(scanFromBlock ?? current.quote.issuedBlock)
       if (from <= latest) {
-        const to = from + 999n < latest ? from + 999n : latest
+        const last = from + this.logPageSize - 1n
+        const to = last < latest ? last : latest
         const events = await this.client.getLogs({ address: this.config.escrow, event: parseAbiItem('event IntroductionLocked(bytes32 indexed id,address indexed sender,address indexed recipient,uint256 recipientProfileId,uint256 evaluationFee,uint256 attentionBond,uint64 expiresAt)'), args: { id: expectedId }, fromBlock: from, toBlock: to, strict: true })
         if (events[0]) {
           hash = events[0].transactionHash
@@ -172,8 +194,7 @@ export class ChainService {
       }
       if (!verified) return { chain: { ...current, lockTransactionHash: hash, scanFromBlock, lastCheckedAt: Date.now() }, state: intro.state }
     }
-    const latest = await this.client.getBlockNumber()
-    const confirmedBlock = latest + 1n - BigInt(this.config.confirmations)
+    const confirmedBlock = await this.confirmedHead()
     const record = await this.client.readContract({ address: this.config.escrow, abi: introductionEscrowAbi, functionName: 'getIntroduction', args: [verified.introductionId], blockNumber: confirmedBlock })
     const state = chainStates[record.state]
     if (!state || record.state === 0) throw new ChainError('unknown_chain_state')
@@ -194,21 +215,33 @@ export class ChainService {
       // Public RPCs cap event-query ranges. Search newest blocks first so a
       // refund after a multi-day response period doesn't query the entire TTL.
       const first = BigInt(verified.confirmedBlock)
-      for (let to = confirmedBlock; !refund && to >= first;) {
-        const from = to - 999n > first ? to - 999n : first
+      let to = current.refundScanToBlock === undefined ? confirmedBlock : BigInt(current.refundScanToBlock)
+      if (to > confirmedBlock) to = confirmedBlock
+      // Persist progress between bounded batches, including after API restarts.
+      for (let page = 0; !refund && to >= first && page < 4; page++) {
+        const start = to - this.logPageSize + 1n
+        const from = start > first ? start : first
         const events = await this.client.getLogs({ address: this.config.escrow, event: parseAbiItem('event AttentionBondRefunded(bytes32 indexed id,address indexed to,uint256 amount)'), args: { id: verified.introductionId }, fromBlock: from, toBlock: to, strict: true })
         const found = events.find(log => same(log.args.to, intro.sender) && log.args.amount === current.quote!.message.attentionBond)
         if (found) refund = { amount: found.args.amount, transactionHash: found.transactionHash, blockNumber: found.blockNumber }
         to = from - 1n
       }
-      if (!refund || !(await this.receipt(refund.transactionHash))) throw new ChainError('refund_not_confirmed', 503)
+      if (!refund) {
+        chain.refundScanToBlock = to >= first ? to.toString() : undefined
+        chain.refundPending = true
+        return { chain, state: intro.state === 'quoted' ? 'ready_for_review' : intro.state }
+      }
+      if (!(await this.receipt(refund.transactionHash))) throw new ChainError('refund_not_confirmed', 503)
       chain.refund = { amount: refund.amount.toString(), transactionHash: refund.transactionHash, blockNumber: refund.blockNumber.toString() }
+      chain.refundPending = false
+      chain.refundScanToBlock = undefined
     }
     return { chain, state }
   }
   async prepareAction(intro: StoredIntroduction, actor: Address, action: 'accepted' | 'declined' | 'expired' | 'withdrawn') {
     const synced = await this.sync(intro)
     if (!synced) throw new ChainError('funding_not_confirmed')
+    if (synced.chain.refundPending) throw new ChainError('refund_not_confirmed', 503)
     if (terminalStates.has(synced.state)) throw new ChainError('introduction_already_resolved')
     if (action === 'expired') {
       if ((await this.client.getBlock()).timestamp < BigInt(synced.chain.expiresAt!)) throw new ChainError('not_expired')
@@ -235,10 +268,10 @@ export class ChainService {
     if (!response.ok || (await response.json() as { error?: unknown }).error) throw new ChainError('local_faucet_unavailable', 503)
   }
 }
-export function configuredChain(): ChainService | undefined {
+export function configuredChain(pilotMode = false): ChainService | undefined {
   if (!process.env.SIGNALPASS_CHAIN_CONFIG) return undefined
   const config = chainConfigSchema.parse(JSON.parse(readFileSync(process.env.SIGNALPASS_CHAIN_CONFIG, 'utf8')))
   const raw = process.env.SIGNALPASS_QUOTE_SIGNER_PRIVATE_KEY || (process.env.SIGNALPASS_QUOTE_SIGNER_KEY_FILE ? readFileSync(process.env.SIGNALPASS_QUOTE_SIGNER_KEY_FILE, 'utf8').trim() : '')
   if (!/^0x[0-9a-fA-F]{64}$/.test(raw)) throw new Error('Configure a quote signing key locally; never put it in browser configuration.')
-  return new ChainService(config, raw as Hex)
+  return new ChainService(config, raw as Hex, pilotMode)
 }
