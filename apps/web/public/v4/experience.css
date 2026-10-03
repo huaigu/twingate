@@ -239,8 +239,20 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
  .persona-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
  .persona-options .persona { width: 100%; max-width: 65px; height: auto; aspect-ratio: 1; justify-self: center; }
  .persona-options .persona small { white-space: normal; width: 100%; }
+ .interest-box { height: auto; max-height: none; overflow: visible; }
+ .interest-tag button, .widget-tag button { width: 44px; height: 44px; flex: 0 0 44px; }
+ .interest-box .add-tag, .widget-interests .add-tag { min-height: 44px; }
+ .session-in-header [data-session-state="demo"] .v4-session-copy strong { white-space: normal; text-overflow: clip; }
 }
 @media (max-width: 600px) {
+ .sp-home .hero-layout { grid-template-columns: minmax(0, 1fr); }
+ .sp-home .hero-copy, .sp-home .hero-visual { min-width: 0; max-width: 100%; }
+ .sp-home .hero-actions, .source-actions, .embed-actions { flex-direction: column; align-items: stretch; }
+ .sp-home .hero-actions .button, .source-actions .button, .embed-actions .button { width: 100%; min-width: 0; flex: auto; white-space: normal; }
+ .sp-home .benefits { flex-wrap: wrap; justify-content: flex-start; gap: 12px 18px; }
+ .inbox-heading h1 { font-size: clamp(34px, 10.5vw, 48px); line-height: 1.05; letter-spacing: -1.5px; }
+ .sp-workspace .compose-goals { grid-template-columns: 1fr; }
+ .sp-workspace .compose-goal > span { justify-content: flex-start; padding-inline: 14px; font-size: 14px; }
  .inbox-tabs { flex-direction: column; }
  .inbox-tab { flex: auto; justify-content: space-between; text-align: left; white-space: normal; padding: 10px 12px; }
  .inbox-tab span { width: auto; min-width: 22px; height: 22px; padding-inline: 5px; font-size: 11px; }
