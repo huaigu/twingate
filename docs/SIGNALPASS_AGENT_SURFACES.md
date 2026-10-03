@@ -1,237 +1,89 @@
-# SignalPass Agent Surface 与未来产品形态
-
-> 当前实现（2026-10-01）：默认入口已改为 SignalPass 托管的 `/assistant`。已实现 goal → 公开候选与来源引文 → 私有草稿 → 人工编辑确认；模型密钥只由运营方配置，用户不必安装 OpenClaw/Hermes。已有 OpenAI Responses 与免费模型专用 OpenRouter 适配器；OpenRouter 已用虚构资料和签名会话完成真实推荐与草稿验收，供应商报告费用为零。公开部署和真实社区效果仍待验证，免费供应商的限流与不完整响应也有记录。仅公开、已批准、允许匹配的资料能成为候选；下文私有资料匹配、完整 skills、收件箱 AI 和宿主适配仍属目标设计。详见 [托管实现与验收](HOSTED_AGENT.md)。
-
-这份文档把 SignalPass 从 Web-first 黑客松 Demo 延展到 Agent-first 产品时的边界固定下来。目标不是做一个公开的 AI 分身广场，而是让每个 Builder 拥有一个私有 Personal Agent，帮助他们发现值得认识的人、准备 Introduction，并处理别人发来的请求。
-
-## 核心模型
-
-```text
-Human
-  ├─ owns → Profile
-  ├─ controls → Gate Policy
-  ├─ may choose → 3D Persona
-  └─ authorizes → Personal Agent
-
-Personal Agent
-  ├─ as sender → Intro Coach
-  ├─ as recipient → Gatekeeper
-  └─ through a host → Web / OpenClaw / Hermes / other client
-
-SignalPass Network
-  ├─ Builder discovery
-  ├─ Introduction Card
-  ├─ bilateral evaluation
-  ├─ protected queue
-  ├─ fee + refundable attention bond
-  └─ receipt + consented handoff
-```
+# SignalPass Personal Agent：当前实现与目标能力
 
-### Profile、Persona、Agent 的区别
+> 当前状态：2026-10-03。公开入口为 [SignalPass /assistant](https://signalpass.coderbojack.space/assistant)，由 SignalPass 提供模型和私有工作区。用户不用安装 OpenClaw/Hermes，也不用提供模型密钥。公开站已启用 TokenRhythm `deepseek-v4-flash`；推荐、澄清、私有草稿及实际 API 服务重启后的数据恢复已验收。详见 [托管实现](HOSTED_AGENT.md) 与 [TokenRhythm 验收记录](reports/signalpass-tokenrhythm-2026-10-03.md)。
 
-| 概念 | 是否公开 | 主要用途 | 不应该代表什么 |
-| --- | --- | --- | --- |
-| Profile | 是 | 说明正在做什么、想认识谁、能提供什么、当前是否开放。 | 不是全局信誉分。 |
-| 3D Persona | 可选、通常公开 | 让 Builder 有一个容易记住的视觉门面。 | 不是身份认证、真人证明或用户的替身。 |
-| Personal Agent | 私有 | 读取用户授权的目标和边界，推荐候选人、整理上下文、管理请求。 | 不是可以自由公开行动的第二个用户。 |
-| Gate Policy | 公开摘要 + 版本哈希 | 说明接收者愿意考虑什么、当前可接触状态和希望的下一步。 | 不是平台替用户建立的黑箱评分。 |
+**People worth knowing, with context.** 我们希望每个人都有一个理解自己、帮助发现合适的人并准备第一次交流的 Personal Agent。Monad Builder 是第一批用户；合作、学习和共同兴趣都可以成为介绍的起点。是否公开资料、联系谁、说什么、是否接受，始终由本人决定。
 
-一个人只有一个 Personal Agent；`Intro Coach` 和 `Gatekeeper` 是这个 Agent 在不同方向上的工作角色，不需要用户分别养两个机器人。
+## 当前公开产品
 
-## 当前 MVP 与未来形态
+1. 用户说出目标，可以明确同意让 Agent 使用自己已批准的资料；不勾选也能仅按目标找人。
+2. 系统从公开、已批准、允许匹配且未关闭介绍的资料中筛选候选。Agent 最多推荐三人，给出理由、来源原文和不确定之处。
+3. “Why you two” 卡片把原始目标、对方资料中的依据、经同意使用的本人贡献和一个试探性的下一步放在一起。用户可以回答澄清问题，继续细化同一个目标。
+4. 用户选定对象并批准资料用途后，Agent 起草四问 Introduction Card。草稿留在本人工作区，进入原有编辑器后仍能修改；对外分享资料需要另外确认。
+5. 用户确认发送。钱包保证金流程会展示报价，再由本人签名；链上资金确认后才交付介绍。Agent 没有发送、接受、发布或付款工具。
+6. 收件人自行接受、追问或拒绝。接受后，双方可分别选择向对方分享一个联系或预约渠道；接受本身不会自动公开联系方式。
 
-### 当前黑客松 MVP
+公开站使用 **Monad Mainnet（143）**。两只项目自有钱包已完成资料登记、锁仓、接受/拒绝和保证金全额退款，见 [主网交易证据](reports/signalpass-mainnet-deployment-2026-10-03.md)。超时退款目前只有本地 EVM 验证，尚无主网超时交易。当前钱包流程为人工审核，AI 评估费为零，gas 另付。
 
-```text
-Web
-  → 人手动浏览 Builders
-  → 人选择 Bob
-  → 人填写 Introduction
-  → Agent 评估
-  → Bob 的受保护队列
-  → Bob 接受 / 追问 / 拒绝
-```
+公开 AI 三步和主网结算已经分别验收；另有两只独立签名的虚构账号，在公开 HTTPS 网站的 Chromium 浏览器中完成了 **AI → 人工编辑介绍 → 单独确认发送 → 接受 → 单独确认分享联系方式**，见 [完整公开演练](reports/signalpass-public-journey-2026-10-03.md)。这次串联选择无保证金路径，没有 MON 交易；主网结算是独立验收。虚构账号不代表真实社区用户、推荐质量或合作成果。
 
-这条路径用 Alice/Bob 和 mock 或 Hunyuan evaluator 验证产品机制。它不需要 OpenClaw 或 Hermes，也不应该因为没有 Agent 宿主就无法演示。
+## Profile、Persona 与 Agent
 
-### 黑客松的 Agent-first 增量
+| 概念 | 当前含义 | 边界 |
+| --- | --- | --- |
+| Profile | 本人批准的背景、兴趣、想认识的人和可提供的帮助；支持 Public / Unlisted / Private。 | 资料为用户自述，不是已核验的身份、经历或信誉分。 |
+| Personal Agent | 账号独立的目标、推荐记录与私有草稿，通过共享托管服务执行。 | “每人一个 Agent”不要求每人运行独立进程；当前没有长期自主记忆或后台行动。 |
+| Gate Policy | 可接触状态和介绍条款，钱包路径使用批准的版本哈希。 | 当前由人审阅请求；收件箱 AI 尚未接入。 |
+| 3D Persona | 未来可选的视觉呈现。 | 生成能力尚未接入；不是身份认证、真人证明或信誉。Hunyuan 保持未配置。 |
 
-```text
-Personal Agent
-  → 读取用户目标
-  → 从公开 Profile 生成候选列表
-  → 解释“为什么推荐这个人”
-  → 等待用户确认
-  → 起草 Introduction
-  → 等待用户确认费用与发送
-```
+未来同一 Personal Agent 可以在发起时担当 Intro Coach，在收件时担当 Gatekeeper。收件侧摘要与建议仍是扩展目标，不能当作当前双边 Agent 已经完成对话。
 
-Agent 辅助发现改变的是“怎么找到 Bob”，不改变“谁可以决定发送”和“谁可以决定接受”。候选推荐可以自动化，关系建立不能自动化。
+## 推荐实现与证据边界
 
-### 生产形态
+当前代码直接编排筛选、模型生成和校验，不依赖 LangGraph，也没有声称实现全网语义搜索：
 
-```text
-Web / OpenClaw / Hermes / other host
-  → provider-neutral SignalPass skills
-  → SignalPass API and state machine
-  → recipient's Personal Agent
-  → human consent
-  → Monad settlement + receipt
-  → private introduction handoff
-```
+1. 读取已批准的公开资料，检查 matching 授权、可接触状态并排除本人。
+2. 按原始目标和澄清答案中的关键词排序，最多向模型提供 40 份候选资料。
+3. 模型从这些候选中返回 0–3 人，包含理由、疑点和精确来源引文；无合适对象可以返回空结果。没有合格候选时不调用模型、不消耗推理额度。
+4. 服务端检查候选身份、引文原文、当前资料版本和权限。澄清最多三次，保留原始目标。
+5. 起草前重新检查资料用途授权。可识别的无依据熟识关系、职业经历等表述有保守拦截，但这不是全面事实核验，用户仍必须审阅。
 
-OpenClaw 和 Hermes 是客户端入口。它们可以承载 Personal Agent，也可以只作为调用工具的宿主；SignalPass 不把自己的 Profile、Introduction、Gate Policy 和资金规则复制到每个宿主里。
+候选引文来自对方公开资料，不代表第三方核验；兴趣相同也不证明专业能力或双方有意建立关系。GitHub/其他导入链接仍是用户提供的上下文，没有完成来源核验。Nansen 信号、私有资料匹配和自动外部抓取不在当前托管推荐流程中。
 
-## Provider-neutral skills
+## 数据与费用
 
-黑客松先定义能力和权限，再写具体宿主的安装格式。下面的名字是产品能力名，不假设 OpenClaw 或 Hermes 的具体 SDK。
+- **资料用途分开确认。** Agent 使用本人资料，不等于可以把资料发给另一个人。模型只得到目标及最小批准字段；钱包地址、导入链接、私有原文、收件箱内容和联系方式不进入托管推荐/起草输入。
+- **候选只来自公开匹配池。** Unlisted 资料持链接可见，但不进入 Agent 候选池；Private 资料同样不进入候选池。私人资料经本人同意，可以作为本人发起请求时的背景。
+- **账号隔离。** 目标、推荐和草稿通过签名会话与参与者权限隔离；SQLite 没有应用层静态加密，也不提供端到端加密聊天。来源引文和模型解释不应被描述为身份认证。
+- **托管 AI 由 SignalPass 覆盖。** 当前每账号每 UTC 日最多 20 次、全站 200 次推理尝试，失败也计数；清空历史或服务重启不重置额度。这是请求次数限制，不是金额预算，也不代表 TokenRhythm 供应商费用为零。
+- **钱包保证金独立。** 当前人工审核的 AI 评估费为零，保证金可退，gas 另付。真正的发起人付费评估尚未接通；未来收费必须先展示用途、金额和何时赚取该费用。评估前超时应退回未赚取的费用与保证金，AI 不能没收资金。
 
-| Skill | 作用 | 权限 | 是否需要人确认 |
-| --- | --- | --- | --- |
-| `discover-builders` | 根据用户目标和公开 Profile 返回候选 Builder、匹配理由和 Profile 链接。 | 只读 | 发送前仍需确认候选人。 |
-| `read-profile` | 读取某个 Builder 的公开 Profile、可接触状态和 Gate Policy 摘要。 | 只读 | 否。 |
-| `draft-introduction` | 根据四个问题生成或改写 Introduction Card。 | 读用户输入、写草稿 | 发送前必须确认正文。 |
-| `quote-introduction` | 计算 Evaluation Fee、Attention Bond、过期时间和报价解释。 | 只读 | 锁定前必须确认金额。 |
-| `submit-introduction` | 提交已确认的 Introduction，并触发评估。 | 改变关系和资金状态 | 必须确认。 |
-| `review-introduction` | 展示共同点、缺失上下文、建议问题和 Gatekeeper recommendation。 | 读取用户收到的摘要 | 接受前必须确认。 |
-| `manage-introductions` | 查看自己的发送记录和接收队列，支持撤回、接受、追问或拒绝。 | 读取；部分动作会改状态 | 所有关系状态动作必须确认。 |
-| `open-private-introduction` | 在双方同意后打开私密 handoff，并显示下一步。 | 读取已授权的私密上下文 | 必须确认进入私密空间。 |
+API、配额、草稿时限、删除边界和部署设置以 [HOSTED_AGENT.md](HOSTED_AGENT.md) 为准。
 
-每个 skill 返回的数据都要带上：
+## Provider-neutral 能力设计（未来宿主适配）
 
-- `source_scope`：使用了哪些公开 Profile、用户输入或已同意的 Verified Context。
-- `confidence`：Agent 的判断强度，不是人的信誉分。
-- `status`：`suggested`、`awaiting_confirmation` 或 `confirmed`。
-- `next_action`：用户现在可以做什么，不能把建议伪装成已经执行。
+下表是可复用能力的设计名称，不是已经发布的安装包或当前 API 返回格式。当前 Web 入口通过已实现的 API 调用推荐、澄清、草稿、介绍和联系方式功能；OpenClaw/Hermes 适配仍未交付。
 
-## Agent 辅助发现的用户体验
+| 能力名 | 作用 | 确认边界 |
+| --- | --- | --- |
+| `discover-builders` | 按用户目标返回候选人、理由和资料来源。 | 推荐不能自动发起介绍。保留此设计名，不限制未来用户必须是 Builder。 |
+| `read-profile` | 读取授权范围内的 Profile、可接触状态与条款。 | 只读，不能扩大资料可见范围。 |
+| `draft-introduction` | 根据批准的目标和资料准备 Introduction Card。 | 使用个人资料及发送正文分别确认。 |
+| `quote-introduction` | 展示评估费、保证金、有效期和退款规则。 | 锁定前由本人确认金额。 |
+| `submit-introduction` | 提交本人已确认的介绍。 | 必须显式确认；钱包签名继续走受控流程。 |
+| `review-introduction` | 未来收件 AI 展示共同点、缺失上下文和建议问题。 | 建议不能替收件人接受或拒绝。 |
+| `manage-introductions` | 查询本人介绍，或准备撤回、追问与决定。 | 所有关系和资金状态动作必须确认。 |
+| `open-private-introduction` | 打开已授权的介绍与后续联系入口。 | 联系渠道必须单独批准分享，不能代对方发布。 |
 
-### 1. 一次性设置
+未来适配器应返回使用的来源范围、`suggested / awaiting_confirmation / confirmed` 状态及下一步，让建议和已执行动作始终可分辨；如果返回 confidence，它表示建议的不确定性，不是人的信誉分。宿主安装格式和 API 需要届时按官方能力验证。
 
-用户创建 Profile，填写：
+适配器只调用 SignalPass 的能力，不复制核心状态机、Profile、Gate Policy 和资金规则。不得借宿主权限绕过确认、自动群发或伪造真人回应。用户的授权上下文和外部动作应能回到具体介绍及确认记录。
 
-- 我正在构建什么
-- 我希望认识什么样的人
-- 我能提供什么
-- 我目前是否开放
-- 哪些信息可以被 Agent 使用
-- 哪些动作永远需要确认
+## 当前验收与下一步
 
-用户可以生成 3D Persona，但没有 Persona 也可以完整使用 SignalPass。
+| 项目 | 已有证据与剩余边界 |
+| --- | --- |
+| 公开推荐、澄清、私有草稿 | TokenRhythm 三次公网调用通过；精确引文、原始目标保留、资料授权和跨账号隔离已检查。使用的是明确标注的虚构资料。 |
+| 实际 API 服务重启 | 同一签名会话、历史、草稿和已消耗额度恢复；不是仅测试进程内数据库重新打开。 |
+| 主网钱包流程 | 登记、锁仓、接受/拒绝和全额退款有交易记录。超时仅本地验证。 |
+| 介绍与联系分享 | 完整公开 Chromium 演练通过：真实 AI、编辑后的准确正文交付、收件人接受、双方单独批准分享联系方式，刷新后状态和渠道保留。使用虚构账号与无保证金路径，不是串联主网演练。 |
+| 社区价值 | 还需真实参与者批准资料并自愿参与，观察推荐是否有用、正文是否需事实修正、接受后是否继续交流。合成验收不是用户增长数据。 |
 
-### 2. Agent 给出候选，而不是自动联系
+演示流程和首批社区方案见 [HACKATHON_PRODUCT_DEMO.md](HACKATHON_PRODUCT_DEMO.md)。不需要先接 OpenClaw/Hermes，也不需要开启 Hunyuan，才能验证这条主线。
 
-用户可以问：
+## 保留的扩展方向
 
-> 帮我找正在做 Monad 开发者工具，并且愿意聊基础设施合作的人。
-
-Agent 返回少量候选，每个候选至少解释：
-
-- 共同的构建主题
-- 对方公开的想认识对象
-- 这次联系可以提供什么
-- 哪些信息还不确定
-
-它不能直接发送 Introduction，也不能因为“匹配度高”就绕过用户。
-
-### 3. Agent 起草 Introduction
-
-用户确认候选人后，Agent 根据四个问题起草卡片。用户看到原文、修改建议和缺失上下文；系统展示 Evaluation Fee 与 Attention Bond，直到用户确认才锁定。
-
-### 4. 对方 Agent 处理请求
-
-Recipient 的 Personal Agent 按照用户的 Gate Policy 生成摘要：为什么可能相关、对方能提供什么、是否需要一条补充问题。Agent 不能接受关系，也不能决定罚没 bond。
-
-### 5. 人决定后续
-
-Recipient 可以接受、要求补充上下文或拒绝。接受后才允许进入 private introduction handoff；在此之前，双方 Agent 只能处理受限上下文。
-
-## OpenClaw / Hermes 适配原则
-
-1. **宿主可替换。** Web、OpenClaw、Hermes 调用同一组能力，不把核心状态机复制到宿主侧。
-2. **权限最小化。** `discover-builders` 和 `read-profile` 默认只读；`submit`、`accept`、`decline`、`open-private-introduction` 是显式确认动作。
-3. **用户拥有上下文。** Personal Agent 使用的目标、边界、记忆和披露权限属于用户，可查看、修改和撤回。
-4. **动作可追踪。** 每个外部宿主的调用都要能回到一个 Introduction、一个用户确认和一个可复核 Receipt。
-5. **不做公开自动代理。** 不允许 Agent 自动 Feed 发帖、批量私信、无限点赞或伪造真人回应。
-6. **明确 AI 身份。** Agent 生成的摘要和建议必须标明来源和“recommendation, not decision”。
-
-适配器的安装方式、宿主 API 和权限声明需要分别根据 OpenClaw、Hermes 的官方能力验证；本文件只固定 SignalPass 的产品和安全边界。
-
-## 黑客松验收标准
-
-黑客松可以把目标收敛为下面 6 个可演示结果：
-
-1. Alice 能用 Personal Agent 请求“帮我找合适的 Monad Builder”。
-2. Agent 返回 Bob 和可解释的推荐理由，不自动发送。
-3. Alice 确认后，Agent 生成四问 Introduction Card 和透明报价。
-4. Alice 确认发送后，Intro Coach 与 Bob 的 Gatekeeper 返回双方摘要。
-5. Bob 通过 Web 或 Agent 宿主看到受保护请求，并明确选择接受、追问或拒绝。
-6. 应用展示状态、费用/Bond 结果和 Receipt；任何尚未实现的 private handoff、真实链上结算或宿主深度集成都明确标注为下一阶段。
-
-## 已确认的扩展方向（2026-09-13）
-
-### Vision 不限于 Builder
-
-SignalPass 的 Vision 是 **People worth knowing, with context.** Builder 只是本次黑客松最容易验证的示例人群，不是产品的永久边界。用户可以因为合作、交流、学习或共同兴趣而发现另一个人。
-
-Discovery 的输入使用自然语言，并可选一个轻量目标：`聊聊 / 交流`、`一起做事`、`学习 / 请教`。三种目标仍然共享同一个 Introduction 模型，只改变 Agent 的提示、解释和建议下一步。
-
-### Profile visibility 与 Agent matching 分离
-
-用户可以分别控制：
-
-```text
-Profile visibility: Public / Limited / Private
-Allow Agent matching: On / Off
-```
-
-Private Profile 只要打开 Agent matching，就可以参与服务器侧的私有兴趣比较。匹配结果默认只返回抽象后的共同主题；只有在双方进一步同意后，才揭示名字、Persona 或更多 Profile 内容。私有兴趣不能转化为公开信誉分。
-
-### Widget 是引流名片，不是完整 Profile
-
-用户批准 Profile 后，可以生成一个可嵌入个人网站、项目页或社交主页的轻量 Widget。Widget 只展示：
-
-- 3D Persona（可选）
-- 名字和一句个人介绍
-- 3–5 个公开兴趣标签
-- 一个引流 CTA，例如 `了解我` 或 `通过 SignalPass 认识我`
-
-Widget 的 CTA 打开 SignalPass 的 Public Profile，由访问者自己决定是否发起 Introduction。私有兴趣、Agent memory、Gate Policy 细节和钱包信息都不进入 Widget。
-
-Widget 使用版本化的公开 Profile snapshot；更新会生成新版本，用户可以撤回旧版本。Profile synthesis 和 Widget 生成可以由官方 Personal Agent 完成，也可以由用户自己的 Agent 通过一次性导入 URL 推送草稿，但发布前必须由用户批准。
-
-### Matching workflow 的真实实现边界
-
-黑客松使用 LangGraph（或等价的显式 workflow 编排）连接以下节点：
-
-```text
-load_profiles
-  → normalize_profile_fields
-  → extract_interests_and_goals
-  → retrieve_candidates
-  → score_similarity_and_complementarity
-  → explain_match
-  → await_human_confirmation
-```
-
-匹配器使用透明的硬条件 + 软评分：matching 授权、可接触状态和屏蔽规则是硬条件；兴趣相似、目标对齐、能力互补和 availability fit 用于排序与解释。前台展示理由，不展示单一匹配分数。
-
-黑客松数据源优先使用 GitHub 和用户提供的公开链接，同时保留 Alice/Bob fixture。所有未完成 OAuth 或 signed challenge 的来源都标记为 `user-provided / not verified`，只作为 Profile 上下文，不作为身份或信誉证明。
-
-### 收费边界
-
-```text
-官方托管 Personal Agent 生成 Profile / Widget
-  → Profile synthesis fee（黑客松可展示但不收取）
-
-用户自己的 OpenClaw / Hermes Agent
-  → 自己承担模型成本，SignalPass 不收托管推理费
-
-Agent-assisted discovery
-  → 黑客松阶段免费
-
-正式发起 Introduction
-  → Evaluation Fee + Attention Bond
-```
-
-任何收费都必须在动作前展示用途和金额，且不能暗示付费会获得更高信誉或优先匹配。
+- **私人资料匹配：** 未来可在用户明确授权下，仅返回抽象共同点，再由双方决定是否透露身份。当前尚未实现，不能因 matching 开关打开就让 Private/Unlisted 资料成为候选。
+- **Profile 与 Widget 自动生成：** 现有资料审阅和 Widget 是基础；对话式资料整理、一次性导入 URL、版本化发布/撤回和自动生成 3D Persona 属于后续设计。发布仍需本人批准，私有记忆和钱包信息不能进入公开 Widget。
+- **收件侧与后续助手：** 可以未来增加请求摘要、建议问题和经授权的后续安排；不能代人同意关系、自动发送或自行决定资金结果。
+- **更多接入：** 嵌入式钱包、实时 Envio 索引、Nansen 核验和外部宿主仍待集成与单独验收。
