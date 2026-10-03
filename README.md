@@ -2,17 +2,19 @@
 
 **People worth knowing, with context.**
 
-SignalPass helps you find someone worth meeting, understand why you might connect, and prepare a thoughtful introduction. Your Personal Agent helps with discovery and writing; you decide what to share and when to send. Monad builders are our first community, with a broader vision of personal agents helping people connect around shared interests and complementary goals.
+SignalPass is an **AI introduction assistant** for communities. Tell it who you want to meet or what you need help with. Your Personal Agent suggests relevant people, shows the profile quotes behind each suggestion, and helps you write a thoughtful first message. You review what is sent; the other person decides whether to continue.
+
+Monad builders are our first community, with a broader vision of personal agents helping people connect around shared interests and complementary goals.
 
 [Open SignalPass](https://signalpass.coderbojack.space/) · [Try your Personal Agent](https://signalpass.coderbojack.space/assistant?demo=0) · [Explore the sample](https://signalpass.coderbojack.space/discover?demo=1)
 
 ## Demo
 
-[![Watch SignalPass in action](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.jpg)](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html)
+[![Watch SignalPass in action](https://signalpass.coderbojack.space/media/signalpass-demo-20261003-v2.jpg)](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html)
 
-[Watch the two-person demo](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html) · [Watch the product pitch](https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261003.mp4)
+[Watch the two-person demo](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html) · [Watch the product pitch](https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261003-v2.mp4)
 
-Follow Alice and Bob from a goal to an introduction they both choose. The films use edited recordings from the production app, with fictional participants, real AI, English subtitles and original music. The introduction uses no bond; the separate Monad segment shows verified mainnet test transactions.
+Alice needs feedback on a wallet prototype. Bob offers usability reviews. Follow their introduction in a **2:56 narrated product demo**, or watch the **1:51 product pitch** for the idea and why it matters. The films use edited production recordings, fictional participants, real AI responses, English narration and subtitles, and original music. The introduction uses no bond; the separate Monad segment shows verified mainnet test transactions.
 
 - **Live product:** [start an assisted introduction](https://signalpass.coderbojack.space/assistant?demo=0). Live matching requires people to approve their profiles, make them public and opt into matching. Use **Send without a bond** for a first complete journey.
 - **Sample walkthrough:** [explore fictional people](https://signalpass.coderbojack.space/discover?demo=1) without a wallet. This mode is explicitly illustrative: it uses no live AI, sends no external introduction and makes no payment. Open the live link above to exit sample mode.
