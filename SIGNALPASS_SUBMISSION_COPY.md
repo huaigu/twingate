@@ -64,7 +64,7 @@ The hosted pilot uses TokenRhythm `deepseek-v4-flash`. SignalPass covers inferen
 
 ## Portal fields saved — October 3, 2026
 
-The [submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md) tracks remaining work. The primary track is Social, Attention & Culture; unsupported Envio, Dynamic and Hunyuan bounty selections were removed. The entry remains a saved draft, with the owner's two video links outstanding. Source repository access must also be arranged for judges: the repository is currently private.
+The [submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md) tracks remaining work. The primary track is Social, Attention & Culture; unsupported Envio, Dynamic and Hunyuan bounty selections were removed. The entry remains a saved draft, with the owner's two video links outstanding. The repository remains private at the owner's direction. An invitation to the organizer's stated address was sent on October 3 and is awaiting MonadMetropolis's acceptance. The form permits private sharing, but Rules v3.0 sections 4.1 and 7.2 require public source; eligibility through private sharing needs organizer clarification. The October 3 progress update records this blocker, completed work and ordered next steps. Saving progress is not final submission.
 
 ### Go-to-market and user acquisition
 
@@ -98,7 +98,7 @@ Public browser rehearsal (fictional accounts, no bond): https://github.com/huaig
 
 Separate mainnet transactions and refunds: https://github.com/huaigu/twingate/blob/main/docs/reports/signalpass-mainnet-deployment-2026-10-03.md
 
-Repository evidence links currently require access because the source repository is private. Judge source access must be arranged before final submission. These mainnet transaction links are publicly accessible:
+Repository evidence links require access because the source repository is private. An invitation to metropolis@hackathon.monad.xyz (GitHub: MonadMetropolis) was sent on October 3 and is awaiting acceptance. The submission form permits this sharing route, but Rules v3.0 sections 4.1 and 7.2 require public source. Organizer clarification is needed before relying on private access for eligibility; the repository remains private pending resolution. These mainnet transaction links are publicly accessible:
 
 - Accepted introduction lock: https://monadvision.com/tx/0x3f64e633da6c0bff6880703bf8e228419b39125f3fd14747bd048031c45850f6
 - Acceptance refund: https://monadvision.com/tx/0xe7c23bc70532bafe2bc2d9ef14b465a73214358a129626a0a40e1b6bb05ab00a
