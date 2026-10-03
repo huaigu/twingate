@@ -4,7 +4,7 @@ import { decodeFunctionData, verifyTypedData, type Hex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { escrowDomain, introductionEscrowAbi, LOCK_INTRODUCTION_TYPES, type BuilderProfile, type GatePolicy } from '@signalpass/core'
 import { createApp } from './app.js'
-import { ChainService } from './chain.js'
+import { ChainError, ChainService, chainConfigSchema, type ChainConfig } from './chain.js'
 import { declineKey, type StoredIntroduction } from './store.js'
 
 const origin = 'http://localhost:3004'
@@ -17,8 +17,8 @@ const profile = (handle: string) => ({ handle, profile: { name: handle, bio: 'Bu
 class QuoteChain extends ChainService {
   timestamp = 1_800_000_000n
   signatures = 0
-  constructor() {
-    super({ chainId: 31337, rpcUrl: 'http://127.0.0.1:1', registry: '0x1111111111111111111111111111111111111111', escrow: '0x2222222222222222222222222222222222222222', receipt: '0x3333333333333333333333333333333333333333', name: 'Test observations', confirmations: 1, localTtlSeconds: 60 }, key)
+  constructor(chainId: ChainConfig['chainId'] = 31337, pilotMode = false) {
+    super({ chainId, rpcUrl: 'http://127.0.0.1:1', registry: '0x1111111111111111111111111111111111111111', escrow: '0x2222222222222222222222222222222222222222', receipt: '0x3333333333333333333333333333333333333333', name: 'Test observations', confirmations: 1, localTtlSeconds: 60 }, key, pilotMode)
     Object.defineProperty(this, 'client', { value: {
       readContract: async ({ functionName }: { functionName: string }) => functionName === 'unresolvedLimitFor' ? 3n : 0n,
       getBlock: async () => ({ timestamp: this.timestamp, number: 1n }),
@@ -35,8 +35,8 @@ class QuoteChain extends ChainService {
   override async sync(_intro: StoredIntroduction) { return null }
 }
 
-async function harness() {
-  const chain = new QuoteChain(), api = createApp({ origin, chain })
+async function harness(chainId: ChainConfig['chainId'] = 31337, pilotMode = false) {
+  const chain = new QuoteChain(chainId, pilotMode), api = createApp({ origin, chain })
   type Identity = { cookie: string; csrf: string }
   const request = async (identity: Identity | null, path: string, body?: unknown) => {
     const response = await api.app.request(path, { method: body === undefined ? 'GET' : 'POST', headers: { origin, 'content-type': 'application/json', ...(identity ? { cookie: identity.cookie, 'x-signalpass-csrf': identity.csrf } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
@@ -44,7 +44,7 @@ async function harness() {
   }
   const identities: Identity[] = []
   for (const [index, account] of accounts.entries()) {
-    const challenge = await request(null, '/auth/challenge', { address: account.address, chainId: 31337 })
+    const challenge = await request(null, '/auth/challenge', { address: account.address, chainId })
     const signature = await account.signMessage({ message: challenge.data.message })
     const login = await request(null, '/auth/verify', { nonce: challenge.data.nonce, signature })
     const identity = { cookie: login.cookie, csrf: login.data.session.csrf }; identities.push(identity)
@@ -117,5 +117,32 @@ test('a saved unfunded draft cannot get a fresh signature after the sender reach
     assert.equal(result.data.error, 'introduction_limit_reached')
     assert.equal(h.chain.signatures, 0)
     assert.equal(h.api.store.introductions.get(id)!.chain, undefined)
+  } finally { h.api.close() }
+})
+
+test('mainnet pilot produces a zero-fee low-bond signature bound to chain 143 and the recipient deadline', async () => {
+  const h = await harness(143, true)
+  try {
+    assert.equal(chainConfigSchema.parse(h.chain.config).chainId, 143)
+    assert.equal(chainConfigSchema.safeParse({ ...h.chain.config, chainId: 1 }).success, false)
+    const config = await h.request(null, '/chain/config')
+    assert.equal(config.data.currency, 'MON')
+    assert.equal(config.data.local, false)
+    assert.equal(config.data.pilotMode, true)
+    assert.deepEqual(config.data.newProfileDefaults, { baseBond: '100000000000000', timeoutSeconds: 600 })
+    const id = await h.draft()
+    const funding = await h.request(h.sender, `/introductions/${id}/funding-quote`, {})
+    assert.equal(funding.status, 200)
+    assert.equal(funding.data.summary.evaluationFee, '0')
+    assert.equal(funding.data.summary.amount, '0.000075')
+    assert.equal(funding.data.summary.timeoutSeconds, 600)
+    assert.equal(funding.data.transaction.chainId, '0x8f')
+    assert.equal(BigInt(funding.data.transaction.value), 75_000_000_000_000n)
+    const signed = h.api.store.introductions.get(id)!.chain!.quote!
+    const verification = { address: privateKeyToAccount(key).address, types: LOCK_INTRODUCTION_TYPES, primaryType: 'LockIntroduction' as const, message: signed.message, signature: signed.signature }
+    assert(await verifyTypedData({ ...verification, domain: escrowDomain(143, h.chain.config.escrow) }))
+    assert.equal(await verifyTypedData({ ...verification, domain: escrowDomain(10143, h.chain.config.escrow) }), false)
+    // A loopback RPC must not accidentally grant access to anvil methods on mainnet.
+    await assert.rejects(h.chain.faucet(accounts[0]!.address), (error) => error instanceof ChainError && error.code === 'local_faucet_only')
   } finally { h.api.close() }
 })

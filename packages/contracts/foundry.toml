@@ -16,3 +16,4 @@ bracket_spacing = false
 
 [rpc_endpoints]
 monad_testnet = "https://testnet-rpc.monad.xyz"
+monad_mainnet = "https://rpc.monad.xyz"

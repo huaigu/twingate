@@ -5,10 +5,13 @@ import { configuredChain } from './chain.js'
 import { configuredHostedAgent } from './agent-provider.js'
 import { runtimeConfig } from './runtime.js'
 import { createLifecycle } from './lifecycle.js'
+import { configuredPilotMode } from './pilot.js'
 
 const config = runtimeConfig(process.env, fileURLToPath(new URL('../../../.data/signalpass.sqlite', import.meta.url)))
+const pilotMode = configuredPilotMode()
 const api = createApp({
-  chain: configuredChain(),
+  chain: configuredChain(pilotMode),
+  pilotMode,
   databasePath: config.databasePath,
   origin: config.origin,
   evaluatorUrl: process.env.EVALUATOR_URL || undefined,

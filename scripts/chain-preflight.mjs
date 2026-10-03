@@ -5,7 +5,7 @@ try {
   const path = process.argv[2] || process.env.SIGNALPASS_CHAIN_CONFIG;
   if (!path) throw new Error('Provide a deployment manifest path: pnpm chain:preflight .data/local-chain/chain.json');
   const config = JSON.parse(readFileSync(path, 'utf8'));
-  if (![31337, 10143].includes(config.chainId)) throw new Error('Only Local EVM 31337 and Monad testnet 10143 are supported.');
+  if (![31337, 10143, 143].includes(config.chainId)) throw new Error('Only Local EVM 31337, Monad testnet 10143 and Monad mainnet 143 are supported.');
   for (const name of ['registry', 'escrow', 'receipt']) if (!viem.isAddress(config[name]) || config[name] === viem.zeroAddress) throw new Error('Set a deployed address for ' + name + '.');
   if (!Number.isInteger(config.confirmations) || config.confirmations < 1 || config.confirmations > 20) throw new Error('Set confirmations between 1 and 20.');
   const client = viem.createPublicClient({ transport: viem.http(config.rpcUrl, { timeout: 10000, retryCount: 0 }), cacheTime: 0 });

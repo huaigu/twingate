@@ -50,7 +50,7 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 
 ## 🏗️ Architecture Stack
 
-- **Settlement networks**: local EVM (`31337`) and Monad Testnet (`10143`) only. The current verified deployment is local; public testnet deployment is pending.
+- **Settlement networks**: local EVM (`31337`), Monad Testnet (`10143`), and opt-in Monad Mainnet (`143`). Public deployment is pending; see [the mainnet pilot plan](docs/MONAD_MAINNET_PILOT.md) for pricing, funding and verification.
 - **Smart Contracts**: Solidity 0.8.24 (Foundry)
   - `ProfileRegistry.sol`: builder profile, availability, and versioned gate-policy hashes.
   - `IntroductionEscrow.sol`: evaluation fee, attention bond, unresolved limits, timeouts, resolution.
@@ -153,7 +153,7 @@ forge script script/Deploy.s.sol --rpc-url monad_testnet --sender 0xYourAddress
 DEPLOYER_PRIVATE_KEY=0x... forge script script/Deploy.s.sol --rpc-url monad_testnet --broadcast
 ```
 
-The earlier unsigned-lock deployment has been superseded. Deploy the current signed-quote contracts and set `QUOTE_SIGNER_ADDRESS` to the API signer address; `TREASURY_ADDRESS` optionally separates administration. The script rejects networks other than 31337 and 10143. No public deployment is claimed for this revision. Follow [the deployment checklist](docs/WALLET_BONDS.md); broadcasting needs a funded testnet wallet.
+The earlier unsigned-lock deployment has been superseded. Deploy the current signed-quote contracts and set `QUOTE_SIGNER_ADDRESS` to the API signer address; `TREASURY_ADDRESS` optionally separates administration. The script accepts 31337 and 10143; mainnet 143 additionally requires `SIGNALPASS_ALLOW_MAINNET=true` and a quote signer different from the deployer. No public deployment is claimed for this revision. Follow [the wallet checklist](docs/WALLET_BONDS.md) or [the mainnet pilot plan](docs/MONAD_MAINNET_PILOT.md); broadcasting needs a funded wallet.
 
 ---
 
