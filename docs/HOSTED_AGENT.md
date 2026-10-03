@@ -33,7 +33,7 @@ Never put the key in frontend variables, source control or the user interface. A
 | --- | --- |
 | `SIGNALPASS_AGENT_PROVIDER` | Empty disables AI; accepts `openai`, `openrouter` or `tokenrhythm`. |
 | `SIGNALPASS_AGENT_API_KEY` | Dedicated server-side key; use this or the protected key-file setting. |
-| `SIGNALPASS_AGENT_API_KEY_FILE` | Alternative regular, owner-only key file (0400/0600), owned by root or the API user, at most 8 KiB. Do not also set a nonempty direct key. A systemd credential mount is supported. |
+| `SIGNALPASS_AGENT_API_KEY_FILE` | Alternative regular, owner-only key file (0400/0600), owned by root or the API user, at most 8 KiB. Do not also set a nonempty direct key. For systemd DynamicUser credentials, use the owner-only runtime copy below. |
 | `SIGNALPASS_AGENT_MODEL` | Required explicit model supporting structured output. OpenRouter accepts only a named `vendor/model:free` variant; router aliases and paid models are rejected. |
 | `SIGNALPASS_AGENT_BASE_URL` | Empty selects `https://api.openai.com/v1`, `https://openrouter.ai/api/v1` or `https://tokenrhythm.studio/v1`. HTTPS required except HTTP loopback for local fixtures. A custom endpoint receives the configured key and authorized inputs, so only use an operator-trusted endpoint. |
 | `SIGNALPASS_AGENT_TIMEOUT_MS` | Optional integer 1000–60000; blank defaults to 15000 for OpenAI and 45000 for OpenRouter/TokenRhythm. |
@@ -66,7 +66,22 @@ For clarification and SQLite persistence coverage, run `pnpm agent:live:persiste
 
 Use `SIGNALPASS_AGENT_PROVIDER=tokenrhythm`, `SIGNALPASS_AGENT_MODEL=deepseek-v4-flash` and the authorized server-side credential. The default endpoint is `https://tokenrhythm.studio/v1/chat/completions`. The adapter requests one non-streamed strict-schema result, caps output at 2,400 tokens, and rejects incomplete, refused, tool-call or malformed results without retries. It requests `store:false`; this is not a guarantee about provider retention or billing.
 
-For the planned public pilot, the site-wide limit is 200 inference attempts per UTC day, with 20 per account. The application reserves attempts in SQLite before calling the provider, including failed calls. The quota is a request limit, not a financial spending cap. Profiles are included only under the consent and public-matching rules below. See the [TokenRhythm activation report](reports/signalpass-tokenrhythm-2026-10-03.md) for verification and deployment status.
+The current public pilot is configured with TokenRhythm `deepseek-v4-flash`, a site-wide limit of 200 inference attempts per UTC day, and 20 per account. The application reserves attempts in SQLite before calling the provider, including failed calls. The quota is a request limit, not a financial spending cap. Profiles are included only under the consent and public-matching rules below. See the [TokenRhythm activation report](reports/signalpass-tokenrhythm-2026-10-03.md) for verification and deployment status.
+
+For the `signalpass-api.service` DynamicUser unit, provision the credential source outside the repository, owned by root with mode 0600. The following example uses `/etc/signalpass/agent-provider.key`:
+
+```ini
+[Service]
+DynamicUser=yes
+LoadCredential=agent-provider:/etc/signalpass/agent-provider.key
+RuntimeDirectory=signalpass-api
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=no
+ExecStartPre=/usr/bin/install -T -m0600 /run/credentials/signalpass-api.service/agent-provider /run/signalpass-api/agent-provider.key
+Environment=SIGNALPASS_AGENT_API_KEY_FILE=/run/signalpass-api/agent-provider.key
+```
+
+Systemd can mount the credential as root-owned mode 0440, readable by the service group. The ordinary `ExecStartPre` runs as the API's DynamicUser and creates its own mode-0600 copy inside the mode-0700 runtime directory. This preserves the application's strict owner-only file guard; systemd removes the runtime copy on stop. Do not prefix this command with `+` or `!`, or force root ownership of the copy. Keep the plaintext key out of `Environment` and `EnvironmentFile`; set only the key-file path, with no nonempty `SIGNALPASS_AGENT_API_KEY`. The credential path above applies to the exact unit name `signalpass-api.service`.
 
 References: [OpenRouter quickstart](https://openrouter.ai/docs/quickstart), [free variants](https://openrouter.ai/docs/guides/routing/model-variants/free), and [provider routing constraints](https://openrouter.ai/docs/guides/routing/provider-selection).
 
