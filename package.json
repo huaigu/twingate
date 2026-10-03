@@ -18,6 +18,7 @@
     "agent:ui:test": "node scripts/agent-ui-test.mjs",
     "connection:ui:test": "node scripts/connection-ui-test.mjs",
     "agent:live:test": "pnpm --filter @signalpass/api exec node --import tsx scripts/agent-live-smoke.ts",
+    "agent:live:persistence:test": "pnpm --filter @signalpass/api exec node --import tsx scripts/agent-persistence-live-smoke.ts",
     "wallet:quote:test": "node --test scripts/wallet-quote-test.mjs",
     "verify": "pnpm v4:flow:test && pnpm wallet:quote:test && pnpm -r typecheck && pnpm -r test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
