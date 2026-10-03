@@ -235,6 +235,7 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
  .sp-home .hero-layout { grid-template-columns: minmax(0, 1fr); }
  .sp-home .hero-copy { max-width: 650px; padding: 0; }
  .sp-home .hero-visual { width: min(740px, 100%); justify-self: center; margin-top: 24px; }
+ .sp-home .hand-note.note-top { display: none; }
 }
 @media (max-width: 700px) {
  .scene .draft-row { grid-template-columns: 38px minmax(0, 1fr) auto; }
