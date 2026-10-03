@@ -253,12 +253,19 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
  .inbox-heading h1 { font-size: clamp(34px, 10.5vw, 48px); line-height: 1.05; letter-spacing: -1.5px; }
  .sp-workspace .compose-goals { grid-template-columns: 1fr; }
  .sp-workspace .compose-goal > span { justify-content: flex-start; padding-inline: 14px; font-size: 14px; }
+ .sp-workspace .introduction-brand { flex-wrap: wrap; }
+ .visibility-options { grid-template-columns: 1fr; }
+ .visibility-card { min-height: 0; padding: 16px 44px 16px 48px; }
+ .visibility-card > .icon { top: 20px; }
+ .visibility-card strong { font-size: 14px; }
+ .visibility-card > span:last-child { font-size: 13px; line-height: 1.6; }
  .inbox-tabs { flex-direction: column; }
  .inbox-tab { flex: auto; justify-content: space-between; text-align: left; white-space: normal; padding: 10px 12px; }
  .inbox-tab span { width: auto; min-width: 22px; height: 22px; padding-inline: 5px; font-size: 11px; }
 }
 @media (max-width: 360px) {
  .sp-home .site-header { padding-inline: 16px; }
+ .sp-workspace .discovery-goals { grid-template-columns: 1fr; }
  .sp-home .brand-word { font-size: 20px; }
  .session-in-header .session-loading { width: 84px; white-space: normal; }
  .sp-home .session-in-header .v4-session-bar .button { width: 84px; white-space: normal; justify-content: center; text-align: center; }
