@@ -51,7 +51,7 @@ Browser wallet providers in tests sign with ephemeral test accounts inside the t
 
 ## Prepare Monad testnet
 
-No funded deployment key is configured for this revision, so no public testnet deployment is claimed. Do not use local transaction hashes as testnet evidence.
+These steps describe a separate testnet deployment. The live public site uses [Monad Mainnet](reports/signalpass-mainnet-deployment-2026-10-03.md); no separate public testnet deployment is claimed. Do not use local or mainnet transaction hashes as testnet evidence.
 
 1. Choose an API quote signer locally. Keep its key in a protected server-only file and configure SIGNALPASS_QUOTE_SIGNER_KEY_FILE. Put only its public address in QUOTE_SIGNER_ADDRESS.
 2. Set the testnet RPC and a funded deployment wallet locally. Keep private keys out of source control, browser variables, reports and chat. Optionally choose TREASURY_ADDRESS for administration.

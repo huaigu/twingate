@@ -1,6 +1,6 @@
 # Monad mainnet pilot
 
-Status: prepared for a small, funded pilot; **no mainnet contracts have been deployed**. The website's existing no-payment mode remains available until actual deployments and a server-only quote signer are configured.
+Status: **live on Monad Mainnet** at https://signalpass.coderbojack.space/. The three contracts, separate server quote signer and low-cost pilot settings are configured. Mainnet registration, signed locking, acceptance and decline refunds passed. See [the actual deployment and cost record](reports/signalpass-mainnet-deployment-2026-10-03.md) and [deployment manifest](../deployments/monad-mainnet.json). The no-bond introduction option is also available.
 
 ## Cost estimate
 

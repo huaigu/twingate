@@ -1,0 +1,20 @@
+{
+  "chainId": 143,
+  "name": "Monad Mainnet",
+  "rpcUrl": "https://rpc.monad.xyz",
+  "walletRpcUrl": "https://rpc.monad.xyz",
+  "explorerUrl": "https://monadvision.com",
+  "registry": "0x61c02a0b68d00C9537e0fc20c42a7d63CcBf7Cda",
+  "escrow": "0xF0c1BA35CDacC2508CbD8207C8fD2Ab7B735a722",
+  "receipt": "0xd6964883249797e66d038fa1567d7d75529E86bE",
+  "confirmations": 3,
+  "deployedAt": "2026-10-03T00:55:07.188Z",
+  "sourceCommit": "670836d6b4de2ac73167e81f018f52a2d3a069d8",
+  "deployer": "0x07eC693f33876b4De5a9e45d5675fBb9F0FcF0c5",
+  "quoteSigner": "0xDf164586D55bE3F9a2987Cb86a7c6c62C01083FD",
+  "deploymentTransactions": {
+    "ProfileRegistry": "0xb42da5083acddf37124022b1645223684b4c241ac2cda78a606ce7624706a439",
+    "IntroductionReceipt": "0x683adf1baf2ac6cd773b7b3104a3b52d2ecee31eaec4e021abcff202445ebf94",
+    "IntroductionEscrow": "0x02f0224c1389e483f63f61935f9aa62fb5c444dadc892b7eb83c62e539c91bd9"
+  }
+}

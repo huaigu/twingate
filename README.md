@@ -25,7 +25,7 @@ The product shape is **one private Personal Agent per person, one public Builder
 1. **A goal that survives setup**: Enter what you need, sign in and approve your profile, then return to the same goal and selected person.
 2. **People with reasons**: The hosted agent recommends eligible public profiles with source quotes and a “Why you two” explanation. Answer a clarification to refine the original goal; a weak fit stays tentative and no-match is a valid outcome.
 3. **An introduction you approve**: Explicitly permit profile use, review a private four-part draft, edit it and independently choose what context to share. AI cannot send or spend.
-4. **A recipient with a choice**: The recipient accepts, asks for context or declines. Optional refundable wallet bonds are verified on a local EVM; manual review has zero AI evaluation fee. Public Monad testnet deployment remains pending.
+4. **A recipient with a choice**: The recipient accepts, asks for context or declines. Optional refundable wallet bonds are live on Monad Mainnet; manual review has zero AI evaluation fee. [Deployment and refund evidence](docs/reports/signalpass-mainnet-deployment-2026-10-03.md).
 5. **An explicit next step**: After acceptance, each participant can choose and share one contact or scheduling channel with the other participant. Acceptance never exposes contact details automatically.
 
 Hunyuan persona generation, a recipient-side autonomous agent, Nansen verification and embedded wallets remain future integrations. See [the product demo and first-community guide](docs/HACKATHON_PRODUCT_DEMO.md) for the current complete journey and clearly labelled rehearsal data.
@@ -50,7 +50,7 @@ Hackathon research notes — the official catalog and rules, the bounty analysis
 
 ## 🏗️ Architecture Stack
 
-- **Settlement networks**: local EVM (`31337`), Monad Testnet (`10143`), and opt-in Monad Mainnet (`143`). Public deployment is pending; see [the mainnet pilot plan](docs/MONAD_MAINNET_PILOT.md) for pricing, funding and verification.
+- **Settlement networks**: local EVM (`31337`), Monad Testnet (`10143`), and Monad Mainnet (`143`). The live site uses mainnet with low-cost pilot settings; see [the deployment record](docs/reports/signalpass-mainnet-deployment-2026-10-03.md) and [pilot plan](docs/MONAD_MAINNET_PILOT.md).
 - **Smart Contracts**: Solidity 0.8.24 (Foundry)
   - `ProfileRegistry.sol`: builder profile, availability, and versioned gate-policy hashes.
   - `IntroductionEscrow.sol`: evaluation fee, attention bond, unresolved limits, timeouts, resolution.
@@ -153,7 +153,7 @@ forge script script/Deploy.s.sol --rpc-url monad_testnet --sender 0xYourAddress
 DEPLOYER_PRIVATE_KEY=0x... forge script script/Deploy.s.sol --rpc-url monad_testnet --broadcast
 ```
 
-The earlier unsigned-lock deployment has been superseded. Deploy the current signed-quote contracts and set `QUOTE_SIGNER_ADDRESS` to the API signer address; `TREASURY_ADDRESS` optionally separates administration. The script accepts 31337 and 10143; mainnet 143 additionally requires `SIGNALPASS_ALLOW_MAINNET=true` and a quote signer different from the deployer. No public deployment is claimed for this revision. Follow [the wallet checklist](docs/WALLET_BONDS.md) or [the mainnet pilot plan](docs/MONAD_MAINNET_PILOT.md); broadcasting needs a funded wallet.
+The earlier unsigned-lock deployment has been superseded. Deploy the current signed-quote contracts and set `QUOTE_SIGNER_ADDRESS` to the API signer address; `TREASURY_ADDRESS` optionally separates administration. The script accepts 31337 and 10143; mainnet 143 additionally requires `SIGNALPASS_ALLOW_MAINNET=true` and a quote signer different from the deployer. The current mainnet addresses are in [deployments/monad-mainnet.json](deployments/monad-mainnet.json), with [successful mainnet lock/refund evidence](docs/reports/signalpass-mainnet-deployment-2026-10-03.md). Follow [the wallet checklist](docs/WALLET_BONDS.md) or [the pilot plan](docs/MONAD_MAINNET_PILOT.md) for another deployment.
 
 ---
 
