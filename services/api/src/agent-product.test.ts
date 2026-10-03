@@ -258,3 +258,39 @@ test('achievement grounding accepts first-person rendering of exact bio fragment
     }
   } finally { h.close() }
 })
+
+test('draft grounding allows a clarified product audience while rejecting unsupported employment', async () => {
+  const h = fixture()
+  try {
+    const senderProfile = { ...corpus.sender, building: 'Building a Monad wallet onboarding prototype.' }
+    const sender = await h.login(0, senderProfile); await h.login(1, corpus.profiles[0]!)
+    h.setResponse((request) => h.select(request.input as DiscoveryInput, ['sample-wallet-engineer']))
+    const initial = await h.request(sender, '/agent/discover', { goal: 'Find a reviewer for my Monad wallet prototype.', useProfile: true })
+    assert.equal(initial.status, 200)
+    const refined = await h.request(sender, '/agent/discover', { parentRunId: initial.data.run.id, answer: 'Prioritize wallet onboarding usability for first-time users.', useProfile: true })
+    assert.equal(refined.status, 200)
+    assert(!senderProfile.building.includes('first-time'))
+    const input = { runId: refined.data.run.id, recipientHandle: 'sample-wallet-engineer', useProfile: true }
+    for (const whoAmI of [
+      'I am building a Monad wallet onboarding prototype for first-time users.',
+      "I'm building a Monad wallet onboarding prototype for first-time users.",
+    ]) {
+      h.setResponse(() => ({ intent: { ...intro, whoAmI }, notes: [] }))
+      assert.equal((await h.request(sender, '/agent/draft', input)).status, 200, whoAmI)
+    }
+    for (const whoAmI of [
+      'I work at Google.',
+      'I worked for Google.',
+      "I'm an engineer at Google.",
+      'I am a frontend developer at Google.',
+      "I'm currently working for Google.",
+    ]) {
+      h.setResponse(() => ({ intent: { ...intro, whoAmI }, notes: [] }))
+      const rejected = await h.request(sender, '/agent/draft', input)
+      assert.equal(rejected.status, 502, whoAmI)
+      assert.equal(rejected.data.error, 'agent_draft_ungrounded')
+    }
+    assert.equal((await h.request(sender, '/agent/workspace')).data.drafts.length, 2)
+    assert.equal(h.api.store.introductions.size, 0)
+  } finally { h.close() }
+})

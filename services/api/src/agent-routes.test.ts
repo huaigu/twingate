@@ -225,6 +225,52 @@ test('persistent user/global budgets count failures and cannot be reset by clear
   } finally { h.close(); rmSync(dir, { recursive: true, force: true }) }
 })
 
+for (const exhausted of ['account', 'site'] as const) {
+  test(`UTC midnight cannot check tomorrow's ${exhausted} budget while charging yesterday`, async context => {
+    context.mock.timers.enable({ apis: ['Date'], now: new Date('2026-10-02T23:59:59.999Z') })
+    const model = new TestModel(), h = harness({ model, dailyUserLimit: 2, dailyGlobalLimit: 3 })
+    try {
+      const alice = await h.login(0, 'alice')
+      await h.login(1, 'bob')
+      const owner = accounts[0]!.address.toLowerCase()
+      const ownerAttempts = exhausted === 'account' ? 2 : 0
+      const globalAttempts = exhausted === 'site' ? 3 : 1
+      const db = h.api.store.db
+      db.prepare('INSERT INTO agent_usage(day,owner,attempts) VALUES(?,?,?)').run('2026-10-02', owner, ownerAttempts)
+      db.prepare('INSERT INTO agent_usage(day,owner,attempts) VALUES(?,?,?)').run('2026-10-02', '*', globalAttempts)
+      const prepare = db.prepare
+      let crossedMidnight = false
+      context.mock.method(db, 'prepare', function (sql: string) {
+        // Advance after reserve captures its UTC day, before either usage lookup.
+        if (!crossedMidnight && sql === 'DELETE FROM agent_inflight WHERE expires_at <= ?') {
+          context.mock.timers.tick(1)
+          crossedMidnight = true
+        }
+        return prepare.call(db, sql)
+      })
+
+      const rejected = await h.request(alice, '/agent/discover', { goal })
+      assert.equal(crossedMidnight, true)
+      assert.equal(new Date().toISOString(), '2026-10-03T00:00:00.000Z')
+      assert.equal(rejected.status, 429)
+      assert.equal(rejected.data.error, 'agent_budget_exhausted')
+      assert.equal(model.requests.length, 0)
+      const usage = (day: string, key: string) => Number(db.prepare('SELECT attempts FROM agent_usage WHERE day = ? AND owner = ?').get(day, key)?.attempts ?? 0)
+      assert.equal(usage('2026-10-02', owner), ownerAttempts)
+      assert.equal(usage('2026-10-02', '*'), globalAttempts)
+      assert.equal(usage('2026-10-03', owner), 0)
+      assert.equal(usage('2026-10-03', '*'), 0)
+
+      // A new request legitimately uses the fresh UTC-day allowance.
+      assert.equal((await h.request(alice, '/agent/discover', { goal })).status, 200)
+      assert.equal(model.requests.length, 1)
+      assert.equal(usage('2026-10-03', owner), 1)
+      assert.equal(usage('2026-10-03', '*'), 1)
+      assert.equal((await h.request(alice, '/agent/status')).data.remainingToday, 1)
+    } finally { context.mock.restoreAll(); context.mock.timers.reset(); h.close() }
+  })
+}
+
 test('concurrent model work reserves durable quota before awaiting, with per-user and global limits', async () => {
   const model = new TestModel(), h = harness({ model, maxConcurrent: 2 })
   const pending: Array<(data: unknown) => void> = []

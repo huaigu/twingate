@@ -2,8 +2,9 @@
 /**
  * Explicit, isolated live acceptance: discovery -> clarification -> draft.
  * Uses fictional profiles, ephemeral SIWE identities and a temporary SQLite DB.
- * At most three named-free OpenRouter calls; no deployed API, production DB,
- * introduction, evaluator, contract or RPC calls. No retries or paid fallback.
+ * At most three explicitly configured OpenRouter-free or TokenRhythm calls;
+ * no deployed API, production DB, introduction, evaluator, contract or RPC
+ * calls. No retries or model fallback.
  * Does not load .env files. Never prints generated text, keys, cookies or input.
  */
 import { mkdtempSync, rmSync } from 'node:fs'
@@ -50,7 +51,7 @@ function requireCheck(condition: unknown, message: string): asserts condition {
 
 /** Injection is solely for offline script-contract tests. main uses the strict configuration gate. */
 export async function runPersistenceAcceptance(model: AgentModel, report: Reporter = console.log): Promise<{ calls: number; evidenceQuotes: number }> {
-  requireCheck(model.provider === 'openrouter' && FREE_MODEL.test(model.model), 'The persistence gate requires a named-free OpenRouter model.')
+  requireCheck(model.provider === 'openrouter' && FREE_MODEL.test(model.model) || model.provider === 'tokenrhythm' && model.model === 'deepseek-v4-flash', 'The persistence gate requires an explicit supported test provider and model.')
   let calls = 0
   let evidenceQuotes = 0
   const countedModel: AgentModel = {
@@ -84,7 +85,9 @@ export async function runPersistenceAcceptance(model: AgentModel, report: Report
   }
   const success = async <T>(label: string, identity: Identity | null, path: string, body?: unknown): Promise<T> => {
     const result = await request<T>(identity, path, body)
-    requireCheck(result.status === 200, `${label} failed (HTTP ${result.status}). No introduction was sent; raw response details are withheld.`)
+    const category = (result.data as { error?: unknown } | null)?.error
+    const safeCategory = typeof category === 'string' && /^[a-z][a-z_]{0,60}$/.test(category) ? `, ${category}` : ''
+    requireCheck(result.status === 200, `${label} failed (HTTP ${result.status}${safeCategory}). No introduction was sent; raw response details are withheld.`)
     return result.data
   }
   const timed = async <T>(label: string, work: () => Promise<T>): Promise<T> => {
@@ -192,11 +195,17 @@ export async function runPersistenceAcceptance(model: AgentModel, report: Report
 function recipientHandle(): string { return profiles[1].handle }
 
 export async function main(env: Environment = process.env, report: Reporter = console.log): Promise<void> {
-  // Reuse the pure official-URL, explicit-key and named-free-model validation.
-  const config = { ...liveSmokeConfiguration(env), SIGNALPASS_AGENT_DAILY_USER_LIMIT: String(CALL_LIMIT), SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT: String(CALL_LIMIT) }
+  // Retain the free-only OpenRouter gate; TokenRhythm is a separate explicit opt-in.
+  let providerConfig: Environment
+  if (env.SIGNALPASS_AGENT_PROVIDER?.trim() === 'tokenrhythm') {
+    const base = env.SIGNALPASS_AGENT_BASE_URL?.trim().replace(/\/+$/, '') || 'https://tokenrhythm.studio/v1'
+    requireCheck(base === 'https://tokenrhythm.studio/v1' && env.SIGNALPASS_AGENT_MODEL?.trim() === 'deepseek-v4-flash', 'The TokenRhythm test requires its official endpoint and explicit deepseek-v4-flash model. No provider request was made.')
+    providerConfig = { SIGNALPASS_AGENT_PROVIDER: 'tokenrhythm', SIGNALPASS_AGENT_MODEL: 'deepseek-v4-flash', SIGNALPASS_AGENT_BASE_URL: base, SIGNALPASS_AGENT_API_KEY: env.SIGNALPASS_AGENT_API_KEY, SIGNALPASS_AGENT_API_KEY_FILE: env.SIGNALPASS_AGENT_API_KEY_FILE, SIGNALPASS_AGENT_TIMEOUT_MS: env.SIGNALPASS_AGENT_TIMEOUT_MS }
+  } else providerConfig = liveSmokeConfiguration(env)
+  const config = { ...providerConfig, SIGNALPASS_AGENT_DAILY_USER_LIMIT: String(CALL_LIMIT), SIGNALPASS_AGENT_DAILY_GLOBAL_LIMIT: String(CALL_LIMIT) }
   const agent = configuredHostedAgent(config)
-  requireCheck(agent.model, 'The free OpenRouter model was not configured. No provider request was made.')
-  report('Live persistence acceptance: temporary SQLite, fictional profiles, explicit free model, at most three provider calls; delivery disabled.')
+  requireCheck(agent.model, 'The explicit test provider was not configured. No provider request was made.')
+  report('Live persistence acceptance: temporary SQLite, fictional profiles, explicit provider/model, at most three provider calls; delivery disabled.')
   await runPersistenceAcceptance(agent.model, report)
 }
 
