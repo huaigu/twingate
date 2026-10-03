@@ -50,6 +50,8 @@ In this repository:
 
 - [📒 Product Direction](./SIGNALPASS_PRODUCT_DIRECTION.md): the problem, the mechanism, the fee/bond split, the agent handshake, and an explicit list of what SignalPass does *not* do.
 - [📝 Submission Copy](./SIGNALPASS_SUBMISSION_COPY.md): the canonical name, one-liner and description used on the submission form.
+- [Submission checklist](./docs/HACKATHON_SUBMISSION_CHECKLIST.md): saved portal progress, the October 13 deadline, private-repository judge access and remaining owner actions.
+- [Video recording briefs](./docs/HACKATHON_VIDEO_BRIEFS.md): timed outlines and shot lists for the technical demo (up to 3 minutes) and pitch (up to 2 minutes).
 - [🗺️ Product Architecture Diagram](./docs/architecture/signalpass-product-architecture.html): interactive diagram with dark and light themes.
 - [🤖 Agent Surface](./docs/SIGNALPASS_AGENT_SURFACES.md): the Personal Agent model, provider-neutral skills, OpenClaw/Hermes adapter boundary and hackathon acceptance criteria.
 - [Product demo and first community](./docs/HACKATHON_PRODUCT_DEMO.md): the complete product story, recovery rehearsal, synthetic quality cases and consenting cohort plan.

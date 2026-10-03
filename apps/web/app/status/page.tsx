@@ -5,78 +5,84 @@ type Tone = 'bond' | 'accent' | 'fee' | 'danger'
 interface Row {
   readonly area: string
   readonly what: string
+  readonly label: string
   readonly status: string
   readonly tone: Tone
 }
 
 const ROWS: readonly Row[] = [
   {
-    area: 'Contracts',
-    what: 'ProfileRegistry, IntroductionEscrow, IntroductionReceipt (Solidity 0.8.24, Foundry)',
-    status: 'Built and tested — 34 tests, including a fuzz run over every terminal path',
+    area: 'Personal Agent',
+    label: 'Live',
+    what: 'Goal-based discovery, follow-up questions and private introduction drafts',
+    status: 'Live with TokenRhythm deepseek-v4-flash. Up to 20 inference attempts per account and 200 across the site per UTC day; failed attempts count. No automatic retries or fallback.',
     tone: 'bond',
   },
   {
-    area: 'Domain model',
-    what: 'Introduction state machine, pricing curve, EIP-712 payloads (@signalpass/core)',
-    status: 'Built — one copy shared by the contracts’ off-chain twin, API, evaluator, indexer and UI',
+    area: 'Wallet sign-in',
+    label: 'Live',
+    what: 'Server-verified Sign-In with Ethereum using an injected Ethereum wallet',
+    status: 'Live signed sessions with HttpOnly cookies. Signing in requests a message signature, not a payment. Dynamic embedded wallets are not connected.',
     tone: 'bond',
   },
   {
-    area: 'API',
-    what: 'Hono service: profiles, quote, submit, evaluate, transition, queue',
-    status: 'Built — in-memory store; onchain writes are not wired in this build',
-    tone: 'accent',
-  },
-  {
-    area: 'Evaluator',
-    what: 'Bilateral evaluation + recommendation guardrail',
-    status: 'Built — mock provider is the default; the Hunyuan provider is implemented behind the same interface and needs credentials',
-    tone: 'accent',
-  },
-  {
-    area: 'Indexer',
-    what: 'Derived queue health, sender standing, pressure index (pure functions)',
-    status: 'Aggregation built and tested; Envio config and schema written but the runtime is not started',
-    tone: 'accent',
-  },
-  {
-    area: 'Web',
-    what: 'This application — directory, composer, live quote, protected inbox, receipt',
-    status: 'Built',
+    area: 'Persistence',
+    label: 'Live',
+    what: 'Profiles, introductions, signed sessions, private agent history and usage limits',
+    status: 'Persistent SQLite. Public acceptance verified sessions, drafts, history and consumed quota across an actual API service restart. Private records use account and participant access controls.',
     tone: 'bond',
   },
   {
-    area: 'Deployment',
-    what: 'Deploy script for Monad testnet (chain 10143)',
-    status: 'Verified by dry run against the live testnet RPC: 3 contracts, ~3.54M gas, ~0.72 MON at the current gas price. Needs a funded key to broadcast',
+    area: 'Introductions',
+    label: 'Live',
+    what: 'Edit a draft, review delivery, receive a decision and optionally exchange contact details',
+    status: 'Live with explicit sender confirmation and recipient acceptance, decline or context requests. Contact sharing requires acceptance and each participant’s own approval. Agents cannot send messages, decide for a recipient or move funds.',
+    tone: 'bond',
+  },
+  {
+    area: 'Monad Mainnet',
+    label: 'Live',
+    what: 'ProfileRegistry, IntroductionEscrow and IntroductionReceipt on chain 143',
+    status: 'Deployed. The optional wallet-bond pilot uses real MON and requires explicit wallet transactions. A no-bond introduction is also available. Manual evaluation charges zero AI evaluation fee; transaction gas still applies.',
+    tone: 'bond',
+  },
+  {
+    area: 'Settlement evidence',
+    label: 'Verified with limits',
+    what: 'Bond locking, recipient decisions and refunds',
+    status: 'Mainnet acceptance and decline returned the full bond principal, with transaction evidence. Gas is not refunded. Expiry was tested on a local EVM and requires a resolution transaction; mainnet expiry was not exercised.',
+    tone: 'accent',
+  },
+  {
+    area: 'Profile context',
+    label: 'Explicit consent',
+    what: 'Approved profiles, visibility settings and consent for AI requests',
+    status: 'Matching considers eligible public profiles that opted into suggestions. Your goal, follow-up answers and candidate profile details go to the configured AI provider; your approved profile is included only with explicit permission. Self-reported facts are not independently verified.',
+    tone: 'accent',
+  },
+  {
+    area: 'Sample tour',
+    label: 'Sample mode',
+    what: 'A separate, labeled example community and introduction editor',
+    status: 'Available without a wallet. Sample mode does not invoke AI, deliver messages or make payments. Live recommendations need real participants with approved public profiles and matching enabled.',
     tone: 'fee',
   },
   {
-    area: 'Wallet login',
-    what: 'Dynamic',
-    status: 'Not wired — this build uses seeded demo identities and simulates the escrow split',
-    tone: 'fee',
-  },
-  {
-    area: '3D presence',
-    what: 'Hunyuan 3D agent persona',
-    status: 'Slot is real and asynchronous; the provider is implemented, waiting on credentials',
-    tone: 'fee',
-  },
-  {
-    area: 'Verified context',
-    what: 'Opt-in disclosed signals',
-    status: 'Consent record is real and part of the hashed payload; third-party verification is not wired',
+    area: 'Other integrations',
+    label: 'Not enabled',
+    what: 'Sponsor integrations and external verification',
+    status: 'Hunyuan, Dynamic embedded wallets, the Envio runtime and third-party profile verification are not enabled on the public site. Repository scaffolding is not evidence of a working integration.',
     tone: 'fee',
   },
 ]
 
+const REPORTS = 'https://github.com/huaigu/twingate/blob/main/docs/reports/'
+
 const COMMANDS = [
-  { label: 'Install', command: 'pnpm install' },
+  { label: 'Install', command: 'pnpm install --frozen-lockfile' },
   { label: 'Typecheck everything', command: 'pnpm -r typecheck' },
   { label: 'Contract tests', command: 'pnpm contracts:test' },
-  { label: 'Indexer aggregation tests', command: 'pnpm --filter @signalpass/indexer test' },
+  { label: 'API tests', command: 'pnpm --filter @signalpass/api test' },
   { label: 'Run the API', command: 'pnpm api:dev' },
   { label: 'Run this UI', command: 'pnpm --filter @signalpass/web dev' },
 ] as const
@@ -84,64 +90,73 @@ const COMMANDS = [
 export default function StatusPage() {
   return (
     <div className="wrap">
-      <div className="eyebrow">Build status</div>
+      <div className="eyebrow">Public pilot · checked October 3, 2026</div>
       <h1 className="h2" style={{ marginTop: 12, maxWidth: '30ch' }}>
-        What is real today, and what is deliberately honest about being a stub.
+        What is live, what was tested, and what still needs people.
       </h1>
       <p className="lede" style={{ marginTop: 14 }}>
-        A mechanism that protects people’s attention is only worth anything if you can say exactly which
-        parts of it are running. This page is that statement. Nothing here is described as working unless it
-        runs.
+        SignalPass runs hosted AI discovery and drafting, persistent accounts and introductions, and an
+        optional Monad Mainnet bond. People approve every message, contact disclosure and wallet action.
+        This is a dated deployment record, not a real-time availability monitor or a claim that every
+        recommendation is useful or correct.
       </p>
 
-      <div className="card section">
-        <table className="table">
-          <thead>
-            <tr>
-              <th style={{ width: '16%' }}>Area</th>
-              <th style={{ width: '38%' }}>What it does</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ROWS.map((row) => (
-              <tr key={row.area}>
-                <td className="strong nowrap">{row.area}</td>
-                <td className="muted">{row.what}</td>
-                <td>
-                  <span className="pill" data-tone={row.tone}>
-                    <span className="pill-dot" />
-                    {row.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="card section" style={{ minWidth: 0 }}>
+        {ROWS.map((row, index) => (
+          <section key={row.area} style={{ display: 'flex', flexWrap: 'wrap', gap: '16px 32px', padding: '20px 0', borderTop: index ? '1px solid var(--line)' : undefined }}>
+            <div style={{ flex: '1 1 16rem', minWidth: 0, overflowWrap: 'anywhere' }}>
+              <h2 className="h3">{row.area}</h2>
+              <p className="muted" style={{ marginTop: 8 }}>{row.what}</p>
+            </div>
+            <div style={{ flex: '2 1 24rem', minWidth: 0 }}>
+              <span className="pill" data-tone={row.tone} style={{ maxWidth: '100%', whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
+                <span className="pill-dot" aria-hidden="true" />
+                {row.label}
+              </span>
+              <p style={{ marginTop: 10, lineHeight: 1.65, whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
+                {row.status}
+              </p>
+            </div>
+          </section>
+        ))}
       </div>
 
       <section className="section split">
         <div>
-          <div className="eyebrow">The invariants that are actually tested</div>
+          <div className="eyebrow">Separate evidence for separate claims</div>
           <h2 className="h3" style={{ marginTop: 10 }}>
-            Four claims, each backed by a failing-if-broken test.
+            Public AI, the product journey and mainnet settlement.
           </h2>
+          <p className="small muted" style={{ marginTop: 12 }}>
+            The reports below require access to the private project repository. The mainnet transaction
+            links are public.
+          </p>
           <ul className="bullets" style={{ marginTop: 16 }}>
             <li>
-              <strong>No path ever seizes the bond.</strong> A fuzz test walks every terminal state, accept
-              and decline included, and asserts the sender’s balance is exactly restored.
+              <a href={REPORTS + 'signalpass-tokenrhythm-2026-10-03.md'}>Hosted AI acceptance</a>{' '}
+              exercised discovery, clarification, private drafting, account isolation and persistence
+              through the public HTTPS application. The limits are inference attempts, not a monetary
+              budget or a guarantee of provider availability.
             </li>
             <li>
-              <strong>Only the recipient can decide.</strong> Accept and decline revert for anyone else — a
-              test calls them from the sender’s address and from a stranger’s.
+              <a href={REPORTS + 'signalpass-public-journey-2026-10-03.md'}>Two-person product rehearsal</a>{' '}
+              followed fictional participants from a live AI suggestion through an edited introduction,
+              recipient acceptance and mutual contact sharing. It used the no-bond option and made no
+              wallet transactions.
             </li>
             <li>
-              <strong>An agent can never approve access.</strong> The evaluator role is asserted to be unable
-              to move an introduction past review.
+              <a href={REPORTS + 'signalpass-mainnet-deployment-2026-10-03.md'}>Mainnet settlement evidence</a>{' '}
+              records the deployed contracts, bond locks, acceptance, decline and full principal refunds.
+              This is separate from the AI rehearsal; it does not claim a mainnet expiry test or explorer
+              source-code verification. Public two-wallet test: {' '}
+              <a href="https://monadvision.com/tx/0x3f64e633da6c0bff6880703bf8e228419b39125f3fd14747bd048031c45850f6">accepted introduction lock</a>,{' '}
+              <a href="https://monadvision.com/tx/0xe7c23bc70532bafe2bc2d9ef14b465a73214358a129626a0a40e1b6bb05ab00a">acceptance refund</a>,{' '}
+              <a href="https://monadvision.com/tx/0xb4b86d8c62b3611d897fb7908cb50ac06e6ba0617e75b7a17b52d967f6103190">decline refund</a>.
             </li>
             <li>
-              <strong>Unanswered introductions always expire.</strong> Anyone can trigger expiry, and the
-              pre-evaluation case refunds fee and bond in full.
+              <strong>Human review remains necessary.</strong> Source quotes and recipient eligibility
+              are checked, but generated interpretations and personal claims can still be wrong.
+              Synthetic acceptance tests do not establish recommendation quality across a real community.
             </li>
           </ul>
         </div>
@@ -160,8 +175,12 @@ export default function StatusPage() {
           </dl>
           <hr className="divider" style={{ margin: '18px 0' }} />
           <p className="tiny dim">
-            The web app talks to the API at <span className="mono">NEXT_PUBLIC_API_URL</span>, defaulting to{' '}
-            <span className="mono">http://localhost:8787</span>.
+            The live V4 UI uses same-origin <span className="mono">/api/*</span> routes, proxied through{' '}
+            <span className="mono">SIGNALPASS_API_ORIGIN</span> (local default:{' '}
+            <span className="mono">http://127.0.0.1:8789</span>). See the{' '}
+            <a href="https://github.com/huaigu/twingate/blob/main/docs/DEPLOYMENT.md">deployment guide (repository access required)</a>{' '}
+            for configuration and persistent storage. Private records are access-controlled, not
+            application-level encrypted at rest.
           </p>
         </div>
       </section>
@@ -170,16 +189,18 @@ export default function StatusPage() {
         <div className="notice" data-tone="accent">
           <div className="row-between" style={{ flexWrap: 'wrap' }}>
             <div style={{ maxWidth: '56ch' }}>
-              <div className="strong">The one thing worth arguing about.</div>
+              <div className="strong">Try the flow at your own pace.</div>
               <p className="small muted" style={{ marginTop: 6 }}>
-                Most “gated inbox” designs answer a bad question: how do we charge for attention? That turns
-                a person into a toll booth. SignalPass charges for the evaluation and for occupying a slot in
-                a queue — never for the reply — and makes the expensive part refundable precisely so the
-                cheap, honest introduction stays cheap.
+                Explore the labeled sample tour without a wallet, or connect a wallet to use the live
+                agent. If the public directory is empty, create a profile and invite another person to
+                opt into suggestions. A bond is optional and never buys a reply.
               </p>
             </div>
-            <Link href="/builders" className="btn">
-              Go try it
+            <Link href="/discover?demo=1" className="btn">
+              Explore sample profiles
+            </Link>
+            <Link href="/assistant?demo=0" className="btn">
+              Open live agent
             </Link>
           </div>
         </div>

@@ -10,18 +10,20 @@ The strongest demonstration is one useful connection with visible consent at eac
 
 Use two separate signed-in browser sessions and two consenting participants with approved profiles. The recipient must be public, open to introductions and opted into suggestions. Keep a third, different candidate available so the explanation has meaning. Label synthetic rehearsal accounts clearly; never present them as community traction.
 
+QA cleanup left the live directory empty. Arrange consenting public profiles before a live matching demonstration; the offline `?demo=1` sample does not generate real AI suggestions or deliver introductions. For the submission videos, follow the timed [technical and pitch briefs](HACKATHON_VIDEO_BRIEFS.md); recording remains with the project owner.
+
 | Time | Show | Explain |
 | --- | --- | --- |
 | 0:00–0:20 | A specific goal in My agent. Sign in or finish profile setup if needed, then return to the same goal. | “I need feedback on a wallet onboarding prototype. I can offer frontend prototyping in return.” |
 | 0:20–1:00 | Start discovery and show the honest waiting state. Inspect Why you two, source quotes and caveat. | “This person explicitly offers relevant help. This is a suggestion, and they still decide whether to respond.” |
-| 1:00–1:25 | Answer one clarification and refine. | “I mean connection failures, not a visual redesign.” The original goal remains visible. |
+| 1:00–1:25 | If the agent asks a useful clarification, answer it and refine. If it returns no question, inspect the source and caveat, then continue to the draft. | “I can narrow the request when needed.” A clarification retains the original goal; do not manufacture a question for the recording. |
 | 1:25–2:05 | Explicitly allow your profile for drafting. Review the four fields and edit one sentence in the composer. | “The agent prepares private text. I decide what to say and what profile context to attach.” |
 | 2:05–2:35 | Confirm the introduction. Switch to the actual recipient session, read the same wording and accept. | “Nothing reaches the other person before confirmation. They can also ask for context or decline.” |
 | 2:35–3:00 | Open Continue conversation. Choose a contact or scheduling channel and explicitly share it. Refresh the other participant's view. | “Acceptance does not expose contact details. Each person chooses what to share, with this participant only.” |
 
-AI timing varies. The previous free-provider acceptance took about 37–46 seconds across discovery and drafting, without refinement. Allow extra time for a live presentation or shorten the narration; never represent saved results as a new inference. Save one genuine, reviewed run before recording as a visibly disclosed fallback. Do not refresh or repeat an uncertain send/payment.
+AI timing varies. In the October 3 public browser rehearsal, TokenRhythm discovery took 2,937 ms and drafting 1,611 ms through the browser HTTP operations. The provider returned no clarification question. These are two observed calls, not a performance promise; earlier free-provider timings describe a different provider. Allow extra time for a live presentation or shorten the narration, label any shortened wait, and never represent saved results as a new inference. Save one genuine, reviewed run before recording as a visibly disclosed fallback. Do not refresh or repeat an uncertain send/payment. See [the public rehearsal report](reports/signalpass-public-journey-2026-10-03.md).
 
-Keep the optional wallet-bond segment separate and name the actual network. The existing [chain demonstration runbook](DEMO_RUNBOOK.md) covers lock, accept/refund, decline and expiry. Local EVM evidence is not public Monad testnet evidence.
+Keep the optional wallet-bond segment separate and name the actual network. The public product rehearsal used **Send without a bond**. Separate [Monad Mainnet (143) evidence](reports/signalpass-mainnet-deployment-2026-10-03.md) shows registration, lock, acceptance/decline and full bond refunds. Expiry has been verified locally only. Use the existing explorer links for a brief evidence segment; do not present the no-bond introduction as that mainnet transaction or imply a new funded transaction is necessary for recording.
 
 ## Rehearse recovery once
 

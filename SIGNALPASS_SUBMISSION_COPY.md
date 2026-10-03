@@ -61,3 +61,46 @@ The hosted pilot uses TokenRhythm `deepseek-v4-flash`. SignalPass covers inferen
 - Do not claim private chat, autonomous outreach, private-profile matching, source verification, recipient inbox AI, installed agent skills or sponsor integrations without implementation and runtime evidence.
 - Do not describe wallet context as a wealth score or let it imply automatic access decisions.
 - Keep future capabilities in the roadmap, not in present-tense submission claims.
+
+## Portal fields saved — October 3, 2026
+
+The [submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md) tracks remaining work. The primary track is Social, Attention & Culture; unsupported Envio, Dynamic and Hunyuan bounty selections were removed. The entry remains a saved draft, with the owner's two video links outstanding. Source repository access must also be arranged for judges: the repository is currently private.
+
+### Go-to-market and user acquisition
+
+We will start with a small, opt-in group of 8–12 Monad builders, designers and usability researchers whose offers and current needs complement each other. Recruitment will begin through the team's existing relationships and permitted posts in relevant builder communities. These are planned channels, not existing partnerships or committed users.
+
+Each participant will approve a short profile with one concrete need and one useful contribution. We will help the first participants complete an introduction, then ask both sides whether the explanation was useful, whether the draft needed corrections and whether they chose to continue the conversation.
+
+After a useful exchange, participants can share their public SignalPass profile and invite a relevant peer. We want introductions with a clear purpose, rather than referrals driven by rewards or indiscriminate outreach.
+
+We will track onboarding completion, time to the first approved introduction, recipient responses and participant-reported useful conversations, with consent. The first goal is to learn what makes an introduction worth answering. We have not yet established adoption or conversion figures; public rehearsal accounts are excluded from community metrics. Broader acquisition follows that initial learning.
+
+### Live product
+
+https://signalpass.coderbojack.space/
+
+### Judge access instructions
+
+Live product: https://signalpass.coderbojack.space/
+
+Use an injected Ethereum wallet to sign in. The sign-in signature creates a session; it does not request a payment. Users do not need an AI API key or an external agent installation.
+
+The live directory was empty after QA cleanup on October 3. For live matching, use two consenting people with independent wallets and approved profiles. The intended recipient must be public, open to introductions and opted into matching.
+
+Open https://signalpass.coderbojack.space/assistant?demo=0, describe a concrete goal and choose whether to use your approved profile. Review the recommendation's source quote, prepare a draft, edit it and use the separate confirmation to send. Choose 'Send without a bond' for the first complete journey. The other participant can accept, then each person separately chooses whether to share a contact option.
+
+For an interface-only walkthrough, use https://signalpass.coderbojack.space/discover?demo=1. This is explicitly offline sample mode: no live AI generation, external delivery or payments. Sample mode persists across navigation; the assistant link above explicitly returns to live mode.
+
+Included AI usage is limited to 20 attempts per account and 200 site-wide per UTC day. Optional Monad Mainnet bonds require real MON and gas; inspect recorded transaction evidence without transacting.
+
+Public browser rehearsal (fictional accounts, no bond): https://github.com/huaigu/twingate/blob/main/docs/reports/signalpass-public-journey-2026-10-03.md
+
+Separate mainnet transactions and refunds: https://github.com/huaigu/twingate/blob/main/docs/reports/signalpass-mainnet-deployment-2026-10-03.md
+
+Repository evidence links currently require access because the source repository is private. Judge source access must be arranged before final submission. These mainnet transaction links are publicly accessible:
+
+- Accepted introduction lock: https://monadvision.com/tx/0x3f64e633da6c0bff6880703bf8e228419b39125f3fd14747bd048031c45850f6
+- Acceptance refund: https://monadvision.com/tx/0xe7c23bc70532bafe2bc2d9ef14b465a73214358a129626a0a40e1b6bb05ab00a
+- Declined introduction lock: https://monadvision.com/tx/0x977ba65dcc77ededf7966c3e1c52b21003dd41e476b2dd8079528cc9e1c64717
+- Decline refund: https://monadvision.com/tx/0xb4b86d8c62b3611d897fb7908cb50ac06e6ba0617e75b7a17b52d967f6103190
