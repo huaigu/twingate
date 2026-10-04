@@ -193,6 +193,22 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
  .v4-header #session-slot { margin-left: auto; }
  .v4-home .nav { display: none; }
 }
+/* Approved interests can be longer than the editor's new-tag suggestions. */
+body[data-page="agent"] .interest-tag,
+body[data-page="widget"] .widget-tag { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+/* The compact preview's action belongs below both the portrait and the text. */
+@media (max-width: 1180px) {
+ body[data-page="widget"] .widget-preview-body { grid-template-rows: min-content min-content 1fr auto; row-gap: 0; }
+ body[data-page="widget"] .widget-profile-image { grid-column: 1; grid-row: 1 / 4; }
+ body[data-page="widget"] .widget-profile-content { display: contents; }
+ body[data-page="widget"] .widget-profile-content > :is(h2, p, .live-tags) { grid-column: 2; }
+ body[data-page="widget"] .widget-profile-content > .button { grid-column: 1 / -1; grid-row: 4; width: 100%; margin-left: 0; }
+}
+/* Four persona choices must fit while the widget editor shares a tablet row. */
+@media (min-width: 701px) and (max-width: 1180px) {
+ body[data-page="widget"] .persona-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+ body[data-page="widget"] .persona-options .persona { width: 100%; max-width: 70px; height: auto; aspect-ratio: 1; justify-self: center; }
+}
 @media (max-width: 700px) {
  .site-header, .v4-header.site-header { gap: 8px; min-height: 76px; padding-block: 16px; flex-wrap: nowrap; }
  .brand-word, .v4-brand { font-size: 26px; letter-spacing: -1px; }

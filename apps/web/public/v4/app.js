@@ -710,7 +710,7 @@
     const publicWidget = api.live && api.me?.profile && api.me.settings.agent.visibility !== "private" ? { ...w, handle: api.me.profile.handle } : w;
     const attrs = `data-profile='${JSON.stringify(publicWidget).replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}'`;
     $("#embed-code").textContent =
-      `<div id="signalpass-widget" ${attrs}></div>\n<script src="${location.origin}/v4/embed/widget.js" defer><\/script>`;
+      `<div id="signalpass-widget" ${attrs}></div>\n<script src="${location.origin}/v4/embed/widget.js?v=1b32833fa235" defer><\/script>`;
     save();
   };
   if (page === "widget") {
