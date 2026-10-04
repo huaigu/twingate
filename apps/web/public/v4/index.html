@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5eee3" />
-    <title>SignalPass — People worth building with.</title>
+    <title>SignalPass — Your AI introduction assistant.</title>
     <meta
       name="description"
-      content="Thoughtful introductions for builders. Share your context, discover common interests, and choose what to share before you reach out."
+      content="Your AI introduction assistant. Find a relevant person and shape a message you approve before sending. Explore a fictional sample without a wallet."
     />
     <link
       rel="icon"
@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/v4/polish.css" />
     <link rel="stylesheet" href="/v4/motion.css" />
     <link rel="stylesheet" href="/v4/experience.css" />
+    <link rel="stylesheet" href="/v4/first-visit.css" />
     <script defer src="/v4/client.js"></script>
     <script defer src="/v4/wallet.js"></script>
     <script defer src="/v4/navigation.js"></script>
@@ -67,24 +68,28 @@
             <span>People worth</span><span>knowing,</span
             ><span class="underlined">with context.</span>
           </h1>
-          <p class="hero-description">Find a shared interest and a reason to reach out. Make the first hello personal — and let the other person choose what comes next.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="/assistant"
-              >Find your next connection
-              <svg
-                class="icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M4 12h15m-6-6 6 6-6 6" /></svg></a
-            ><a class="button secondary" href="#how-it-works"
-              >See how it works</a
-            >
+          <p class="hero-description"><strong>Your AI introduction assistant.</strong> Tell it what you need, find a relevant person, and shape a message you approve before sending.</p>
+          <div class="hero-actions first-visit-actions" role="group" aria-label="Choose how to try SignalPass">
+            <div class="first-visit-option">
+              <a class="button primary" href="/assistant?demo=0" aria-describedby="live-assistant-help"
+                >Use the live assistant
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>
+              <p class="first-visit-help" id="live-assistant-help">Wallet sign-in required</p>
+            </div>
+            <div class="first-visit-option">
+              <a class="button secondary" href="/discover?demo=1" aria-describedby="sample-help">Explore a sample</a>
+              <p class="first-visit-help" id="sample-help">Fictional profiles · No wallet or live AI</p>
+            </div>
           </div>
           <div class="benefits">
             <div class="benefit">

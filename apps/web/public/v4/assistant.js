@@ -36,6 +36,7 @@
     authentication_required: 'Sign in again to continue with this private workspace. Your goal has been kept in this tab.',
   };
   const canRequest = () => Boolean(status?.enabled && api.me && !api.demo && !api.error && status.remainingToday !== 0);
+  const canRefine = () => Boolean(currentRun && currentRun.modelCalled !== false && (currentRun.clarifications?.length || 0) < 3);
   const progressElement = (kind) => $(kind === 'draft' ? '#agent-draft-progress' : kind === 'refine' ? '#agent-refine-progress' : '#agent-progress');
   const progress = (message = '', kind = 'search') => { const element = progressElement(kind); element.textContent = message; if (!busy) element.classList.remove('is-working'); };
   const clearErrors = () => { ['#agent-error', '#agent-draft-error', '#agent-refine-error'].forEach((id) => { $(id).replaceChildren(); $(id).hidden = true; }); };
@@ -76,7 +77,7 @@
     $('#agent-goal-form').setAttribute('aria-busy', String(busy && activeWork === 'search'));
     $('#agent-refine-form').setAttribute('aria-busy', String(busy && activeWork === 'refine'));
     $('#agent-selection').setAttribute('aria-busy', String(busy && activeWork === 'draft'));
-    $('#agent-refine-submit').disabled = busy || !canRequest() || (currentRun?.clarifications?.length || 0) >= 3;
+    $('#agent-refine-submit').disabled = busy || !canRequest() || !canRefine();
     $('#agent-refine-submit').textContent = busy && activeWork === 'refine' ? 'Refining your suggestions…' : 'Refine these suggestions →';
     $('#agent-prepare-selected').disabled = busy || !canRequest() || !validHandle(selectedHandle);
     $('#agent-prepare-selected').textContent = busy && activeWork === 'draft' ? 'Preparing your introduction…' : 'Prepare introduction →';
@@ -86,7 +87,7 @@
     $('#agent-draft-handoff').classList.toggle('primary', selectedDraft);
     $('#agent-draft-handoff').classList.toggle('outline', !selectedDraft);
     ['#agent-goal', '#agent-use-profile', '#agent-draft-consent', '#agent-refine-answer'].forEach((id) => { $(id).disabled = busy; });
-    document.querySelectorAll('[data-example],.assistant-select-match,#agent-confirm-clear,#agent-clear-history,.assistant-history-entry button,.assistant-retry').forEach((button) => { button.disabled = busy; });
+    document.querySelectorAll('[data-example],.assistant-select-match,#agent-confirm-clear,#agent-clear-history,#agent-edit-goal,.assistant-history-entry button,.assistant-retry').forEach((button) => { button.disabled = busy; });
   }
   function renderBudget() {
     const budget = $('#agent-budget');
@@ -106,7 +107,7 @@
     } else if (api.error) {
       badge.textContent = 'Connection unavailable'; notice('We couldn’t load your workspace. Reconnect to try again. Nothing has been sent.', [action('Try again', () => { persistResume(); location.reload(); })]);
     } else if (!api.me) {
-      badge.textContent = 'Ready when you are'; notice('Start with a goal, then connect your wallet to keep working. Sign-in is free and does not request a payment.', [action('Connect wallet', connect)]);
+      badge.textContent = 'Ready when you are'; notice('Start with a goal, then connect your wallet to keep working. Sign-in is free and does not request a payment. Or try offline fictional sample people: no wallet, AI requests, or external messages.', [action('Connect wallet', connect), link('Try sample people', '/discover?demo=1', 'button outline')]);
     } else if (!status) {
       badge.textContent = 'Availability unknown'; notice('We couldn’t check your agent’s availability. Try again, or browse people yourself.', [action('Try again', () => { persistResume(); location.reload(); }), link('Browse people →', '/discover')]);
     } else if (!status.enabled) {
@@ -170,7 +171,8 @@
     selectedHandle = matches.some((match) => match.handle === previousHandle) ? previousHandle : matches[0]?.handle || null;
     if (!matches.length) {
       const empty = node('article', 'paper assistant-match');
-      empty.append(node('h3', '', run.modelCalled === false ? 'A community is still taking shape.' : 'No clear match yet.'), node('p', 'assistant-reason', run.modelCalled === false ? 'There are no eligible public profiles in this directory yet. Your goal is saved; you can return as more people join.' : 'There may not be someone with the right context here yet. Add a detail below, try a different goal, or browse the people available.'), link('Browse people →', '/discover')); container.append(empty);
+      const guidance = canRefine() ? 'Add a detail below, edit your goal, or browse the people available.' : 'You can edit your goal or browse the people available.';
+      empty.append(node('h3', '', run.modelCalled === false ? 'A community is still taking shape.' : 'No clear match yet.'), node('p', 'assistant-reason', run.modelCalled === false ? 'There are no eligible public profiles in this directory yet. Your goal is saved; you can return as more people join.' : 'There may not be someone with the right context here yet. ' + guidance), link('Browse people →', '/discover')); container.append(empty);
     }
     matches.forEach((match) => {
       const card = node('article', 'paper assistant-match'); card.dataset.handle = match.handle;
@@ -191,10 +193,12 @@
       }, 'button outline assistant-select-match'); select.dataset.handle = match.handle; select.setAttribute('aria-pressed', 'false');
       actions.append(select, link('View profile ↗', '/discover/' + encodeURIComponent(match.handle))); card.append(actions); container.append(card);
     });
-    const question = text(run.nextQuestion); $('#agent-refine-form').hidden = !question || clarifications.length >= 3;
-    $('#agent-next-question').textContent = question;
+    const question = text(run.nextQuestion);
+    $('#agent-refine-form').hidden = !canRefine();
+    $('#agent-next-question').textContent = question || (matches.length ? 'Not quite right? What should be different?' : 'What detail would make a match more useful?');
+    $('#agent-refine-limit').hidden = clarifications.length < 3;
     $('#agent-refine-answer').value = '';
-    $('#agent-refine-hint').textContent = `Your original goal stays the same. This answer adds context to a new search (${clarifications.length} of 3 answers used).`;
+    $('#agent-refine-hint').textContent = `Your original goal stays the same. Add a specific need, constraint, or what is missing from these suggestions (${clarifications.length} of 3 answers used). An AI refinement uses one included request; nothing is sent to another person.`;
     renderSelection(); persistResume(); if (focus) focusSection($('#agent-results'));
   }
   function renderDraft(draft, focus = false, fromHistory = false) {
@@ -243,6 +247,7 @@
   }
   async function search(goal, parentRunId = null, answer = null) {
     if (busy || !canRequest()) return;
+    if (parentRunId && !canRefine()) return;
     const kind = parentRunId ? 'refine' : 'search'; clearErrors(); persistResume();
     if ($('#agent-use-profile').checked && (!api.me?.profile || !api.me?.settings)) { showError({ code: 'profile_required' }, { kind }); return; }
     beginWork(kind, kind === 'refine' ? 'Using your answer to reconsider the available people.' : 'Looking for useful connections in public profiles.');
@@ -260,6 +265,7 @@
   $('#agent-refine-form').addEventListener('submit', (event) => { event.preventDefault(); const answer = $('#agent-refine-answer').value.trim(); if (!currentRun || answer.length < 3) { $('#agent-refine-answer').setCustomValidity('Add a little more detail—at least 3 characters.'); $('#agent-refine-answer').reportValidity(); return; } void search(currentRun.goal, currentRun.id, answer); });
   $('#agent-goal').addEventListener('input', () => { $('#agent-goal').setCustomValidity(''); persistResume(); });
   $('#agent-refine-answer').addEventListener('input', () => $('#agent-refine-answer').setCustomValidity(''));
+  $('#agent-edit-goal').addEventListener('click', () => { if (!busy) { focusSection($('#agent-goal-form')); $('#agent-goal').focus(); } });
   ['#agent-use-profile', '#agent-draft-consent'].forEach((id) => $(id).addEventListener('change', () => { const checked = $(id).checked; $('#agent-use-profile').checked = checked; $('#agent-draft-consent').checked = checked; }));
   $('#agent-prepare-selected').addEventListener('click', prepareDraft);
   document.querySelectorAll('[data-example]').forEach((button) => button.addEventListener('click', () => { $('#agent-goal').value = button.dataset.example; $('#agent-goal').setCustomValidity(''); persistResume(); $('#agent-goal').focus(); }));
