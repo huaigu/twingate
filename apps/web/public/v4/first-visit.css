@@ -1,0 +1,42 @@
+/* Homepage entry choices; preserve the shared hero and its animation. */
+.sp-home .hero-description strong {
+  display: block;
+  color: var(--sp-ink);
+  font-weight: 600;
+}
+
+.sp-home .first-visit-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.sp-home .first-visit-option {
+  min-width: 0;
+}
+
+.sp-home .first-visit-actions .button {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding-inline: 14px;
+  gap: 10px;
+  font-size: 14px;
+  white-space: normal;
+  text-align: center;
+}
+
+.sp-home .first-visit-help {
+  margin: 8px 0 0;
+  color: var(--sp-muted);
+  font: 13px/1.5 var(--sp-font-text);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .sp-home .first-visit-actions {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}

@@ -72,10 +72,15 @@
               </section>
               <form id="agent-refine-form" class="assistant-refine" aria-labelledby="agent-next-question" aria-busy="false" hidden>
                 <p class="assistant-step">MAKE THIS SEARCH MORE USEFUL</p><h3 id="agent-next-question"></h3>
-                <label for="agent-refine-answer" class="sr-only">Your answer to the agent’s question</label><textarea id="agent-refine-answer" minlength="3" maxlength="600" rows="3" placeholder="Add the detail that matters most…" aria-describedby="agent-refine-hint" required></textarea>
+                <label for="agent-refine-answer" class="sr-only">Additional context for this search</label><textarea id="agent-refine-answer" minlength="3" maxlength="600" rows="3" placeholder="Add the detail that matters most…" aria-describedby="agent-refine-hint" required></textarea>
                 <p id="agent-refine-hint" class="assistant-field-hint">Your original goal stays the same. This answer adds context to a new search.</p><button type="submit" id="agent-refine-submit" class="button outline">Refine these suggestions →</button>
                 <p id="agent-refine-progress" class="assistant-progress" role="status" aria-live="polite"></p><div id="agent-refine-error" class="assistant-error" role="alert" tabindex="-1" hidden></div>
               </form>
+              <section id="agent-refine-limit" class="assistant-refine" aria-labelledby="agent-refine-limit-heading" hidden>
+                <h3 id="agent-refine-limit-heading">Three answers added to this search.</h3>
+                <p class="assistant-field-hint">Your goal and earlier answers are saved. Review any suggestions above, or edit your goal to start a new search when you are ready.</p>
+                <button type="button" id="agent-edit-goal" class="button outline">Review or change your goal →</button>
+              </section>
             </section>
             <section id="agent-draft-panel" class="paper assistant-draft-panel" aria-labelledby="draft-heading" tabindex="-1" hidden>
               <p class="assistant-step">03 / MAKE IT YOURS</p><h2 id="draft-heading">An introduction to review.</h2>
