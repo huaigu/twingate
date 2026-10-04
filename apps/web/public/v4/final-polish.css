@@ -40,6 +40,12 @@ body[data-page="sources"] .source-workspace .source-chip {
   overflow-wrap: anywhere;
 }
 
+body[data-page="discover"] .person-tags .chip {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 body[data-page="inbox"] .inbox-workspace .inbox-tab {
   color: var(--sp-ink);
 }
@@ -98,6 +104,11 @@ body[data-page="inbox"] .inbox-workspace .inbox-tab.active {
   line-height: 1.6;
   color: var(--sp-muted);
   overflow-wrap: anywhere;
+}
+
+#app-dialog .dialog-tags .chip {
+  max-width: 100%;
+  white-space: normal;
 }
 
 #app-dialog .dialog-input {
