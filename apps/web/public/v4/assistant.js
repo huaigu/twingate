@@ -148,20 +148,28 @@
     const section = node('section', 'assistant-connection'); section.append(node('h4', '', 'Why you two'));
     const facts = node('dl');
     const fact = (title, value, source) => { const cell = node('div', 'assistant-connection-cell'); const content = node('dd', '', value); content.append(node('cite', '', source)); cell.append(node('dt', '', title), content); facts.append(cell); };
+    const recipientEvidence = match.connection?.recipientEvidence;
+    const recipientQuote = text(recipientEvidence?.quote);
+    if (recipientQuote.trim()) {
+      const sourceLabel = Object.hasOwn(evidenceLabels, recipientEvidence.field) ? evidenceLabels[recipientEvidence.field] : 'Public profile';
+      fact(recipientEvidence.field === 'canOffer' ? 'What they offer' : 'Relevant profile context', `“${recipientQuote}”`, 'Their public profile · ' + sourceLabel);
+    } else {
+      // Older saved searches may not have a selected evidence quote.
+      fact('What they offer', text(match.canOffer) || 'No specific offer is listed.', 'Their public profile · Can offer');
+    }
     fact('What you need', text(run.goal), 'Your stated goal');
-    fact('What they offer', text(match.canOffer) || 'No specific offer is listed.', 'Their public profile · Can offer');
     const ownEvidence = match.connection?.senderEvidence;
     fact('What you could offer', ownEvidence?.field === 'canOffer' && text(ownEvidence.quote) ? `“${text(ownEvidence.quote)}”` : 'Use your approved profile in a new search to show your contribution here.', ownEvidence?.field === 'canOffer' ? 'Your approved profile · not a commitment' : 'No personal contribution inferred');
     fact('A possible first step', 'Ask whether a short written exchange about this goal would be useful.', 'A suggestion · both people still decide');
     section.append(facts);
-    if (match.connection?.basis === 'shared_interest_only') section.append(node('p', 'assistant-shared-interest', 'This suggestion is based on shared interests only. It is not evidence of experience with your specific need.'));
+    if (recipientEvidence?.field === 'interests' || match.connection?.basis === 'shared_interest_only') section.append(node('p', 'assistant-shared-interest', 'Shared interests do not establish experience with your specific need.'));
     return section;
   }
   function renderRun(run, focus = false) {
     const previousHandle = selectedHandle;
     currentRun = run; $('#agent-results').hidden = false;
     $('#results-goal').textContent = text(run.goal);
-    const scope = Number.isFinite(run.consideredCandidates) && Number.isFinite(run.eligibleCandidates) ? ` Reviewed ${run.consideredCandidates} of ${run.eligibleCandidates} eligible public profiles.` : '';
+    const scope = Number.isFinite(run.consideredCandidates) && Number.isFinite(run.eligibleCandidates) ? ` Reviewed ${run.consideredCandidates} of ${run.eligibleCandidates} eligible public profiles in the current directory.` : '';
     $('#results-context').textContent = run.modelCalled === false ? 'There are no eligible public profiles to consider yet. No AI request was used.' : (run.usedProfile ? 'This search used your goal and approved profile.' : 'This search used your goal only.') + scope + ' The suggestions below need your judgment.';
     const clarifications = Array.isArray(run.clarifications) ? run.clarifications.slice(0, 3) : [];
     $('#agent-clarifications').replaceChildren(...clarifications.map((item, i) => node('p', '', `Added context ${i + 1}: ${text(item.answer)}`)));
@@ -171,8 +179,8 @@
     selectedHandle = matches.some((match) => match.handle === previousHandle) ? previousHandle : matches[0]?.handle || null;
     if (!matches.length) {
       const empty = node('article', 'paper assistant-match');
-      const guidance = canRefine() ? 'Add a detail below, edit your goal, or browse the people available.' : 'You can edit your goal or browse the people available.';
-      empty.append(node('h3', '', run.modelCalled === false ? 'A community is still taking shape.' : 'No clear match yet.'), node('p', 'assistant-reason', run.modelCalled === false ? 'There are no eligible public profiles in this directory yet. Your goal is saved; you can return as more people join.' : 'There may not be someone with the right context here yet. ' + guidance), link('Browse people →', '/discover')); container.append(empty);
+      const guidance = canRefine() ? 'You can add context below or edit your goal. A refined search may still find no suitable match.' : 'You can edit your goal or browse the current directory.';
+      empty.append(node('h3', '', run.modelCalled === false ? 'A community is still taking shape.' : 'No clear match among the profiles reviewed'), node('p', 'assistant-reason', run.modelCalled === false ? 'There are no eligible public profiles in this directory yet. Your goal is saved; you can return as more people join.' : 'Your goal is saved. This result is limited to the current directory profiles reviewed for this search. ' + guidance), link('Browse people →', '/discover')); container.append(empty);
     }
     matches.forEach((match) => {
       const card = node('article', 'paper assistant-match'); card.dataset.handle = match.handle;
@@ -195,7 +203,8 @@
     });
     const question = text(run.nextQuestion);
     $('#agent-refine-form').hidden = !canRefine();
-    $('#agent-next-question').textContent = question || (matches.length ? 'Not quite right? What should be different?' : 'What detail would make a match more useful?');
+    // Keep older no-match runs directory-scoped too, without rewriting their history.
+    $('#agent-next-question').textContent = matches.length ? question || 'Not quite right? What should be different?' : 'What else should we consider within this directory?';
     $('#agent-refine-limit').hidden = clarifications.length < 3;
     $('#agent-refine-answer').value = '';
     $('#agent-refine-hint').textContent = `Your original goal stays the same. Add a specific need, constraint, or what is missing from these suggestions (${clarifications.length} of 3 answers used). An AI refinement uses one included request; nothing is sent to another person.`;

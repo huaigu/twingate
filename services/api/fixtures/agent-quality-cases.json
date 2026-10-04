@@ -81,7 +81,7 @@
       "id": "no-match",
       "goal": "Find an experienced telescope optics manufacturer who can fabricate a custom primary mirror.",
       "plausibleHandles": [],
-      "review": "Return zero recommendations and a useful clarification; never force a match."
+      "review": "Return zero recommendations with no model follow-up question; manual refinement remains available. Never force a match."
     },
     {
       "id": "refinement",

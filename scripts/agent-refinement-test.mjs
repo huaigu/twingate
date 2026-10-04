@@ -133,7 +133,7 @@ function assertRefinementVisible(h) {
 test('a completed search with no matches and no model question offers an accessible refinement', async () => {
   const h = await harness(makeRun());
   assertRefinementVisible(h);
-  assert.match(h.get('agent-matches').textContent, /No clear match yet/i);
+  assert.match(h.get('agent-matches').textContent, /No clear match among the profiles reviewed/i);
   assert.equal(h.get('results-goal').textContent, goal);
 });
 
@@ -194,9 +194,9 @@ test('after three answers, editing the goal only focuses it and forced submit ca
   assert.equal(h.get('agent-history').querySelectorAll('button').length, 1);
 });
 
-test('model-supplied questions remain literal text, never interpreted markup', async () => {
+test('model-supplied questions for matched profiles remain literal text, never interpreted markup', async () => {
   const question = '<img src=x onerror="window.untrustedQuestionRan=true"> Which flow matters?';
-  const h = await harness(makeRun({ nextQuestion: question }));
+  const h = await harness(makeRun({ matches: [match], nextQuestion: question }));
   assertRefinementVisible(h);
   assert.equal(h.get('agent-next-question').textContent, question);
   assert.equal(h.get('agent-next-question').querySelector('img'), null);
@@ -215,4 +215,93 @@ test('signed-out people can discover clearly disclosed offline samples without a
   await sample.dispatch('click');
   assert.deepEqual(h.calls, []);
   assert.equal(h.connects(), 0);
+  assert.match(h.get('goal-hint').textContent, /Searches only people who have made their profiles available on SignalPass/);
+});
+
+function leadingConnectionFact(h) {
+  const section = h.get('agent-matches').querySelector('.assistant-connection');
+  assert(section, 'A match needs its source-backed connection explanation');
+  return { section, fact: section.querySelectorAll('.assistant-connection-cell')[0] };
+}
+
+test('the chosen offer quote leads Why you two instead of an unrelated full offer', async () => {
+  const quote = 'Wallet accessibility reviews for first-time users.';
+  const recipientEvidence = { field: 'canOffer', quote };
+  const h = await harness(makeRun({ matches: [{ ...match,
+    canOffer: 'Career introductions. ' + quote,
+    evidence: [recipientEvidence, { field: 'building', quote: 'Building wallets' }],
+    connection: { recipientEvidence, basis: 'profile_evidence', senderEvidence: null },
+  }] }));
+  const { section, fact } = leadingConnectionFact(h);
+  assert.equal(fact.querySelector('dt').textContent, 'What they offer');
+  assert.equal(fact.querySelector('dd').textContent, `“${quote}”Their public profile · Can offer`);
+  assert.equal(section.textContent.includes('Career introductions.'), false, 'Unrelated offer text must not displace the selected evidence');
+  assert.match(section.textContent, /No personal contribution inferred/);
+  assert.equal(h.discoveries().length, 0, 'Showing evidence must not trigger inference');
+});
+
+for (const [field, label, quote] of [
+  ['building', 'Working on', 'Testing first-time wallet onboarding.'],
+  ['wantsToMeet', 'Wants to meet', 'Builders who want wallet accessibility feedback.'],
+  ['interests', 'Interests', 'Wallet accessibility'],
+]) test(`chosen ${field} evidence is labeled as profile context, never as an offer`, async () => {
+  const recipientEvidence = { field, quote };
+  const h = await harness(makeRun({ matches: [{ ...match,
+    canOffer: 'Career introductions.', evidence: [recipientEvidence],
+    connection: { recipientEvidence, basis: field === 'interests' ? 'shared_interest_only' : 'profile_evidence' },
+  }] }));
+  const { section, fact } = leadingConnectionFact(h);
+  assert.equal(fact.querySelector('dt').textContent, 'Relevant profile context');
+  assert.equal(fact.querySelector('dd').textContent, `“${quote}”Their public profile · ${label}`);
+  assert.equal(section.textContent.includes('Career introductions.'), false);
+  if (field === 'interests') {
+    assert.match(section.querySelector('.assistant-shared-interest').textContent, /do not establish experience with your specific need/i);
+  } else assert.equal(section.querySelector('.assistant-shared-interest'), null);
+});
+
+test('legacy saved matches without chosen evidence keep the existing offer fallback', async () => {
+  const h = await harness(makeRun({ matches: [match] }));
+  const { fact } = leadingConnectionFact(h);
+  assert.equal(fact.querySelector('dt').textContent, 'What they offer');
+  assert.equal(fact.querySelector('dd').textContent, match.canOffer + 'Their public profile · Can offer');
+  assert.equal(h.get('agent-selection').hidden, false);
+});
+
+test('an interest-led highlight does not claim other profile evidence is absent', async () => {
+  const recipientEvidence = { field: 'interests', quote: 'Wallet accessibility' };
+  const h = await harness(makeRun({ matches: [{ ...match,
+    evidence: [recipientEvidence, { field: 'building', quote: 'Building wallets' }],
+    connection: { recipientEvidence, basis: 'shared_interest_only' },
+  }] }));
+  const warning = leadingConnectionFact(h).section.querySelector('.assistant-shared-interest').textContent;
+  assert.equal(warning, 'Shared interests do not establish experience with your specific need.');
+  assert.equal(/only/i.test(warning), false);
+  assert.equal(h.get('agent-matches').querySelectorAll('blockquote').length, 2, 'Both source quotes remain available to review');
+});
+
+test('chosen profile quote markup stays literal in the lead fact and evidence panel', async () => {
+  const quote = '<img src=x onerror="window.untrustedProfileRan=true"> Wallet review.';
+  const recipientEvidence = { field: 'canOffer', quote };
+  const h = await harness(makeRun({ matches: [{ ...match, canOffer: quote, evidence: [recipientEvidence], connection: { recipientEvidence } }] }));
+  const { fact } = leadingConnectionFact(h);
+  assert.equal(fact.querySelector('dd').textContent, `“${quote}”Their public profile · Can offer`);
+  assert(h.get('agent-matches').querySelector('blockquote').textContent.includes(quote));
+  assert.equal(h.get('agent-matches').querySelector('img'), null);
+});
+
+test('saved no-fit results stay directory-scoped without replaying an old outside-search question', async () => {
+  const saved = makeRun({ consideredCandidates: 3, eligibleCandidates: 22, nextQuestion: 'Should I search the whole web for an external expert? <img src=x>' });
+  const original = JSON.stringify(saved);
+  const h = await harness(saved);
+  assertRefinementVisible(h);
+  assert.equal(h.get('agent-matches').querySelector('h3').textContent, 'No clear match among the profiles reviewed');
+  assert.match(h.get('results-context').textContent, /Reviewed 3 of 22 eligible public profiles in the current directory/);
+  assert.match(h.get('agent-matches').textContent, /Your goal is saved/);
+  assert.match(h.get('agent-matches').textContent, /limited to the current directory profiles reviewed/);
+  assert.match(h.get('agent-matches').textContent, /may still find no suitable match/);
+  assert.match(h.get('agent-next-question').textContent, /within this directory/);
+  assert.equal(h.get('agent-next-question').textContent.includes('whole web'), false);
+  assert.equal(h.get('agent-next-question').querySelector('img'), null);
+  assert.equal(JSON.stringify(saved), original, 'Presentation must not rewrite stored model questions or history');
+  assert.equal(h.discoveries().length, 0);
 });

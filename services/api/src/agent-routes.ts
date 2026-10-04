@@ -6,6 +6,7 @@ import type { Session } from './auth.js'
 import { collection, transaction } from './database.js'
 import { hashDocument, profileByOwner, type Store } from './store.js'
 import { AgentProviderError } from './agent-provider.js'
+import { prioritizeEvidence } from './agent-evidence.js'
 import type { AgentDraft, AgentProfile, AgentRun, HostedAgentOptions } from './agent-types.js'
 
 export type { AgentModel, HostedAgentOptions } from './agent-types.js'
@@ -139,10 +140,13 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
     const recipient = store.profiles.get(record.draft.recipientHandle)
     return record.draft.expiresAt > now() && eligible(recipient, record.owner) && version(recipient) === record.draft.recipientVersion && store.settings.get(record.owner)?.version === record.draft.profileVersion
   }
-  const safeRun = (record: StoredRun): AgentRun => ({ ...record.run, matches: record.run.matches.filter((match) => {
-    const current = store.profiles.get(match.handle)
-    return eligible(current, record.owner) && version(current) === record.recipientVersions[match.handle]
-  }) })
+  const safeRun = (record: StoredRun): AgentRun => {
+    const matches = record.run.matches.filter((match) => {
+      const current = store.profiles.get(match.handle)
+      return eligible(current, record.owner) && version(current) === record.recipientVersions[match.handle]
+    })
+    return { ...record.run, matches, nextQuestion: matches.length ? record.run.nextQuestion : null }
+  }
   const reserve = (owner: string) => transaction(store.db, () => {
     const today = day()
     store.db.prepare('DELETE FROM agent_usage WHERE day < ?').run(today)
@@ -217,7 +221,7 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
       const candidateVersions = Object.fromEntries(candidates.map((profile) => [profile.handle, version(profile)]))
       const output = candidates.length === 0 ? { matches: [], nextQuestion: null } : discoveryOutput.parse(await generate(owner, {
         operation: 'discover', schema: discoveryJsonSchema,
-        instructions: `${instructions} Select zero to three unique supplied candidate handles that genuinely relate to the original goal and its user-provided clarification answers. Clarifications refine the original goal; they never replace it. Never force a match. Each recommendation needs a specific reason, an honest caveat and at least one exact contiguous quote from its supplied building, canOffer, wantsToMeet or interests field (join interests with comma-space). Quotes must substantiate the reason. A shared interest alone does not prove expertise or mutual interest; describe such matches as exploratory. If there is no supported connection return no matches and one useful clarification question, or null when further clarification would not help. Use nextQuestion for one useful clarification or null. The candidate pool is bounded; do not claim to have searched everyone. If senderProfile is null do not infer or invent the user's background.`,
+        instructions: `${instructions} Select zero to three unique supplied candidate handles that genuinely relate to the original goal and its user-provided clarification answers. Clarifications refine the original goal; they never replace it. Never force a match. Each recommendation needs a specific reason, an honest caveat and at least one exact contiguous quote from its supplied building, canOffer, wantsToMeet or interests field (join interests with comma-space). Quotes must substantiate the reason. Put the quote most directly supporting the requested need first; prefer relevant work or an explicit relevant offer over generic profile boilerplate. Preserve limitations and negations in quotes; a word overlap is not proof of ability. A shared interest alone does not prove expertise or mutual interest; describe such matches as exploratory. If there is no supported connection return matches: [] and nextQuestion: null. When recommending people, ask at most one clarification only if its answer could distinguish relevant options or needs supported by the supplied profiles; otherwise return nextQuestion: null. Do not ask for location, schooling, credentials or other details absent from the supplied profiles merely to continue the conversation. Search is limited to this supplied directory: never promise an external search, more people outside the directory or future outreach. The candidate pool is bounded; do not claim to have searched everyone. If senderProfile is null do not infer or invent the user's background.`,
         input: { goal, clarificationAnswers: clarifications.map((item) => item.answer), senderProfile: sender?.profile ?? null, candidates: candidates.map(safeProfile) },
       }))
       checkGeneration(owner, generation)
@@ -234,9 +238,10 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
         }
         const current = store.profiles.get(match.handle)
         if (!eligible(current, owner) || version(current) !== candidateVersions[match.handle]) throw new AgentError('agent_candidate_unavailable', 409)
-        const recipientEvidence = match.evidence.find((evidence) => evidence.field !== 'interests') ?? match.evidence[0]!
+        const evidence = prioritizeEvidence(match.evidence, goal, clarifications.map((item) => item.answer))
+        const recipientEvidence = evidence[0]!
         const interests = new Set(safe.interests.map(normalizeClaim))
-        return { ...safe, ...match, connection: {
+        return { ...safe, ...match, evidence, connection: {
           goal, recipientEvidence,
           senderEvidence: sender ? { field: 'canOffer' as const, quote: sender.profile.canOffer } : null,
           sharedInterests: sender ? sender.profile.interests.filter((interest) => interests.has(normalizeClaim(interest))) : [],
@@ -244,7 +249,9 @@ export function installAgentRoutes(app: Hono<{ Variables: { session: Session } }
           suggestedFirstStep: 'Would a short written exchange about this goal be useful?',
         } }
       })
-      const run: AgentRun = { id: randomUUID(), goal, createdAt: now(), usedProfile: Boolean(sender), profileVersion: sender?.version ?? null, matches, nextQuestion: output.nextQuestion, eligibleCandidates: available.length, consideredCandidates: candidates.length, candidateLimit: CANDIDATE_LIMIT, parentRunId: parent?.run.id ?? null, clarifications, modelCalled: candidates.length > 0 }
+      // With no supported match, a model question cannot promise a better pool.
+      // The person may still explicitly refine the goal using the same endpoint.
+      const run: AgentRun = { id: randomUUID(), goal, createdAt: now(), usedProfile: Boolean(sender), profileVersion: sender?.version ?? null, matches, nextQuestion: matches.length ? output.nextQuestion : null, eligibleCandidates: available.length, consideredCandidates: candidates.length, candidateLimit: CANDIDATE_LIMIT, parentRunId: parent?.run.id ?? null, clarifications, modelCalled: candidates.length > 0 }
       runs.set(run.id, { owner, run, recipientVersions: Object.fromEntries(matches.map((match) => [match.handle, candidateVersions[match.handle]!])), generation }); prune(owner)
       return c.json({ run, usage: { remainingToday: remaining(owner) }, provider: run.modelCalled ? model!.provider : null, model: run.modelCalled ? model!.model : null })
     } catch (error) { const failure = errorResponse(error); return c.json({ error: failure.code }, failure.status) }
