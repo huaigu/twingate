@@ -190,7 +190,7 @@
     const slot = document.getElementById('session-slot');
     if (slot) { slot.replaceChildren(bar); slot.setAttribute('aria-busy', 'false'); }
     else (header.closest('.viewport') || header.closest('.hero-page') || header).before(bar);
-    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { if (!demo) el.textContent = api.chain?.enabled ? api.chainLabel() + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · you approve every message'; });
+    document.querySelectorAll('.v4-footer small, .v4-demo-chip').forEach((el) => { el.textContent = demo ? 'Sample mode · fictional profiles · no messages or payments' : api.chain?.enabled ? api.chainLabel() + ' · optional refundable bond · manual review, AI fee 0' : 'Live introductions · you approve every message'; });
     if (api.live) window.ethereum?.on?.('accountsChanged', async (accounts) => {
       // First-time wallet authorization can emit this event before sign-in.
       // Keep that guest goal intact; a changed authenticated account must clear it.

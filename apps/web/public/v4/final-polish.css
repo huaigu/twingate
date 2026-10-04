@@ -1,0 +1,174 @@
+/* Reading and target-size fixes from the profile, inbox and composer review.
+   Keep the existing paper, artwork, scene geometry and motion. */
+
+/* Only these legacy pages scale their entire desktop scene. Compensate text
+   and hit areas locally; native .sp-workspace pages keep their own sizing. */
+body:is([data-page="sources"], [data-page="inbox"]):not(.sp-workspace) {
+  --polish-reading-scale: 1;
+}
+
+@media (min-width: 1181px) {
+  body:is([data-page="sources"], [data-page="inbox"]):not(.sp-workspace) {
+    --polish-reading-scale: var(--scale, 1);
+  }
+}
+
+body[data-page="sources"] .source-workspace :is(.source-help, .source-desc, .source-notice p, .draft-person p, .draft-row p),
+body[data-page="inbox"] .inbox-workspace :is(.inbox-person-info > span, .connection-person p, .fit-block p, .connection-privacy p, .inbox-action-status) {
+  font-size: calc(14px / var(--polish-reading-scale, 1));
+  line-height: 1.6;
+  color: var(--sp-muted);
+  overflow-wrap: anywhere;
+}
+
+body[data-page="sources"] .source-workspace :is(.source-tile strong, .draft-row h3),
+body[data-page="inbox"] .inbox-workspace .fit-block h3 {
+  font-size: calc(16px / var(--polish-reading-scale, 1));
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="sources"] .source-workspace :is(.source-chip, .draft-sources h4, .draft-sources small, .draft-heading .status-pill),
+body[data-page="inbox"] .inbox-workspace :is(.inbox-group-title, .inbox-row > time, .connection-privacy h3) {
+  font-size: calc(12px / var(--polish-reading-scale, 1));
+  line-height: 1.5;
+  color: var(--sp-muted);
+}
+
+/* Taller copy stays in normal card flow, including the profile edit action. */
+body[data-page="sources"] .source-workspace .draft-heading {
+  flex-wrap: wrap;
+}
+
+body[data-page="sources"] .source-workspace .draft-person > div {
+  padding-bottom: 0;
+}
+
+body[data-page="sources"] .source-workspace .draft-person .edit-btn {
+  position: static;
+  grid-column: 2;
+  justify-self: end;
+}
+
+body[data-page="sources"] .source-workspace .edit-btn {
+  min-width: calc(44px / var(--polish-reading-scale, 1));
+  min-height: calc(44px / var(--polish-reading-scale, 1));
+  font-size: calc(13px / var(--polish-reading-scale, 1));
+}
+
+body[data-page="sources"] .source-workspace .source-chip {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-tab {
+  min-height: calc(44px / var(--polish-reading-scale, 1));
+  font-size: calc(13px / var(--polish-reading-scale, 1));
+  line-height: 1.35;
+  white-space: normal;
+  color: var(--sp-ink);
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-tab.active {
+  color: var(--sp-violet);
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-tab span {
+  width: auto;
+  min-width: calc(22px / var(--polish-reading-scale, 1));
+  height: calc(22px / var(--polish-reading-scale, 1));
+  font-size: calc(12px / var(--polish-reading-scale, 1));
+}
+
+/* The intermediate layout shares the width with the detail panel. Keep each
+   tab label and counter together without changing the small mobile layout. */
+@media (min-width: 601px) and (max-width: 1180px) {
+  body[data-page="inbox"] .inbox-workspace .inbox-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body[data-page="inbox"] .inbox-workspace .inbox-tab {
+    flex: none;
+    justify-content: space-between;
+  }
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-person-info > strong {
+  padding-right: 0;
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-row > time {
+  position: static;
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: start;
+  margin-top: 0;
+  white-space: normal;
+}
+
+body[data-page="inbox"] .inbox-workspace .inbox-row > .icon {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+body[data-page="inbox"] .inbox-workspace :is(.fit-block, .connection-privacy > div) {
+  align-items: flex-start;
+}
+
+/* Native dialogs are outside the scaled scene. */
+#app-dialog .dialog-close {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--sp-violet-hover);
+}
+
+#app-dialog #dialog-title {
+  padding-right: 48px;
+}
+
+#app-dialog :is(.dialog-copy, .context-list, .draft-message) {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--sp-muted);
+  overflow-wrap: anywhere;
+}
+
+#app-dialog :is(.dialog-notice, .dialog-field, .dialog-tags .chip) {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sp-muted);
+  overflow-wrap: anywhere;
+}
+
+#app-dialog .dialog-input {
+  font-size: 16px;
+}
+
+/* The composer already uses native layout; improve its supporting facts. */
+body[data-page="compose"].sp-workspace .introduction-card :is(.intro-portrait p, .intro-offers li, .shared-curiosity > p, .verified-context-inner > p) {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sp-muted);
+  overflow-wrap: anywhere;
+}
+
+body[data-page="compose"].sp-workspace .introduction-card :is(.intro-offers h3, .verified-context > h3, .shared-curiosity strong) {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--sp-muted);
+}
+
+/* The markup contains THEIR<br>INTERESTS: hiding the break joins the words. */
+body[data-page="compose"].sp-workspace .shared-curiosity strong br {
+  display: inline;
+}
+
+#app-dialog :is(button, a, input, textarea, select):focus-visible,
+body:is([data-page="sources"], [data-page="inbox"], [data-page="compose"]) :is(.source-tile, .edit-btn, .inbox-tab, .inbox-row, .context-button):focus-visible {
+  outline: 3px solid var(--sp-violet);
+  outline-offset: 3px;
+}

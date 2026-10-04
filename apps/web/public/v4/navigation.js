@@ -14,6 +14,17 @@
     link.href = "/assistant";
     if (document.body.dataset.page === "agent") link.removeAttribute("aria-current");
   });
+  // Keep the parent section visible while writing an introduction or editing privacy.
+  const currentSection = {
+    sources: "/profile/import", agent: "/profile/import",
+    assistant: "/assistant", discover: "/discover",
+    compose: "/inbox", inbox: "/inbox", receipt: "/inbox",
+    widget: "/widget/create", "widget-preview": "/widget/create",
+  }[document.body.dataset.page];
+  if (currentSection) document.querySelectorAll('.v4-menu a, .nav a').forEach((link) => {
+    if (link.getAttribute("href") === currentSection) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
   document.addEventListener(
     "click",
     (event) => {
