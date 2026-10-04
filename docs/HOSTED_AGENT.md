@@ -8,8 +8,8 @@ SignalPass supplies the model connection and private workspace. Users sign in, d
 
 1. A signed-in user enters a goal. Using their approved profile is an unchecked, explicit option.
 2. The server filters public, approved profiles that allow matching and are open to introductions, excluding the requester. Goal terms select at most 40 candidates; the model can recommend at most three of those supplied handles. This is a bounded shortlist, not an exhaustive semantic search.
-3. Each recommendation includes a reason, caveat and exact public-profile quote. The Why you two card combines the original goal, a validated recipient quote, the sender’s exact approved offer when consented, and a clearly tentative first step. Interest-only evidence is marked exploratory. The server validates the handle and quote against the supplied source; it does not independently verify self-reported claims or mutual interest.
-4. Answer the agent’s clarification to refine the same goal, up to three times. Each answer is bounded to 600 characters. The server resolves the original owned run and keeps its goal, applies clarification terms to the bounded shortlist and sends the answer history with the new request. An empty eligible pool makes no provider call and consumes no inference quota.
+3. Each recommendation includes a reason, caveat and exact public-profile quotes. Validated quotes are ordered by distinct meaningful terms shared with the goal and user-provided context; ties retain the model's order. This only changes evidence presentation, not which people are recommended, and is not a semantic relevance score. The Why you two card leads with the selected exact quote and its source field, then shows the original goal, the sender's approved offer when consented, and a tentative first step. An interest is not presented as proof of experience. Quotes keep their limitations and negations. The server validates handles and exact quotes; it does not independently verify self-reported claims or mutual interest.
+4. Add context to refine the same goal, up to three times, even when the agent has not asked a question. Each answer is bounded to 600 characters and requires explicit submission. A model question is permitted only for distinctions supported by the supplied profiles. Results with no remaining matches return no model follow-up question; the interface explains the reviewed directory's limits and leaves manual refinement available. The server resolves the original owned run, keeps its goal and uses the current profile permission. An empty eligible pool makes no provider call and consumes no inference quota. Searches do not query external directories or contact people automatically.
 5. Drafting requires consent to use the sender's approved profile. The model writes the four Introduction Card fields and review notes.
 6. The user opens the existing composer, edits the draft, independently chooses what profile context to share, reviews delivery and confirms sending. Existing wallet-bond confirmation remains in that flow. The model cannot send, accept, publish or spend.
 7. After acceptance, either participant can explicitly share one email, contact link or scheduling link in the private receipt. Nothing is shared automatically and neither party can publish the other’s channel. Removal takes effect on future reads; it cannot undo a copy already made by the other participant.
@@ -120,6 +120,7 @@ The API test suite includes signed-session privacy/consent, output validation, s
 ```sh
 pnpm --filter @signalpass/api test
 pnpm -r typecheck
+pnpm agent:refinement:test
 pnpm v4:flow:test
 pnpm exec playwright install chromium
 pnpm agent:ui:test

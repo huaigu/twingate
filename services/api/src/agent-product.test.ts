@@ -96,18 +96,63 @@ test('synthetic weak-interest and no-match contracts retain uncertainty and neve
   const h = fixture()
   try {
     const { sender } = await h.all()
-    h.setResponse((request) => h.select(request.input as DiscoveryInput, ['sample-community-host'], 'interests'))
+    h.setResponse((request) => {
+      const result = h.select(request.input as DiscoveryInput, ['sample-community-host'], 'interests')
+      return { ...result, matches: result.matches.map((match) => ({ ...match, evidence: [{ field: 'building', quote: 'Small peer feedback sessions' }, ...match.evidence] })) }
+    })
     const weak = await h.request(sender, '/agent/discover', { goal: corpus.cases.find((item) => item.id === 'weak-shared-interest')!.goal, useProfile: true })
     assert.equal(weak.status, 200)
     assert.equal(weak.data.run.matches[0].connection.basis, 'shared_interest_only')
     assert.equal(weak.data.run.matches[0].connection.recipientEvidence.field, 'interests')
-    h.setResponse(() => ({ matches: [], nextQuestion: 'Would you consider expanding the search outside this community?' }))
-    const absent = await h.request(sender, '/agent/discover', { goal: corpus.cases.find((item) => item.id === 'no-match')!.goal })
-    assert.equal(absent.status, 200)
-    assert.deepEqual(absent.data.run.matches, [])
-    assert.equal(absent.data.run.modelCalled, true)
-    assert.equal(absent.data.run.eligibleCandidates, 6)
-    assert.equal(absent.data.run.nextQuestion, 'Would you consider expanding the search outside this community?')
+    assert.equal(weak.data.run.matches[0].evidence[0].field, 'interests')
+    assert.match(weak.data.run.matches[0].reason, /exploratory/)
+    for (const nextQuestion of [null, 'Would you consider expanding the search outside this community?', 'Which region or school should I search?']) {
+      h.setResponse(() => ({ matches: [], nextQuestion }))
+      const callsBefore = h.calls.length
+      const absent = await h.request(sender, '/agent/discover', { goal: corpus.cases.find((item) => item.id === 'no-match')!.goal })
+      assert.equal(absent.status, 200)
+      assert.deepEqual(absent.data.run.matches, [])
+      assert.equal(absent.data.run.modelCalled, true)
+      assert.equal(absent.data.run.eligibleCandidates, 6)
+      assert.equal(absent.data.run.nextQuestion, null)
+      assert.equal(h.calls.length, callsBefore + 1, 'No implicit retry or follow-up inference')
+      const saved = (await h.request(sender, '/agent/workspace')).data.runs.find((run: any) => run.id === absent.data.run.id)
+      assert.equal(saved.nextQuestion, null)
+      assert.deepEqual(saved.matches, [])
+    }
+    assert.equal(h.api.store.introductions.size, 0)
+  } finally { h.close() }
+})
+
+test('discovery prioritizes exact relevant evidence while keeping uncertainty and supported questions', async () => {
+  const h = fixture()
+  try {
+    const sender = await h.login(0, corpus.sender)
+    const recipient = { ...corpus.profiles[0]!, building: 'This is a fictional product rehearsal.' }
+    await h.login(1, recipient)
+    const evidence = [{ field: 'building', quote: recipient.building }, { field: 'canOffer', quote: recipient.canOffer }]
+    const nextQuestion = 'Is wallet connection failure or transaction recovery your main blocker?'
+    h.setResponse(() => ({ matches: [{ handle: recipient.handle, reason: 'Their offer covers wallet connection failures and transaction recovery.', caveat: 'Interest and availability are not confirmed.', evidence }], nextQuestion }))
+    const result = await h.request(sender, '/agent/discover', { goal: 'Review wallet connection failures and transaction recovery.', useProfile: false })
+    assert.equal(result.status, 200)
+    const match = result.data.run.matches[0]
+    assert.deepEqual(match.evidence, [evidence[1], evidence[0]])
+    assert.deepEqual(match.connection.recipientEvidence, evidence[1])
+    assert.equal(match.connection.basis, 'profile_evidence')
+    assert.equal(match.connection.senderEvidence, null)
+    assert.equal(match.caveat, 'Interest and availability are not confirmed.')
+    assert.equal(result.data.run.nextQuestion, nextQuestion)
+    assert.equal(evidence[0]!.field, 'building', 'Model output is not mutated')
+    const call = h.calls[0]!
+    assert.match(call.instructions, /If there is no supported connection return matches: \[\] and nextQuestion: null/)
+    assert.match(call.instructions, /distinguish relevant options or needs supported by the supplied profiles/)
+    assert.match(call.instructions, /never promise an external search/)
+    assert.equal((call.input as DiscoveryInput).senderProfile, null)
+    const saved = (await h.request(sender, '/agent/workspace')).data.runs[0]
+    assert.deepEqual(saved.matches[0].evidence, match.evidence)
+    assert.deepEqual(saved.matches[0].connection.recipientEvidence, evidence[1])
+    assert.equal(h.calls.length, 1)
+    assert.equal(h.api.store.introductions.size, 0)
   } finally { h.close() }
 })
 
@@ -130,6 +175,30 @@ test('empty eligible pool returns an honest local result without inference, even
   } finally { h.close() }
 })
 
+test('workspace suppresses a historical question when its last candidate becomes private without rewriting history', async () => {
+  const h = fixture()
+  try {
+    const sender = await h.login(0, corpus.sender)
+    const profile = corpus.profiles[0]!
+    const recipient = await h.login(1, profile)
+    const question = 'Is wallet connection failure or transaction recovery your main blocker?'
+    h.setResponse((request) => ({ ...h.select(request.input as DiscoveryInput, [profile.handle]), nextQuestion: question }))
+    const found = await h.request(sender, '/agent/discover', { goal: 'Review wallet connection and transaction recovery.', useProfile: false })
+    assert.equal(found.status, 200)
+    assert.equal(found.data.run.nextQuestion, question)
+    const supplied = suppliedProfile(profile)
+    assert.equal((await h.request(recipient, '/me/profile', { ...supplied, agent: { ...supplied.agent, visibility: 'private' } })).status, 200)
+    const saved = (await h.request(sender, '/agent/workspace')).data.runs.find((run: any) => run.id === found.data.run.id)
+    assert.deepEqual(saved.matches, [])
+    assert.equal(saved.nextQuestion, null)
+    const row = h.api.store.db.prepare("SELECT value FROM documents WHERE collection = 'agent_runs' AND key = ?").get(found.data.run.id)
+    const original = JSON.parse(String(row?.value))
+    assert.equal(original.run.nextQuestion, question, 'Read projection does not rewrite stored history')
+    assert.equal(original.run.matches.length, 1)
+    assert.equal(h.calls.length, 1)
+  } finally { h.close() }
+})
+
 test('refinement preserves original goal, is owner scoped, bounded, and passes answers without parent model text', async () => {
   const h = fixture()
   try {
@@ -141,6 +210,7 @@ test('refinement preserves original goal, is owner scoped, bounded, and passes a
     })
     const first = await h.request(sender, '/agent/discover', { goal: scenario.goal, useProfile: true })
     assert.equal(first.status, 200)
+    assert.equal(first.data.run.nextQuestion, null)
     const stolen = await h.request(others[0]!, '/agent/discover', { parentRunId: first.data.run.id, answer: scenario.answer })
     assert.equal(stolen.status, 404)
     assert.equal(stolen.data.error, 'agent_run_not_found')
@@ -151,6 +221,7 @@ test('refinement preserves original goal, is owner scoped, bounded, and passes a
     assert.equal(refined.data.run.goal, scenario.goal)
     assert.equal(refined.data.run.parentRunId, first.data.run.id)
     assert.deepEqual(refined.data.run.clarifications, [{ question: first.data.run.nextQuestion, answer: scenario.answer }])
+    assert.equal(refined.data.run.clarifications[0].question, null, 'Manual refinement works without a model question')
     assert.equal(refined.data.run.matches[0].handle, 'sample-indexer')
     assert.equal(refined.data.run.matches[0].connection.senderEvidence, null)
     const input = h.calls.at(-1)!.input as DiscoveryInput

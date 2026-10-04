@@ -291,7 +291,7 @@ try {
     assert.match(await page.locator('#agent-matches').innerText(), /wallet onboarding feedback/);
     assert.match(await page.locator('#agent-matches').innerText(), /does not confirm availability/);
     const connection = page.locator('.assistant-connection').first();
-    assert.deepEqual(await connection.locator('dt').allTextContents(), ['What you need', 'What they offer', 'What you could offer', 'A possible first step']);
+    assert.deepEqual(await connection.locator('dt').allTextContents(), ['What they offer', 'What you need', 'What you could offer', 'A possible first step']);
     assert.match(await connection.innerText(), /Your stated goal/);
     assert.match(await connection.innerText(), /Their public profile · Can offer/);
     assert.match(await connection.innerText(), /No personal contribution inferred/);
@@ -377,7 +377,7 @@ try {
     await page.keyboard.press('Enter');
     assert.equal(await choice.getAttribute('aria-pressed'), 'true');
     assert.match(await page.locator('#agent-selected-heading').innerText(), /Lina Wu/);
-    assert.match(await page.locator('.assistant-shared-interest').innerText(), /shared interests only.*not evidence of experience/);
+    assert.match(await page.locator('.assistant-shared-interest').innerText(), /Shared interests do not establish experience with your specific need/);
     const answer = 'Focus on mobile wallet connection with first-time users.';
     fixture.refineFailure = true;
     await page.locator('#agent-refine-answer').fill(answer);
