@@ -63,7 +63,8 @@
 }
 
 /* Keep page-level action placement while the library owns the control itself. */
-:is(.first-visit-actions, .widget-profile-content, .approve-actions, .assistant-history-entry) > .btn {
+.first-visit-actions .btn,
+:is(.widget-profile-content, .approve-actions, .assistant-history-entry) > .btn {
   width: 100%;
 }
 
@@ -80,12 +81,6 @@
 @media (max-width: 1180px) {
   .source-actions > .btn {
     flex: 1;
-  }
-}
-
-@media (min-width: 901px) and (max-width: 1180px) {
-  .widget-profile-content > .btn {
-    width: calc(100% + 120px);
   }
 }
 
