@@ -1725,6 +1725,70 @@
     .textarea:has( > textarea[disabled]) > textarea[disabled] {
       cursor: not-allowed;
     }
+    .tabs-box {
+      background-color: var(--color-base-200);
+      padding: 0.25rem;
+      --tabs-box-radius: calc(3 * var(--radius-field));
+      border-radius: calc( min(var(--tab-height) / 2, var(--radius-field)) + min(0.25rem, var(--tabs-box-radius)) );
+      box-shadow: 0 -0.5px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 0.5px oklch(0% 0 0 / calc(var(--depth) * 0.05)) inset;
+    }
+    .tabs-box > .tab {
+      border-radius: var(--radius-field);
+      border-style: none;
+    }
+    .tabs-box > .tab:focus-visible, .tabs-box > .tab:is(label:has(:checked:focus-visible)) {
+      outline-offset: 2px;
+    }
+    .tabs-box > .tab:focus-visible {
+      z-index: 1;
+    }
+    .tabs-box > :is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]):not(.tab-disabled, [disabled] ) {
+      background-color: var(--tab-bg, var(--color-base-100));
+      box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px var(--color-neutral), 0 1px 6px -4px var(--color-neutral);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .tabs-box > :is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]):not(.tab-disabled, [disabled] ) {
+        box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 50%), #0000), 0 1px 6px -4px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 100%), #0000);
+      }
+    }
+    @media (forced-colors: active) {
+      .tabs-box > :is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]):not(.tab-disabled, [disabled] ) {
+        border: 1px solid;
+      }
+    }
+    .tabs-box > :is(input:checked) {
+      background-color: var(--tab-bg, var(--color-base-100));
+      box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px var(--color-neutral), 0 1px 6px -4px var(--color-neutral);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .tabs-box > :is(input:checked) {
+        box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 50%), #0000), 0 1px 6px -4px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 100%), #0000);
+      }
+    }
+    @media (forced-colors: active) {
+      .tabs-box > :is(input:checked) {
+        border: 1px solid;
+      }
+    }
+    .tabs-box > :is(label:has(:checked)) {
+      background-color: var(--tab-bg, var(--color-base-100));
+      box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px var(--color-neutral), 0 1px 6px -4px var(--color-neutral);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .tabs-box > :is(label:has(:checked)) {
+        box-shadow: 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px 1px -1px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 50%), #0000), 0 1px 6px -4px color-mix(in oklab, var(--color-neutral) calc(var(--depth) * 100%), #0000);
+      }
+    }
+    @media (forced-colors: active) {
+      .tabs-box > :is(label:has(:checked)) {
+        border: 1px solid;
+      }
+    }
+    .tabs-box > .tab-content {
+      margin-top: 0.25rem;
+      height: calc(100% - var(--tab-height) + var(--border) - 0.5rem);
+      border-radius: calc( min(var(--tab-height) / 2, var(--radius-field)) + min(0.25rem, var(--tabs-box-radius)) - var(--border) );
+    }
   }
   .container {
     width: 100%;

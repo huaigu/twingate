@@ -26,6 +26,8 @@ Use `.btn` with daisyUI variants, `.input`, `.textarea`, `.select`, `.checkbox`,
 
 The layout adapter uses 40px regular buttons, 32px compact controls (`.btn-sm`), and 48px prominent actions (`.btn-lg`). Text and square icon buttons share the same height at each size. At phone widths compact and regular controls use 44px targets, fields use 16px text, and removable tags have one total 44px row rather than extra padding around a 44px child. Legacy scenes compensate size, spacing, text and SVG dimensions through one scale token; native workspace pages use scale 1. Use `.sp-control-wrap` for intentionally multiline actions. The standalone embed loads the same compiled controls inside its shadow root with the SignalPass theme.
 
+Keep inline preview-page styles in the same legacy layer. For a self-hosted embed, deploy `ui.css` beside the `embed` and `assets` folders; the copied snippet and preview must reference the current widget-script fingerprint.
+
 Run the existing flow, refinement and wallet regression suites after changing control markup. Use the browser review for actual keyboard focus, native dialog behavior, responsive sizes and long labels; the Node suites do not measure layout.
 
 References: [Tailwind CLI](https://tailwindcss.com/docs/installation/tailwind-cli), [omitting Preflight](https://tailwindcss.com/docs/preflight#disabling-preflight), [daisyUI configuration](https://daisyui.com/docs/config/), [custom themes](https://daisyui.com/docs/themes/).

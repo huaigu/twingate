@@ -710,7 +710,7 @@
     const publicWidget = api.live && api.me?.profile && api.me.settings.agent.visibility !== "private" ? { ...w, handle: api.me.profile.handle } : w;
     const attrs = `data-profile='${JSON.stringify(publicWidget).replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}'`;
     $("#embed-code").textContent =
-      `<div id="signalpass-widget" ${attrs}></div>\n<script src="${location.origin}/v4/embed/widget.js?v=1b32833fa235" defer><\/script>`;
+      `<div id="signalpass-widget" ${attrs}></div>\n<script src="${location.origin}/v4/embed/widget.js?v=1e047d4d8e11" defer><\/script>`;
     save();
   };
   if (page === "widget") {
@@ -808,7 +808,7 @@
     } catch (_) {
       openDialog(
         "Copy your embed",
-        `<p class="dialog-copy">Automatic clipboard access is unavailable. Select and copy this code.</p><textarea class="dialog-input textarea" readonly id="manual-copy">${escapeHTML(text)}</textarea>${notice("The script is local to this package. Upload the embed and assets folders alongside your site.")}`,
+        `<p class="dialog-copy">Automatic clipboard access is unavailable. Select and copy this code.</p><textarea class="dialog-input textarea" readonly id="manual-copy">${escapeHTML(text)}</textarea>${notice("For a self-hosted widget, upload ui.css with the embed and assets folders alongside your site.")}`,
         (root) => {
           $("#manual-copy", root).focus();
           $("#manual-copy", root).select();
