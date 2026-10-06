@@ -65,7 +65,7 @@
       });
     } else { scene.classList.remove('motion-preparing'); scene.classList.add('is-animated'); }
   };
-  const replay = document.createElement('button'); replay.type = 'button'; replay.className = 'sp-hero-replay';
+  const replay = document.createElement('button'); replay.type = 'button'; replay.className = 'sp-hero-replay btn btn-ghost btn-sm';
   replay.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 1 7M3 4v6h6"/></svg><span>Replay the connections</span>';
   replay.onclick = () => reveal(true); scene.after(replay);
   if ("IntersectionObserver" in window) {

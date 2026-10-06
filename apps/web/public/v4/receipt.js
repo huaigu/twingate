@@ -76,7 +76,7 @@ if (api.demo) {
     const form = document.createElement("form");
     form.id = "reply-form";
     form.innerHTML =
-      '<label class="dialog-field" for="reply-context">Add the context they asked for</label><textarea class="dialog-input" id="reply-context" required maxlength="1000" rows="4" placeholder="A little more about what you have in mind…"></textarea><div class="dialog-actions"><button class="button primary" type="submit">Approve and add context</button></div>';
+      '<label class="dialog-field" for="reply-context">Add the context they asked for</label><textarea class="dialog-input textarea" id="reply-context" required maxlength="1000" rows="4" placeholder="A little more about what you have in mind…"></textarea><div class="dialog-actions"><button class="button primary btn btn-primary" type="submit">Approve and add context</button></div>';
     document.getElementById("receipt-body").append(form);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -150,7 +150,7 @@ try {
   if (record.status === 'accepted') { const p = document.createElement('p'); p.className = 'v4-result-message'; p.textContent = 'Agreed starting point: ' + record.fields[3]; document.getElementById('receipt-body').append(p); }
   if (record.status === 'context_requested' && record.role === 'sender') {
     const form = document.createElement('form'); form.id = 'reply-form';
-    form.innerHTML = '<label class="dialog-field" for="reply-context">Add the context they asked for</label><textarea class="dialog-input" id="reply-context" required maxlength="1000" rows="4"></textarea><p id="reply-error" role="alert"></p><div class="dialog-actions"><button class="button primary" type="submit">Approve and add context</button></div>';
+    form.innerHTML = '<label class="dialog-field" for="reply-context">Add the context they asked for</label><textarea class="dialog-input textarea" id="reply-context" required maxlength="1000" rows="4"></textarea><p id="reply-error" role="alert"></p><div class="dialog-actions"><button class="button primary btn btn-primary" type="submit">Approve and add context</button></div>';
     document.getElementById('receipt-body').append(form);
     form.onsubmit = async (event) => { event.preventDefault(); const button = form.querySelector('button'); button.disabled = true; try { await api.request('/introductions/' + id + '/reply', { text: form.querySelector('textarea').value.trim(), revision: record.revision }); location.reload(); } catch (error) { form.querySelector('#reply-error').textContent = error.message; button.disabled = false; } };
   }

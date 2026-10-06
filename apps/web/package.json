@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3004",
-    "build": "next build",
+    "dev": "node scripts/build-ui.mjs --dev",
+    "build": "pnpm css:build && next build",
+    "css:build": "node scripts/build-ui.mjs",
+    "css:check": "node scripts/build-ui.mjs --check",
+    "css:watch": "node scripts/build-ui.mjs --watch",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit"
   },
@@ -17,10 +20,14 @@
     "three": "^0.180.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.180.0",
+    "daisyui": "5.7.47",
+    "postcss": "8.5.29",
+    "tailwindcss": "4.3.3",
     "typescript": "5.7.2"
   }
 }

@@ -1,3 +1,4 @@
+@layer legacy {
 /* SignalPass: correspondence-paper details. Native controls remain interactive. */
 .data-settings > p { font: 14px/1.65 Arial, sans-serif; color: var(--sp-muted); margin-top: 14px; }
 .data-settings > .button { margin-top: 18px; }
@@ -39,26 +40,13 @@
 .v4-session-copy small { font: 12px/1.45 var(--sp-sans); color: var(--sp-muted); }
 body > .v4-header { position: relative; inset: auto; width: 100%; }
 .v4-header.site-header { z-index: 30; }
-/* One family and one interaction rhythm for actions across every surface. */
-:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button {
-  font-family: var(--sp-sans); font-size: 14px; font-weight: 600; line-height: 1.35;
-  letter-spacing: 0; min-height: 48px; padding: 12px 20px; border-radius: 12px;
-  transition: background-color 160ms var(--sp-ease), border-color 160ms var(--sp-ease), box-shadow 160ms var(--sp-ease), transform 160ms var(--sp-ease);
-}
-:is(.scene, .hero-page, .v4-summary-card, dialog) .button.primary { background: var(--sp-violet); border-color: var(--sp-violet); color: #fff; box-shadow: 0 2px 3px #3121690b; }
-:is(.scene, .hero-page, .v4-summary-card, dialog) .button.primary:hover { background: var(--sp-violet-hover); border-color: var(--sp-violet-hover); box-shadow: 0 4px 10px #31216916; }
-:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button:is(.outline, .secondary) { border-color: var(--sp-border); color: var(--sp-ink); background: #fffaf580; }
-:is(.scene, .hero-page, .v4-summary-card, .v4-session-bar, dialog) .button:is(.outline, .secondary):hover { border-color: #9e8bbb; background: var(--sp-lilac); }
-.button:active:not(:disabled) { transform: scale(.98); }
-.button:disabled { opacity: .55; box-shadow: none; transform: none; }
-:is(button, a, input, textarea, select):focus-visible { outline: 3px solid #8978d5; outline-offset: 4px; }
+/* Preserve focus for links and selection cards outside the shared controls. */
+:is(button, a, input, textarea, select):not(:is(.btn, .input, .textarea, .select, .checkbox, .radio, .tab, .toggle)):focus-visible { outline: 3px solid #8978d5; outline-offset: 4px; }
 .v4-menu a { min-height: 44px; display: flex; align-items: center; font-size: 14px; border-radius: 10px; }
 .v4-menu a[aria-current="page"] { background: var(--sp-lilac); color: var(--sp-violet); }
 dialog { box-shadow: 0 24px 72px #30223824; }
 dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
 .dialog-copy { font-family: var(--sp-sans); line-height: 1.65; }
-.dialog-input { border-radius: 10px; background: #f5f0e9; border: 1px solid var(--sp-border); font-family: var(--sp-sans); }
-.dialog-input:focus { border-color: var(--sp-violet); background: #fffdf9; box-shadow: 0 0 0 3px #5140cd10; }
 /* The generated illustration is a quiet supporting detail; the next action leads. */
 .v4-empty-state { display: grid; grid-template-columns: 176px minmax(0, 1fr); align-items: center; gap: 28px; padding: 32px; grid-column: 1 / -1; width: 100%; min-height: 264px; border: 1px solid var(--sp-border); border-radius: 18px; background: var(--sp-paper); }
 .v4-empty-art { width: 176px; height: 176px; object-fit: cover; border-radius: 50%; mix-blend-mode: multiply; }
@@ -91,10 +79,6 @@ dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
 .v4-chain-proof code, .v4-chain-proof a { display: block; margin-top: 4px; font-size: 12px; line-height: 1.55; color: #6d6180; }
 .v4-footer { line-height: 1.65; }
 @media (min-width: 1181px) {
-  .scene .button {
-    min-height: calc(48px / var(--scale, 1)); font-size: calc(14px / var(--scale, 1));
-    padding: calc(12px / var(--scale, 1)) calc(16px / var(--scale, 1)); white-space: normal;
-  }
   .scene .v4-menu a { min-height: calc(44px / var(--scale, 1)); font-size: calc(14px / var(--scale, 1)); }
 }
 @media (max-width: 600px) {
@@ -103,10 +87,7 @@ dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
   .v4-session-bar { min-height: 80px; gap: 12px; }
   .v4-session-copy strong { font-size: 13px; }
   .v4-session-copy small { font-size: 11px; line-height: 1.4; }
-  .v4-session-bar .button { min-height: 44px; padding: 10px 13px; font-size: 13px; }
-  .agent-actions .button { font-size: 14px; padding: 12px; white-space: normal; }
-  .source-actions .button { font-family: var(--sp-sans); font-size: 14px; }
-  .dialog-input, .intro-field textarea, .widget-editor input, .widget-editor select { font-size: 16px; }
+  .agent-actions .button { white-space: normal; }
   .v4-empty-state { display: flex; flex-direction: column; text-align: center; padding: 24px 20px; gap: 12px; }
   .v4-empty-art { width: 152px; height: 152px; }
   .v4-empty-state h2 { font-size: 26px; }
@@ -119,6 +100,4 @@ dialog::backdrop { background: #24203266; backdrop-filter: blur(3px); }
   .v4-summary-card .dialog-actions { gap: 10px; }
   .v4-summary-card .dialog-actions .button { flex: 1 1 100%; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .button, .button:active:not(:disabled) { transition: none; transform: none; }
 }

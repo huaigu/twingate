@@ -10,17 +10,19 @@
     />
     <title>Discover people · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
-    <link href="/v4/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
-    <script defer src="/v4/wallet.js?v=92a499b59a9c"></script>
-    <script defer="" src="/v4/app.js?v=4c0ee8375110"></script>
-    <link rel="stylesheet" href="/v4/v4.css" />
-    <link rel="stylesheet" href="/v4/polish.css" />
-    <link rel="stylesheet" href="/v4/motion.css" />
-    <link rel="stylesheet" href="/v4/experience.css?v=c5de147e2cda" />
+    <link href="/v4/styles.css?v=444422b60385" rel="stylesheet" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
+    <script defer="" src="/v4/app.js?v=00a71941e674"></script>
+    <link rel="stylesheet" href="/v4/v4.css?v=654cbac318c2" />
+    <link rel="stylesheet" href="/v4/polish.css?v=7605d6cdeccc" />
+    <link rel="stylesheet" href="/v4/motion.css?v=562fbbf4554b" />
+    <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/motion.js"></script>
+    <script defer src="/v4/motion.js?v=20966f246dd7"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=a17098093354" />
   </head>
   <body class="sp-workspace" data-page="discover">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -44,7 +46,7 @@
             ><a href="/widget/create">Your widget</a>
           </nav>
           <button
-            class="v4-menu-toggle"
+            class="v4-menu-toggle btn btn-ghost btn-square"
             aria-expanded="false"
             aria-controls="site-navigation"
             aria-label="Open navigation"
@@ -54,7 +56,7 @@
           </button>
         </header>
         <main id="main-content">
-          <div class="sp-page-heading discovery-heading"><div><p class="sp-eyebrow">PEOPLE, WITH CONTEXT</p><h1>Find a reason to say hello.</h1><p class="sp-page-description">Shared interests. Useful differences. People you’d like to build with.</p></div><a class="button primary" href="/assistant">Find people with my agent →</a></div>
+          <div class="sp-page-heading discovery-heading"><div><p class="sp-eyebrow">PEOPLE, WITH CONTEXT</p><h1>Find a reason to say hello.</h1><p class="sp-page-description">Shared interests. Useful differences. People you’d like to build with.</p></div><a class="button primary btn btn-primary" href="/assistant">Find people with my agent →</a></div>
           <div class="discovery-workspace">
             <section class="paper discovery-query">
               <h2>What would you like to explore?</h2>
@@ -66,12 +68,12 @@
                   name="curiosity"
                   placeholder="e.g. finding a design partner, learning about zk, or meeting creators..."
                   type="text"
-                />
+                 class="input" />
                 <div class="discovery-controls">
                   <div class="discovery-goals">
                     <button
                       aria-pressed="false"
-                      class="goal-pill"
+                      class="goal-pill btn btn-outline btn-sm"
                       data-discovery-goal="chat"
                       type="button"
                     >
@@ -91,7 +93,7 @@
                       >Chat</button
                     ><button
                       aria-pressed="false"
-                      class="goal-pill"
+                      class="goal-pill btn btn-outline btn-sm"
                       data-discovery-goal="collaborate"
                       type="button"
                     >
@@ -112,7 +114,7 @@
                       >Collaborate</button
                     ><button
                       aria-pressed="false"
-                      class="goal-pill"
+                      class="goal-pill btn btn-outline btn-sm"
                       data-discovery-goal="learn"
                       type="button"
                     >
@@ -132,7 +134,7 @@
                       >Learn
                     </button>
                   </div>
-                  <button class="button primary" type="submit">
+                  <button class="button primary btn btn-primary" type="submit">
                     Explore people<svg
                       aria-hidden="true"
                       class="icon"
@@ -483,7 +485,7 @@
                 </ul>
               </section>
               <button
-                class="browse-people"
+                class="browse-people btn btn-outline"
                 data-action="browse-people"
                 type="button"
               >
@@ -508,7 +510,7 @@
 
     <dialog aria-labelledby="dialog-title" id="app-dialog">
       <form method="dialog">
-        <button aria-label="Close dialog" class="dialog-close">
+        <button aria-label="Close dialog" class="dialog-close btn btn-ghost btn-square btn-sm">
           <svg
             aria-hidden="true"
             class="icon"

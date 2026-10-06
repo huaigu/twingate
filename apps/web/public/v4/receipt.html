@@ -6,19 +6,21 @@
     <meta name="theme-color" content="#f5eee3" />
     <title>Introduction receipt · SignalPass</title>
     <link rel="icon" href="/v4/favicon.svg" />
-    <link rel="stylesheet" href="/v4/styles.css" />
-    <link rel="stylesheet" href="/v4/v4.css" />
-    <link rel="stylesheet" href="/v4/polish.css" />
-    <link rel="stylesheet" href="/v4/motion.css" />
-    <link rel="stylesheet" href="/v4/experience.css?v=c5de147e2cda" />
-    <link rel="stylesheet" href="/v4/connection.css" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
-    <script defer src="/v4/wallet.js?v=92a499b59a9c"></script>
-    <script defer src="/v4/connection.js"></script>
-    <script defer src="/v4/receipt.js"></script>
+    <link rel="stylesheet" href="/v4/styles.css?v=444422b60385" />
+    <link rel="stylesheet" href="/v4/v4.css?v=654cbac318c2" />
+    <link rel="stylesheet" href="/v4/polish.css?v=7605d6cdeccc" />
+    <link rel="stylesheet" href="/v4/motion.css?v=562fbbf4554b" />
+    <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
+    <link rel="stylesheet" href="/v4/connection.css?v=a9e9228fdd12" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
+    <script defer src="/v4/connection.js?v=064424e50f28"></script>
+    <script defer src="/v4/receipt.js?v=f3a9f1e775df"></script>
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/motion.js"></script>
+    <script defer src="/v4/motion.js?v=20966f246dd7"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=a17098093354" />
   </head>
   <body data-page="receipt">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -38,7 +40,7 @@
         ><a href="/widget/create">Your widget</a>
       </nav>
       <button
-        class="v4-menu-toggle"
+        class="v4-menu-toggle btn btn-ghost btn-square"
         aria-expanded="false"
         aria-controls="site-navigation"
         aria-label="Open navigation"
@@ -54,7 +56,7 @@
       <p id="receipt-description">Loading your introduction…</p>
       <div id="receipt-access" hidden>
         <p id="receipt-access-description"></p>
-        <button type="button" class="button primary" id="receipt-reconnect">Connect wallet to continue</button>
+        <button type="button" class="button primary btn btn-primary" id="receipt-reconnect">Connect wallet to continue</button>
         <p id="receipt-access-error" role="alert"></p>
       </div>
       <div id="receipt-body" hidden>
@@ -69,8 +71,8 @@
         <p id="receipt-date" class="v4-receipt-label"></p>
       </div>
       <div class="dialog-actions">
-        <a class="button outline" href="/discover">Keep exploring</a
-        ><a class="button primary" id="recipient-link" href="/inbox"
+        <a class="button outline btn btn-outline" href="/discover">Keep exploring</a
+        ><a class="button primary btn btn-primary" id="recipient-link" href="/inbox"
           >View introductions →</a
         >
       </div>

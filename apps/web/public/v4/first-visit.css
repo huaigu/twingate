@@ -1,3 +1,4 @@
+@layer legacy {
 /* Homepage entry choices; preserve the shared hero and its animation. */
 .sp-home .hero-description strong {
   display: block;
@@ -39,4 +40,5 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
   }
+}
 }

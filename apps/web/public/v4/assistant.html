@@ -7,15 +7,17 @@
     <meta name="description" content="Your SignalPass agent helps you find people with a reason to connect, then prepare an introduction you approve." />
     <title>Your Personal Agent · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
-    <link href="/v4/styles.css" rel="stylesheet" />
-    <link href="/v4/v4.css" rel="stylesheet" />
-    <link href="/v4/polish.css" rel="stylesheet" />
-    <link href="/v4/experience.css?v=c5de147e2cda" rel="stylesheet" />
-    <link href="/v4/assistant.css?v=ca06d296ca77" rel="stylesheet" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
+    <link href="/v4/styles.css?v=444422b60385" rel="stylesheet" />
+    <link href="/v4/v4.css?v=654cbac318c2" rel="stylesheet" />
+    <link href="/v4/polish.css?v=7605d6cdeccc" rel="stylesheet" />
+    <link href="/v4/experience.css?v=87ed5d61798b" rel="stylesheet" />
+    <link href="/v4/assistant.css?v=79a05e7184a9" rel="stylesheet" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/assistant.js?v=bce63e0f356f"></script>
+    <script defer src="/v4/assistant.js?v=e02e610db08e"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=a17098093354" />
   </head>
   <body class="sp-workspace sp-assistant" data-page="assistant">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -26,7 +28,7 @@
         <nav class="v4-menu" id="site-navigation" aria-label="Main navigation">
           <a href="/profile/import">Your profile</a><a href="/assistant" aria-current="page">My agent</a><a href="/discover">Discover</a><a href="/inbox">Introductions</a><a href="/widget/create">Your widget</a>
         </nav>
-        <button class="v4-menu-toggle" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation" type="button"><span></span><span></span></button>
+        <button class="v4-menu-toggle btn btn-ghost btn-square" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg></button>
       </header>
       <main id="main-content">
         <div class="sp-page-heading assistant-heading">
@@ -43,17 +45,17 @@
               <h2 id="goal-heading">Who would help you move forward?</h2>
               <form id="agent-goal-form" aria-busy="false">
                 <label class="sr-only" for="agent-goal">What would you like help with?</label>
-                <textarea id="agent-goal" name="goal" minlength="10" maxlength="1200" rows="4" required placeholder="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return." aria-describedby="goal-hint"></textarea>
+                <textarea id="agent-goal" name="goal" minlength="10" maxlength="1200" rows="4" required placeholder="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return." aria-describedby="goal-hint" class="textarea"></textarea>
                 <p class="assistant-field-hint" id="goal-hint">Say what you need and what you can offer. Searches only people who have made their profiles available on SignalPass.</p>
                 <div class="assistant-examples" aria-label="Example goals">
                   <span>Start with an idea</span>
-                  <button type="button" data-example="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return.">Get early feedback ↗</button>
-                  <button type="button" data-example="I’d like to meet a designer interested in making onchain tools easier to use. I can help prototype and test a small idea together.">Find a collaborator ↗</button>
-                  <button type="button" data-example="I want to understand how people build welcoming online communities. I’d love to exchange experiences in a short conversation.">Learn from someone ↗</button>
+                  <button type="button" data-example="I’m building a Monad analytics tool and want someone to test the wallet onboarding. I can offer product feedback in return." class="btn btn-ghost btn-sm">Get early feedback ↗</button>
+                  <button type="button" data-example="I’d like to meet a designer interested in making onchain tools easier to use. I can help prototype and test a small idea together." class="btn btn-ghost btn-sm">Find a collaborator ↗</button>
+                  <button type="button" data-example="I want to understand how people build welcoming online communities. I’d love to exchange experiences in a short conversation." class="btn btn-ghost btn-sm">Learn from someone ↗</button>
                 </div>
-                <label class="assistant-consent" for="agent-use-profile"><input type="checkbox" id="agent-use-profile" /><span><strong>Use my approved profile for this request</strong><small>Include my background and interests so the introduction sounds like me. You can search with just your goal.</small></span></label>
+                <label class="assistant-consent" for="agent-use-profile"><input type="checkbox" id="agent-use-profile"  class="checkbox checkbox-primary" /><span><strong>Use my approved profile for this request</strong><small>Include my background and interests so the introduction sounds like me. You can search with just your goal.</small></span></label>
                 <p class="assistant-disclosure" id="agent-disclosure">Your goal and selected public profiles are sent to SignalPass’s AI provider. Your approved profile is included only when you check the box. This does not share your profile with another person.</p>
-                <div class="assistant-submit-row"><button type="submit" class="button primary" id="agent-submit" disabled>Find relevant people <span aria-hidden="true">→</span></button><span id="agent-budget" class="assistant-budget">Checking included usage…</span></div>
+                <div class="assistant-submit-row"><button type="submit" class="button primary btn btn-primary" id="agent-submit" disabled>Find relevant people <span aria-hidden="true">→</span></button><span id="agent-budget" class="assistant-budget">Checking included usage…</span></div>
               </form>
               <div class="assistant-notice" id="agent-notice" hidden><p id="agent-notice-text"></p><div id="agent-notice-actions" class="assistant-actions"></div></div>
               <p id="agent-progress" class="assistant-progress" role="status" aria-live="polite"></p>
@@ -67,20 +69,20 @@
               <section id="agent-selection" class="paper assistant-selection" aria-labelledby="agent-selected-heading" hidden>
                 <p class="assistant-step">YOUR NEXT HELLO</p><h3 id="agent-selected-heading"></h3>
                 <p id="agent-selected-detail" class="assistant-field-hint"></p>
-                <label class="assistant-consent assistant-draft-consent" for="agent-draft-consent"><input type="checkbox" id="agent-draft-consent" /><span><strong>Use my approved profile to prepare this introduction</strong><small>My goal, approved profile, and this person’s public profile go to the AI provider. This permission does not send anything.</small></span></label>
-                <div class="assistant-selection-actions"><button type="button" id="agent-prepare-selected" class="button primary assistant-prepare-draft">Prepare introduction →</button><a id="agent-selected-manual" class="sp-text-link" href="/discover">Write it myself ↗</a></div>
+                <label class="assistant-consent assistant-draft-consent" for="agent-draft-consent"><input type="checkbox" id="agent-draft-consent"  class="checkbox checkbox-primary" /><span><strong>Use my approved profile to prepare this introduction</strong><small>My goal, approved profile, and this person’s public profile go to the AI provider. This permission does not send anything.</small></span></label>
+                <div class="assistant-selection-actions"><button type="button" id="agent-prepare-selected" class="button primary assistant-prepare-draft btn btn-primary">Prepare introduction →</button><a id="agent-selected-manual" class="sp-text-link" href="/discover">Write it myself ↗</a></div>
                 <p id="agent-draft-progress" class="assistant-progress" role="status" aria-live="polite"></p><div id="agent-draft-error" class="assistant-error" role="alert" tabindex="-1" hidden></div>
               </section>
               <form id="agent-refine-form" class="assistant-refine" aria-labelledby="agent-next-question" aria-busy="false" hidden>
                 <p class="assistant-step">MAKE THIS SEARCH MORE USEFUL</p><h3 id="agent-next-question"></h3>
-                <label for="agent-refine-answer" class="sr-only">Additional context for this search</label><textarea id="agent-refine-answer" minlength="3" maxlength="600" rows="3" placeholder="Add the detail that matters most…" aria-describedby="agent-refine-hint" required></textarea>
-                <p id="agent-refine-hint" class="assistant-field-hint">Your original goal stays the same. This answer adds context to a new search.</p><button type="submit" id="agent-refine-submit" class="button outline">Refine these suggestions →</button>
+                <label for="agent-refine-answer" class="sr-only">Additional context for this search</label><textarea id="agent-refine-answer" minlength="3" maxlength="600" rows="3" placeholder="Add the detail that matters most…" aria-describedby="agent-refine-hint" required class="textarea"></textarea>
+                <p id="agent-refine-hint" class="assistant-field-hint">Your original goal stays the same. This answer adds context to a new search.</p><button type="submit" id="agent-refine-submit" class="button outline btn btn-outline">Refine these suggestions →</button>
                 <p id="agent-refine-progress" class="assistant-progress" role="status" aria-live="polite"></p><div id="agent-refine-error" class="assistant-error" role="alert" tabindex="-1" hidden></div>
               </form>
               <section id="agent-refine-limit" class="assistant-refine" aria-labelledby="agent-refine-limit-heading" hidden>
                 <h3 id="agent-refine-limit-heading">Three answers added to this search.</h3>
                 <p class="assistant-field-hint">Your goal and earlier answers are saved. Review any suggestions above, or edit your goal to start a new search when you are ready.</p>
-                <button type="button" id="agent-edit-goal" class="button outline">Review or change your goal →</button>
+                <button type="button" id="agent-edit-goal" class="button outline btn btn-outline">Review or change your goal →</button>
               </section>
             </section>
             <section id="agent-draft-panel" class="paper assistant-draft-panel" aria-labelledby="draft-heading" tabindex="-1" hidden>
@@ -88,13 +90,13 @@
               <p class="assistant-draft-caption">AI draft—review the details before sending. Check personal claims and remove any untrue suggestion that you know them or follow their work. Nothing has been sent.</p>
               <div id="agent-draft-fields" class="assistant-draft-fields"></div>
               <p id="agent-preserved-draft" class="assistant-preserved-draft" hidden></p><p id="agent-draft-notes" class="assistant-field-hint"></p><p id="agent-draft-expiry" class="assistant-field-hint"></p>
-              <a id="agent-draft-handoff" class="button primary" href="/discover">Review &amp; edit introduction <span aria-hidden="true">→</span></a>
+              <a id="agent-draft-handoff" class="button primary btn btn-primary" href="/discover">Review &amp; edit introduction <span aria-hidden="true">→</span></a>
               <p class="assistant-field-hint">You’ll edit the message, choose whether to share profile context, and approve delivery on the next page.</p>
             </section>
           </div>
           <aside class="assistant-sidebar" aria-label="Your agent workspace">
             <section class="paper assistant-how"><div class="assistant-orbit" aria-hidden="true">✳</div><h2>Your goal.<br />Your final word.</h2><p>Your agent reads public profiles, explains possible connections, and helps you write the first hello.</p><ol><li><span>1</span>Tell it what matters</li><li><span>2</span>Look at the evidence</li><li><span>3</span>Review before you send</li></ol><p class="assistant-aside-note">No installation. No API key.<br />AI usage is covered within a daily limit.</p><a href="/agent" class="sp-text-link">Profile &amp; privacy settings ↗</a></section>
-            <section class="paper assistant-history" aria-labelledby="history-heading"><div class="assistant-history-heading"><h2 id="history-heading">Your recent work</h2><span class="assistant-private">PRIVATE</span></div><p class="assistant-field-hint">Goals and drafts are private to your signed-in account.</p><div id="agent-history"><p class="assistant-history-empty">Your recent goals and drafts will appear here.</p></div><button type="button" class="assistant-text-button" id="agent-clear-history" hidden>Clear history</button><div class="assistant-clear-confirm" id="agent-clear-confirm" hidden><p>Delete your saved goals and drafts? Sent introductions stay in your inbox. This won’t reset today’s usage.</p><div class="assistant-actions"><button type="button" class="button outline" id="agent-confirm-clear">Delete history</button><button type="button" class="assistant-text-button" id="agent-cancel-clear">Keep history</button></div></div></section>
+            <section class="paper assistant-history" aria-labelledby="history-heading"><div class="assistant-history-heading"><h2 id="history-heading">Your recent work</h2><span class="assistant-private">PRIVATE</span></div><p class="assistant-field-hint">Goals and drafts are private to your signed-in account.</p><div id="agent-history"><p class="assistant-history-empty">Your recent goals and drafts will appear here.</p></div><button type="button" class="assistant-text-button btn btn-ghost btn-sm" id="agent-clear-history" hidden>Clear history</button><div class="assistant-clear-confirm" id="agent-clear-confirm" hidden><p>Delete your saved goals and drafts? Sent introductions stay in your inbox. This won’t reset today’s usage.</p><div class="assistant-actions"><button type="button" class="button outline btn btn-outline" id="agent-confirm-clear">Delete history</button><button type="button" class="assistant-text-button btn btn-ghost btn-sm" id="agent-cancel-clear">Keep history</button></div></div></section>
           </aside>
         </div>
         <footer class="assistant-footer"><span>SignalPass · People worth knowing, with context.</span><span>Suggestions need your judgment. Introductions need your approval.</span></footer>

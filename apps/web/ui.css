@@ -1,0 +1,56 @@
+/* Authored source. Regenerate public/v4/ui.css with pnpm ui:build. */
+@layer legacy, theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+/* V4 is served as native HTML, including controls created by these scripts. */
+@source "./public/v4/*.html";
+@source "./public/v4/*.js";
+@source "./public/v4/embed/*.js";
+@source inline("btn btn-primary btn-secondary btn-outline btn-ghost btn-error btn-sm btn-md btn-lg btn-square input textarea select checkbox radio tabs tab tab-active toggle");
+/* Existing state hooks use .outline; it is not Tailwind's outline utility. */
+@source not inline("outline");
+
+/* No Preflight, modal, page color reset, scroll-gutter override or runtime CDN. */
+@plugin "daisyui" {
+  themes: false;
+  include: button, input, textarea, select, checkbox, radio, tab, toggle;
+  logs: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "signalpass";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #fffdf8;
+  --color-base-200: #f4f0e8;
+  --color-base-300: #d8d0dd;
+  --color-base-content: #292637;
+  --color-primary: #5847bd;
+  --color-primary-content: #ffffff;
+  --color-secondary: #ece6f3;
+  --color-secondary-content: #534366;
+  --color-accent: #dfe8d9;
+  --color-accent-content: #334b3f;
+  --color-neutral: #292637;
+  --color-neutral-content: #fffdf8;
+  --color-info: #365f91;
+  --color-info-content: #ffffff;
+  --color-success: #285c46;
+  --color-success-content: #ffffff;
+  --color-warning: #e5c179;
+  --color-warning-content: #463820;
+  --color-error: #9c4058;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}

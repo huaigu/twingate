@@ -225,14 +225,14 @@
   });
   const notice = (text) => `<p class="dialog-notice">${text}</p>`;
   const buttons = (label, id = "dialog-confirm", other = "Cancel") =>
-    `<div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>${other}</button><button type="button" class="button primary" id="${id}">${label}</button></div>`;
+    `<div class="dialog-actions"><button type="button" class="button outline btn btn-outline" data-close-dialog>${other}</button><button type="button" class="button primary btn btn-primary" id="${id}">${label}</button></div>`;
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-close-dialog]")) closeDialog();
   });
   const addTextDialog = (title, label, placeholder, callback) =>
     openDialog(
       title,
-      `<form id="add-text-form"><label class="dialog-field" for="add-text">${label}</label><input class="dialog-input" id="add-text" maxlength="38" required placeholder="${escapeHTML(placeholder)}" autofocus><div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>Cancel</button><button type="submit" class="button primary">Add interest</button></div></form>`,
+      `<form id="add-text-form"><label class="dialog-field" for="add-text">${label}</label><input class="dialog-input input" id="add-text" maxlength="38" required placeholder="${escapeHTML(placeholder)}" autofocus><div class="dialog-actions"><button type="button" class="button outline btn btn-outline" data-close-dialog>Cancel</button><button type="submit" class="button primary btn btn-primary">Add interest</button></div></form>`,
       (root) =>
         $("#add-text-form", root).addEventListener("submit", (e) => {
           e.preventDefault();
@@ -270,7 +270,7 @@
           ];
     openDialog(
       field === "all" ? "A little about you" : "Edit your draft",
-      `<form id="edit-profile-form">${fields.map(([key, label]) => `<label class="dialog-field" for="edit-${key}">${label}</label>${key === "name" ? `<input class="dialog-input" id="edit-${key}" name="${key}" maxlength="45" required value="${escapeHTML(state.profile[key] || "")}" autofocus>` : `<textarea class="dialog-input" id="edit-${key}" name="${key}" maxlength="240" ${key === "interests" ? "" : "required"}>${escapeHTML(state.profile[key] || "")}</textarea>`}`).join("")}${notice("You control what to share. Changes are saved in this browser only.")}<div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>Cancel</button><button type="submit" class="button primary">Save changes</button></div></form>`,
+      `<form id="edit-profile-form">${fields.map(([key, label]) => `<label class="dialog-field" for="edit-${key}">${label}</label>${key === "name" ? `<input class="dialog-input input" id="edit-${key}" name="${key}" maxlength="45" required value="${escapeHTML(state.profile[key] || "")}" autofocus>` : `<textarea class="dialog-input textarea" id="edit-${key}" name="${key}" maxlength="240" ${key === "interests" ? "" : "required"}>${escapeHTML(state.profile[key] || "")}</textarea>`}`).join("")}${notice("You control what to share. Changes are saved in this browser only.")}<div class="dialog-actions"><button type="button" class="button outline btn btn-outline" data-close-dialog>Cancel</button><button type="submit" class="button primary btn btn-primary">Save changes</button></div></form>`,
       (root) => {
         $("#edit-profile-form", root).addEventListener("submit", (e) => {
           e.preventDefault();
@@ -318,7 +318,7 @@
         if (source === "agent") {
           openDialog(
             "Bring your own agent",
-            `<p class="dialog-copy">Ask your agent to prepare your profile, then paste its JSON draft here. You’ll review every field.</p><form id="agent-import-form"><label class="dialog-field" for="agent-json">Profile JSON</label><textarea class="dialog-input" id="agent-json" rows="7" required maxlength="12000" placeholder='{"name":"Alex","bio":"A little about me","interests":"...","offer":"...","meet":"..."}'></textarea><p class="dialog-copy" id="import-error" role="alert"></p><div class="dialog-actions"><button type="button" class="button outline" data-close-dialog>Cancel</button><button class="button primary" type="submit">Import draft</button></div></form>`,
+            `<p class="dialog-copy">Ask your agent to prepare your profile, then paste its JSON draft here. You’ll review every field.</p><form id="agent-import-form"><label class="dialog-field" for="agent-json">Profile JSON</label><textarea class="dialog-input textarea" id="agent-json" rows="7" required maxlength="12000" placeholder='{"name":"Alex","bio":"A little about me","interests":"...","offer":"...","meet":"..."}'></textarea><p class="dialog-copy" id="import-error" role="alert"></p><div class="dialog-actions"><button type="button" class="button outline btn btn-outline" data-close-dialog>Cancel</button><button class="button primary btn btn-primary" type="submit">Import draft</button></div></form>`,
             (root) =>
               $("#agent-import-form", root).addEventListener(
                 "submit",
@@ -369,7 +369,7 @@
         }
         openDialog(
           `Add ${source === "github" ? "GitHub" : source === "x" ? "Twitter / X" : "your website"}`,
-          `<p class="dialog-copy">Save a public link for reference. SignalPass does not fetch its contents or verify the account.</p><form id="source-form"><label class="dialog-field" for="source-url">Public URL</label><input type="url" class="dialog-input" id="source-url" required autofocus maxlength="500" value="${escapeHTML(state.sourceLinks[source] || "")}" placeholder="${source === "github" ? "https://github.com/yourname" : source === "x" ? "https://x.com/yourname" : "https://your-site.com"}"><p id="source-error" class="dialog-copy" role="alert"></p><div class="dialog-actions"><button class="button outline" id="remove-source" type="button">Remove source</button><button class="button primary" type="submit">Save source</button></div></form>`,
+          `<p class="dialog-copy">Save a public link for reference. SignalPass does not fetch its contents or verify the account.</p><form id="source-form"><label class="dialog-field" for="source-url">Public URL</label><input type="url" class="dialog-input input" id="source-url" required autofocus maxlength="500" value="${escapeHTML(state.sourceLinks[source] || "")}" placeholder="${source === "github" ? "https://github.com/yourname" : source === "x" ? "https://x.com/yourname" : "https://your-site.com"}"><p id="source-error" class="dialog-copy" role="alert"></p><div class="dialog-actions"><button class="button outline btn btn-outline" id="remove-source" type="button">Remove source</button><button class="button primary btn btn-primary" type="submit">Save source</button></div></form>`,
           (root) => {
             $("#source-form", root).addEventListener("submit", (event) => {
               event.preventDefault();
@@ -415,7 +415,7 @@
 
   // 02 — Privacy and matching are local preference controls, not cryptography.
   const interestTag = (text) =>
-    `<span class="interest-tag">${escapeHTML(text)}<button type="button" data-remove-interest aria-label="Remove ${escapeHTML(text)}">${icon("close")}</button></span>`;
+    `<span class="interest-tag">${escapeHTML(text)}<button type="button" data-remove-interest aria-label="Remove ${escapeHTML(text)}" class="btn btn-ghost btn-square btn-sm">${icon("close")}</button></span>`;
   const updateMiniProfile = () => {
     const mini = $(".mini-profile");
     if (!mini) return;
@@ -437,7 +437,7 @@
     if (!list) return;
     list.innerHTML =
       state.agent.interests.map(interestTag).join("") +
-      `<button class="add-tag" data-add-interest type="button">${icon("plus")}Add interest</button>`;
+      `<button class="add-tag btn btn-outline" data-add-interest type="button">${icon("plus")}Add interest</button>`;
   };
   if (page === "agent") {
     renderInterests();
@@ -562,7 +562,7 @@
     if (!p) return;
     openDialog(
       `Meet ${p.name}`,
-      `<img class="avatar dialog-avatar" src="assets/avatar-${p.avatar}.webp" alt="${p.name} illustrated avatar"><p class="dialog-copy">${escapeHTML(p.role)}</p><div class="dialog-tags">${p.tags.map((t) => `<span class="chip">${escapeHTML(t)}</span>`).join("")}</div><p class="dialog-copy">${escapeHTML(p.description)}</p>${notice(api.demo ? "An example suggestion, not a ranking. No one has been contacted." : "This profile was approved by its owner. Sources are not independently verified. No introduction has been sent.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep exploring</button><a class="button primary" href="/introductions/new/${p.name.toLowerCase()}">Draft an introduction ${icon("arrow")}</a></div>`,
+      `<img class="avatar dialog-avatar" src="assets/avatar-${p.avatar}.webp" alt="${p.name} illustrated avatar"><p class="dialog-copy">${escapeHTML(p.role)}</p><div class="dialog-tags">${p.tags.map((t) => `<span class="chip">${escapeHTML(t)}</span>`).join("")}</div><p class="dialog-copy">${escapeHTML(p.description)}</p>${notice(api.demo ? "An example suggestion, not a ranking. No one has been contacted." : "This profile was approved by its owner. Sources are not independently verified. No introduction has been sent.")}<div class="dialog-actions"><button class="button outline btn btn-outline" type="button" data-close-dialog>Keep exploring</button><a class="button primary btn btn-primary" href="/introductions/new/${p.name.toLowerCase()}">Draft an introduction ${icon("arrow")}</a></div>`,
     );
   };
   if (page === "discover") {
@@ -570,7 +570,7 @@
       $(".discovery-results h2").textContent = "Builders open to introductions";
       $("#discovery-form [type=submit]").textContent = "Find shared interests";
       $(".search-result-note").textContent = "Approved public profiles · keyword search, not AI ranking.";
-      $(".people-grid").innerHTML = directory.length ? directory.map((p) => '<article class="paper person-card" role="button" tabindex="0" data-person="' + escapeHTML(p.name) + '"><div class="person-header"><img class="avatar" src="/v4/assets/avatar-' + p.avatar + '.webp" alt=""><div><h3>' + escapeHTML(p.displayName || p.name) + '</h3><p>' + escapeHTML(p.role) + '</p><div class="person-tags">' + p.tags.map(t => '<span class="chip mint">' + escapeHTML(t) + '</span>').join('') + '</div></div></div><h4>In their own words</h4><p>' + escapeHTML(p.description) + '</p></article>').join('') : '<div class="v4-live-empty"><h3>The first connections start with you.</h3><p>There are no other public profiles yet. Save your profile, choose public visibility and invite another builder.</p><a class="button outline" href="/profile/import">Create my profile</a></div>';
+      $(".people-grid").innerHTML = directory.length ? directory.map((p) => '<article class="paper person-card" role="button" tabindex="0" data-person="' + escapeHTML(p.name) + '"><div class="person-header"><img class="avatar" src="/v4/assets/avatar-' + p.avatar + '.webp" alt=""><div><h3>' + escapeHTML(p.displayName || p.name) + '</h3><p>' + escapeHTML(p.role) + '</p><div class="person-tags">' + p.tags.map(t => '<span class="chip mint">' + escapeHTML(t) + '</span>').join('') + '</div></div></div><h4>In their own words</h4><p>' + escapeHTML(p.description) + '</p></article>').join('') : '<div class="v4-live-empty"><h3>The first connections start with you.</h3><p>There are no other public profiles yet. Save your profile, choose public visibility and invite another builder.</p><a class="button outline btn btn-outline" href="/profile/import">Create my profile</a></div>';
       if (!directory.length) api.emptyState($(".v4-live-empty"), { title: "Good people start with a hello.", description: "There are no other public profiles here yet. Add yours, share what you are building, and invite someone you would like to know.", action: "Create my profile", href: "/profile/import", eyebrow: "Your circle starts here" });
     }
     $('[data-person]')?.classList.add('is-featured');
@@ -645,7 +645,7 @@
       if (noMatch)
         $(".people-grid").insertAdjacentHTML(
           "beforeend",
-          '<div class="v4-empty"><h3>No close matches yet</h3><p>Try design, community, research or learning — or clear the search to explore everyone.</p><button type="button" class="button outline" id="clear-search">Explore everyone</button></div>',
+          '<div class="v4-empty"><h3>No close matches yet</h3><p>Try design, community, research or learning — or clear the search to explore everyone.</p><button type="button" class="button outline btn btn-outline" id="clear-search">Explore everyone</button></div>',
         );
       $("#clear-search")?.addEventListener("click", () => {
         $("#curiosity").value = "";
@@ -691,10 +691,10 @@
       w.tags
         .map(
           (t, i) =>
-            `<span class="widget-tag ${tagColors[i % 5]}">${escapeHTML(t)}<button type="button" data-remove-widget-tag aria-label="Remove ${escapeHTML(t)}">${icon("close")}</button></span>`,
+            `<span class="widget-tag ${tagColors[i % 5]}">${escapeHTML(t)}<button type="button" data-remove-widget-tag aria-label="Remove ${escapeHTML(t)}" class="btn btn-ghost btn-square btn-sm">${icon("close")}</button></span>`,
         )
         .join("") +
-      `<button class="add-tag" type="button" data-add-widget-tag>${icon("plus")}Add interest</button>`;
+      `<button class="add-tag btn btn-outline" type="button" data-add-widget-tag>${icon("plus")}Add interest</button>`;
     $$("[data-persona]").forEach((el) => {
       const selected = el.dataset.persona === w.persona;
       el.classList.toggle("selected", selected);
@@ -808,7 +808,7 @@
     } catch (_) {
       openDialog(
         "Copy your embed",
-        `<p class="dialog-copy">Automatic clipboard access is unavailable. Select and copy this code.</p><textarea class="dialog-input" readonly id="manual-copy">${escapeHTML(text)}</textarea>${notice("The script is local to this package. Upload the embed and assets folders alongside your site.")}`,
+        `<p class="dialog-copy">Automatic clipboard access is unavailable. Select and copy this code.</p><textarea class="dialog-input textarea" readonly id="manual-copy">${escapeHTML(text)}</textarea>${notice("The script is local to this package. Upload the embed and assets folders alongside your site.")}`,
         (root) => {
           $("#manual-copy", root).focus();
           $("#manual-copy", root).select();
@@ -857,7 +857,7 @@
   };
   if (page === "compose") {
     if (api.live && (!candidate.handle || (requestedPerson && candidate.handle !== requestedPerson))) {
-      $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary" href="/discover">Discover builders</a></div>';
+      $(".compose-workspace").innerHTML = '<div class="paper v4-live-empty"><h2>Choose a builder first</h2><p>This profile is unavailable or private. Nothing has been sent.</p><a class="button primary btn btn-primary" href="/discover">Discover builders</a></div>';
       api.emptyState($(".compose-workspace .v4-live-empty"), { title: "Who would you like to meet?", description: "Choose an available profile before writing your introduction. Your message has not been sent.", action: "Discover builders", href: "/discover" });
       finishComposeLoading();
       return;
@@ -1041,7 +1041,7 @@
     );
     openDialog(
       `Introduce yourself to ${candidate.name}`,
-      `<p class="dialog-copy">Your goal: <strong>${escapeHTML(goal)}</strong>. Review what the other person will see.</p><div class="draft-message">${escapeHTML(fields.join("\n\n"))}</div><p class="dialog-copy">Shared context: ${state.sharedContext ? "your approved profile and selected interests" : "introduction message only"}.</p>${notice(api.demo ? "Demo delivery: creates a record on this device and lets you try the recipient’s response. No external message or payment." : (api.chain?.enabled ? (api.chain.chainId === 143 ? "Wallet bonds use real MON on Monad Mainnet. Choose a delivery option, then review the exact bond and network gas before approving payment in your wallet." : "Choose your delivery option below. For a wallet bond, review the exact amount and network on the next page before approving payment.") : "This sends the approved introduction to this builder’s private inbox. No payment is requested."))} ${api.live && api.chain?.enabled ? '<fieldset class="v4-settlement-options"><legend>How would you like to send?</legend><label><input type="radio" name="settlement" value="onchain" checked> Refundable wallet bond · review amount next</label><label><input type="radio" name="settlement" value="offchain"> Send without a bond · no payment</label><p>Wallet bonds are delivered after chain confirmation. Manual review, AI fee 0; gas is separate.</p></fieldset>' : ""} ${buttons("Confirm introduction")}`,
+      `<p class="dialog-copy">Your goal: <strong>${escapeHTML(goal)}</strong>. Review what the other person will see.</p><div class="draft-message">${escapeHTML(fields.join("\n\n"))}</div><p class="dialog-copy">Shared context: ${state.sharedContext ? "your approved profile and selected interests" : "introduction message only"}.</p>${notice(api.demo ? "Demo delivery: creates a record on this device and lets you try the recipient’s response. No external message or payment." : (api.chain?.enabled ? (api.chain.chainId === 143 ? "Wallet bonds use real MON on Monad Mainnet. Choose a delivery option, then review the exact bond and network gas before approving payment in your wallet." : "Choose your delivery option below. For a wallet bond, review the exact amount and network on the next page before approving payment.") : "This sends the approved introduction to this builder’s private inbox. No payment is requested."))} ${api.live && api.chain?.enabled ? '<fieldset class="v4-settlement-options"><legend>How would you like to send?</legend><label><input type="radio" name="settlement" value="onchain" checked class="radio radio-primary"> Refundable wallet bond · review amount next</label><label><input type="radio" name="settlement" value="offchain" class="radio radio-primary"> Send without a bond · no payment</label><p>Wallet bonds are delivered after chain confirmation. Manual review, AI fee 0; gas is separate.</p></fieldset>' : ""} ${buttons("Confirm introduction")}`,
       (root) =>
         $("#dialog-confirm", root).addEventListener("click", async () => {
           $("#dialog-confirm", root).disabled = true;
@@ -1261,6 +1261,7 @@
         const tab = el.dataset.inboxTab;
         $$("[data-inbox-tab]").forEach((b) => {
           b.classList.toggle("active", b === el);
+          b.classList.toggle("tab-active", b === el);
           b.setAttribute("aria-selected", String(b === el));
         });
         $$(".inbox-rows>[data-group]").forEach((row) => {
@@ -1348,7 +1349,7 @@
           fee.dataset.fee === "bond"
             ? "Refundable attention bond"
             : "Evaluation fee",
-          `<p class="dialog-copy">${api.chain?.enabled ? "The wallet-bond option requests a refundable attention bond. AI evaluation costs 0 with manual review. The full bond returns on acceptance, decline, or a claim after expiry; gas is separate." : "Payment and refund settlement are not enabled. Wallet sign-in verifies ownership only."}</p>${notice(api.chain?.enabled ? "Review the exact amount on your receipt before approving a wallet transaction." : "No money is charged or transferred by this introduction flow.")}<div class="dialog-actions"><button type="button" class="button primary" data-close-dialog>Understood</button></div>`,
+          `<p class="dialog-copy">${api.chain?.enabled ? "The wallet-bond option requests a refundable attention bond. AI evaluation costs 0 with manual review. The full bond returns on acceptance, decline, or a claim after expiry; gas is separate." : "Payment and refund settlement are not enabled. Wallet sign-in verifies ownership only."}</p>${notice(api.chain?.enabled ? "Review the exact amount on your receipt before approving a wallet transaction." : "No money is charged or transferred by this introduction flow.")}<div class="dialog-actions"><button type="button" class="button primary btn btn-primary" data-close-dialog>Understood</button></div>`,
         );
       return;
     }
@@ -1360,7 +1361,7 @@
       }
       return openDialog(
         "Review your profile draft",
-        `<img class="avatar dialog-avatar" src="assets/avatar-alex.webp" alt="Illustrated profile avatar"><h3 style="font-size:26px">${escapeHTML(state.profile.name)}</h3><p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><ul class="context-list"><li><strong>Current interests</strong><br>${escapeHTML(state.profile.interests || "Not added")}</li><li><strong>Can offer</strong><br>${escapeHTML(state.profile.offer)}</li><li><strong>Wants to meet</strong><br>${escapeHTML(state.profile.meet)}</li></ul>${notice(state.agent.visibility === "private" ? "Saved privately. You can change visibility in Profile & privacy." : state.agent.visibility === "limited" ? "Your saved profile is unlisted: anyone with its link can view it." : "Saving updates your public profile, including the interests people can see.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Keep editing</button><button class="button primary" data-action="approve-profile">${api.profileReturnPath?.() ? "Save & return to my agent" : "Approve draft"} ${icon("arrow")}</button></div>`,
+        `<img class="avatar dialog-avatar" src="assets/avatar-alex.webp" alt="Illustrated profile avatar"><h3 style="font-size:26px">${escapeHTML(state.profile.name)}</h3><p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><ul class="context-list"><li><strong>Current interests</strong><br>${escapeHTML(state.profile.interests || "Not added")}</li><li><strong>Can offer</strong><br>${escapeHTML(state.profile.offer)}</li><li><strong>Wants to meet</strong><br>${escapeHTML(state.profile.meet)}</li></ul>${notice(state.agent.visibility === "private" ? "Saved privately. You can change visibility in Profile & privacy." : state.agent.visibility === "limited" ? "Your saved profile is unlisted: anyone with its link can view it." : "Saving updates your public profile, including the interests people can see.")}<div class="dialog-actions"><button class="button outline btn btn-outline" type="button" data-close-dialog>Keep editing</button><button class="button primary btn btn-primary" data-action="approve-profile">${api.profileReturnPath?.() ? "Save & return to my agent" : "Approve draft"} ${icon("arrow")}</button></div>`,
       );
     }
     if (action === "approve-profile") {
@@ -1380,14 +1381,14 @@
     }
     if (action === "save-agent") {
       if (api.live && !state.profileApproved) {
-        return openDialog("Review your profile first", '<p class="dialog-copy">Approve the details in your profile before saving its visibility and suggestion preferences.</p><div class="dialog-actions"><a class="button primary" href="/profile/import">Review my profile →</a></div>');
+        return openDialog("Review your profile first", '<p class="dialog-copy">Approve the details in your profile before saving its visibility and suggestion preferences.</p><div class="dialog-actions"><a class="button primary btn btn-primary" href="/profile/import">Review my profile →</a></div>');
       }
       if (api.live) { try { await api.saveProfile(state); } catch (error) { toast(error.message); return; } }
       save();
       if ($("[data-settings-status]")) $("[data-settings-status]").textContent = "Settings saved.";
       return openDialog(
         "Your preferences are saved",
-        '<p class="dialog-copy">Tell your agent what you need, or explore the public directory at your own pace.</p><div class="dialog-actions"><a class="button outline" href="/discover">Discover people →</a><a class="button primary" href="/assistant">Open my agent →</a></div>',
+        '<p class="dialog-copy">Tell your agent what you need, or explore the public directory at your own pace.</p><div class="dialog-actions"><a class="button outline btn btn-outline" href="/discover">Discover people →</a><a class="button primary btn btn-primary" href="/assistant">Open my agent →</a></div>',
       );
     }
     if (action === "preview-profile")
@@ -1398,7 +1399,7 @@
           .map((t) => `<span class="chip">${escapeHTML(t)}</span>`)
           .join(
             "",
-          )}</div>${notice(`Current visibility: <strong>${escapeHTML(state.agent.visibility === "limited" ? "unlisted" : state.agent.visibility)}</strong>. ${state.agent.visibility === "private" ? "The public profile is hidden; this is a private preview for you." : state.agent.visibility === "limited" ? "Hidden from discovery. Anyone with your profile link can view it." : "This preview shows the fields you have chosen to share publicly."}`)}<div class="dialog-actions"><button class="button primary" type="button" data-close-dialog>Back to settings</button></div>`,
+          )}</div>${notice(`Current visibility: <strong>${escapeHTML(state.agent.visibility === "limited" ? "unlisted" : state.agent.visibility)}</strong>. ${state.agent.visibility === "private" ? "The public profile is hidden; this is a private preview for you." : state.agent.visibility === "limited" ? "Hidden from discovery. Anyone with your profile link can view it." : "This preview shows the fields you have chosen to share publicly."}`)}<div class="dialog-actions"><button class="button primary btn btn-primary" type="button" data-close-dialog>Back to settings</button></div>`,
       );
     if (action === "browse-people")
       return openDialog(
@@ -1416,7 +1417,7 @@
     if (action === "toggle-context")
       return openDialog(
         "Choose what to share",
-        `<p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><p class="dialog-copy">Interests: ${escapeHTML(state.agent.interests.join(", "))}</p>${notice("Your links are user-provided, not verified. Private agent memory is never included.")}<div class="dialog-actions"><button class="button outline" type="button" id="hide-context">Message only</button><button class="button primary" type="button" id="share-context">Include this context</button></div>`,
+        `<p class="dialog-copy">${escapeHTML(state.profile.bio)}</p><p class="dialog-copy">Interests: ${escapeHTML(state.agent.interests.join(", "))}</p>${notice("Your links are user-provided, not verified. Private agent memory is never included.")}<div class="dialog-actions"><button class="button outline btn btn-outline" type="button" id="hide-context">Message only</button><button class="button primary btn btn-primary" type="button" id="share-context">Include this context</button></div>`,
         (root) => {
           const set = (value) => {
             state.sharedContext = value;
@@ -1447,7 +1448,7 @@
     if (action === "ask-context")
       return openDialog(
         `Ask ${contacts[selectedContact]?.name || selectedContact} for context`,
-        `<form id="context-request-form"><label class="dialog-field" for="context-question">What would help you decide?</label><textarea class="dialog-input" id="context-question" maxlength="500" required autofocus placeholder="Could you share more about what you’d like to explore together?"></textarea>${notice(api.demo ? "This saves a local example only; nothing is sent." : "Your question will be visible to the sender after you confirm.")}<div class="dialog-actions"><button class="button outline" type="button" data-close-dialog>Cancel</button><button class="button primary" type="submit">Save context request</button></div></form>`,
+        `<form id="context-request-form"><label class="dialog-field" for="context-question">What would help you decide?</label><textarea class="dialog-input textarea" id="context-question" maxlength="500" required autofocus placeholder="Could you share more about what you’d like to explore together?"></textarea>${notice(api.demo ? "This saves a local example only; nothing is sent." : "Your question will be visible to the sender after you confirm.")}<div class="dialog-actions"><button class="button outline btn btn-outline" type="button" data-close-dialog>Cancel</button><button class="button primary btn btn-primary" type="submit">Save context request</button></div></form>`,
         (root) =>
           $("#context-request-form", root).addEventListener(
             "submit",
@@ -1524,7 +1525,7 @@
     else
       openDialog(
         "Draft not found",
-        '<p class="dialog-copy">This draft is not saved on this device. Pick someone to start a new introduction.</p><div class="dialog-actions"><a class="button primary" href="/discover">Discover people →</a></div>',
+        '<p class="dialog-copy">This draft is not saved on this device. Pick someone to start a new introduction.</p><div class="dialog-actions"><a class="button primary btn btn-primary" href="/discover">Discover people →</a></div>',
       );
   }
   window.SignalPassView = Object.freeze({ version: "4.1.0", page, mode: api.demo ? "demo" : "live" });
