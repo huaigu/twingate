@@ -33,3 +33,16 @@ node --test scripts/agent-refinement-test.mjs scripts/v4-flow-test.mjs scripts/w
 ```
 
 These tests cover application behavior, not visual layout. Keep screenshot review as a separate release check.
+
+## Final review: 6 October 2026
+
+Fresh desktop screenshots covered all ten views, plus person details, introduction review, profile edit/review, context request, and privacy preview dialogs. The profile draft remained approximately 539px with a 606px source workspace. The five-entry sample inbox used a 517px list and a 639px workspace; its rows remained approximately 76px. Both documents remained 936px high at a 1363 × 936 viewport. Different entry counts legitimately change the list height.
+
+The final scoped corrections preserve desktop scene typography and dimensions:
+
+- Text-only sent inbox links use a single grid column rather than an empty avatar layout. Long sender names wrap within the timestamp reserve.
+- Tablet and phone bios reserve space for the existing Edit button, extending the desktop guard without adding another row.
+- A failed connected-session action keeps its error visible below 1181px.
+- Assistant placeholders, footer copy, and focus outlines use the existing readable muted/violet colors. Shared dialog fields receive the same keyboard outline; the account dialog has an accessible title.
+
+The desktop page/dialog review was rendered in the browser. Phone/tablet changes were checked against responsive source rules; no rendered device or full accessibility compliance claim is made. The existing 40 offline behavior checks passed. They do not verify visual layout or replace the pending real-phone review.

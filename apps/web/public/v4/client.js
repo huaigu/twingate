@@ -85,12 +85,12 @@
   };
   api.accountDialog = () => {
     let dialog = document.getElementById('account-dialog');
-    if (!dialog) { dialog = document.createElement('dialog'); dialog.id = 'account-dialog'; dialog.className = 'v4-account-dialog'; document.body.append(dialog); }
+    if (!dialog) { dialog = document.createElement('dialog'); dialog.id = 'account-dialog'; dialog.className = 'v4-account-dialog'; dialog.setAttribute('aria-labelledby', 'account-dialog-title'); document.body.append(dialog); }
     return dialog;
   };
   api.chooseHandle = (suggested) => new Promise((resolve, reject) => {
     const dialog = api.accountDialog();
-    dialog.innerHTML = '<form><h2>Your public handle</h2><p>Choose the address of your approved profile. Visibility stays under your control.</p><label for="account-handle">Handle</label><input id="account-handle" class="dialog-input" pattern="[a-z0-9_-]{3,32}" minlength="3" maxlength="32" required value="' + escape(suggested) + '"><div class="dialog-actions"><button type="button" class="button outline" id="cancel-handle">Cancel</button><button class="button primary">Save profile</button></div></form>';
+    dialog.innerHTML = '<form><h2 id="account-dialog-title">Your public handle</h2><p>Choose the address of your approved profile. Visibility stays under your control.</p><label for="account-handle">Handle</label><input id="account-handle" class="dialog-input" pattern="[a-z0-9_-]{3,32}" minlength="3" maxlength="32" required value="' + escape(suggested) + '"><div class="dialog-actions"><button type="button" class="button outline" id="cancel-handle">Cancel</button><button class="button primary">Save profile</button></div></form>';
     let done = false;
     dialog.querySelector('form').onsubmit = (e) => { e.preventDefault(); done = true; const handle = dialog.querySelector('input').value; dialog.close(); resolve(handle); };
     dialog.querySelector('#cancel-handle').onclick = () => dialog.close();
