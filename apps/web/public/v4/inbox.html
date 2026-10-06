@@ -10,17 +10,19 @@
     />
     <title>Your introductions · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
-    <link href="/v4/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
-    <script defer src="/v4/wallet.js?v=92a499b59a9c"></script>
-    <script defer="" src="/v4/app.js?v=4c0ee8375110"></script>
-    <link rel="stylesheet" href="/v4/v4.css" />
-    <link rel="stylesheet" href="/v4/polish.css" />
-    <link rel="stylesheet" href="/v4/motion.css" />
-    <link rel="stylesheet" href="/v4/experience.css?v=c5de147e2cda" />
+    <link href="/v4/styles.css?v=444422b60385" rel="stylesheet" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
+    <script defer="" src="/v4/app.js?v=00a71941e674"></script>
+    <link rel="stylesheet" href="/v4/v4.css?v=654cbac318c2" />
+    <link rel="stylesheet" href="/v4/polish.css?v=7605d6cdeccc" />
+    <link rel="stylesheet" href="/v4/motion.css?v=562fbbf4554b" />
+    <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/motion.js"></script>
+    <script defer src="/v4/motion.js?v=20966f246dd7"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=cec39e866028" />
   </head>
   <body data-page="inbox">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -47,7 +49,7 @@
             ><a href="/widget/create">Your widget</a>
           </nav>
           <button
-            class="v4-menu-toggle"
+            class="v4-menu-toggle btn btn-ghost btn-square"
             aria-expanded="false"
             aria-controls="site-navigation"
             aria-label="Open navigation"
@@ -105,12 +107,12 @@
             <section class="paper inbox-list">
               <div
                 aria-label="Introduction status"
-                class="inbox-tabs"
+                class="inbox-tabs tabs"
                 role="tablist"
               >
                 <button
                   aria-selected="true"
-                  class="inbox-tab active"
+                  class="inbox-tab active tab tab-active"
                   data-inbox-tab="needs"
                   role="tab"
                   type="button"
@@ -118,7 +120,7 @@
                   All introductions <span>5</span></button
                 ><button
                   aria-selected="false"
-                  class="inbox-tab"
+                  class="inbox-tab tab"
                   data-inbox-tab="waiting"
                   role="tab"
                   type="button"
@@ -126,7 +128,7 @@
                   Waiting for sender<span>1</span></button
                 ><button
                   aria-selected="false"
-                  class="inbox-tab"
+                  class="inbox-tab tab"
                   data-inbox-tab="saved"
                   role="tab"
                   type="button"
@@ -497,19 +499,19 @@
               </div>
               <div class="inbox-detail-actions">
                 <button
-                  class="button primary"
+                  class="button primary btn btn-primary"
                   data-action="accept-introduction"
                   type="button"
                 >
                   Accept introduction</button
                 ><button
-                  class="button outline"
+                  class="button outline btn btn-outline"
                   data-action="ask-context"
                   type="button"
                 >
                   Ask for context</button
                 ><button
-                  class="button danger"
+                  class="button danger btn btn-error btn-outline"
                   data-action="decline-introduction"
                   type="button"
                 >
@@ -525,7 +527,7 @@
 
     <dialog aria-labelledby="dialog-title" id="app-dialog">
       <form method="dialog">
-        <button aria-label="Close dialog" class="dialog-close">
+        <button aria-label="Close dialog" class="dialog-close btn btn-ghost btn-square btn-sm">
           <svg
             aria-hidden="true"
             class="icon"

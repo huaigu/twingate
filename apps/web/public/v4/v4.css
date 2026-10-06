@@ -1,3 +1,4 @@
+@layer legacy {
 /* V4 product layer. Original compositions and figure assets stay intact. */
 :root {
   --v4-ink: #10152f;
@@ -129,9 +130,6 @@
 }
 .source-actions {
   flex-wrap: wrap;
-}
-.source-actions .button {
-  min-height: 50px;
 }
 .v4-continue {
   display: inline-flex;
@@ -331,13 +329,6 @@
     sans-serif;
   letter-spacing: 0.3px;
 }
-button:disabled {
-  cursor: not-allowed;
-}
-.button:focus-visible {
-  outline: 3px solid #8e7bd6;
-  outline-offset: 4px;
-}
 @media (min-width: 1801px) {
   .viewport {
     max-width: 1800px;
@@ -395,11 +386,6 @@ button:disabled {
     justify-content: center;
     gap: 6px;
     margin-left: auto;
-    width: 44px;
-    height: 44px;
-    border: 1px solid #c6bdd040;
-    border-radius: 50%;
-    background: #fff7;
   }
   .v4-menu-toggle span {
     width: 18px;
@@ -489,7 +475,7 @@ button:disabled {
 
 /* Account controls share the paper/ink palette and existing button primitives. */
 .v4-session-bar { display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1440px;margin:8px auto;padding:8px 24px;font:14px/1.5 Arial,sans-serif;color:#303044;position:relative;z-index:10; }
-.v4-session-bar .button { min-height:44px;white-space:nowrap; }
+.v4-session-bar .button { white-space:nowrap; }
 .v4-account-dialog { width:min(480px,calc(100vw - 32px));padding:28px;border:1px solid #d9d5cd;border-radius:16px;background:#faf8f1;color:#303044; }
 .v4-account-dialog::backdrop { background:rgba(30,26,40,.3); }
 .v4-account-dialog p { font:16px/1.5 Arial,sans-serif; }
@@ -497,8 +483,7 @@ button:disabled {
 .v4-live-empty { padding:24px;font:16px/1.5 Arial,sans-serif; }
 @media(max-width:600px) {
  .v4-session-bar { padding:8px 16px;flex-wrap:wrap;font-size:14px; }
- .verified-context-inner>p,.verified-context-inner button,.fee-explain button,.compose-fees button,[data-fee],[data-inbox-tab] { font-size:14px!important;line-height:1.5!important; }
- [data-fee],[data-inbox-tab],[data-action=toggle-context] { min-height:44px; }
+ .verified-context-inner>p { font-size:14px!important;line-height:1.5!important; }
 }
 .person-card, .person-header, .connection-person, .v4-result-message, .draft-message, [data-profile] { overflow-wrap:anywhere; }
 /* Wallet review surfaces use the same paper, ink and violet as the V4 product. */
@@ -512,7 +497,7 @@ button:disabled {
 .v4-chain-proof { overflow-wrap: anywhere; }
 .v4-chain-proof code, .v4-chain-proof a { font-size: 12px; }
 .v4-chain-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-.v4-chain-actions .button, #confirm-profile-sync { min-height: 44px; white-space: normal; }
+.v4-chain-actions .button, #confirm-profile-sync { white-space: normal; }
 .v4-chain-settings { grid-column: 1 / -1; max-width: 1056px; margin: 20px 0; width: 100%; box-sizing: border-box; }
 .v4-settlement-options { border: 1px solid #d6cfdf; border-radius: 12px; padding: 14px; margin: 18px 0; text-align: left; }
 .v4-settlement-options legend { font-weight: 600; padding: 0 5px; }
@@ -525,4 +510,5 @@ button:disabled {
   .v4-chain-card h2 { font-size: 21px; }
   .v4-chain-card dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
   .v4-chain-actions .button { width: 100%; }
+}
 }

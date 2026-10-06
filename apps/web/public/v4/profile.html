@@ -10,17 +10,19 @@
     />
     <title>Your profile · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
-    <link href="/v4/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
-    <script defer src="/v4/wallet.js?v=92a499b59a9c"></script>
-    <script defer="" src="/v4/app.js?v=4c0ee8375110"></script>
-    <link rel="stylesheet" href="/v4/v4.css" />
-    <link rel="stylesheet" href="/v4/polish.css" />
-    <link rel="stylesheet" href="/v4/motion.css" />
-    <link rel="stylesheet" href="/v4/experience.css?v=c5de147e2cda" />
+    <link href="/v4/styles.css?v=444422b60385" rel="stylesheet" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
+    <script defer="" src="/v4/app.js?v=00a71941e674"></script>
+    <link rel="stylesheet" href="/v4/v4.css?v=654cbac318c2" />
+    <link rel="stylesheet" href="/v4/polish.css?v=7605d6cdeccc" />
+    <link rel="stylesheet" href="/v4/motion.css?v=562fbbf4554b" />
+    <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/motion.js"></script>
+    <script defer src="/v4/motion.js?v=20966f246dd7"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=cec39e866028" />
   </head>
   <body data-page="sources">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -47,7 +49,7 @@
             ><a href="/widget/create">Your widget</a>
           </nav>
           <button
-            class="v4-menu-toggle"
+            class="v4-menu-toggle btn btn-ghost btn-square"
             aria-expanded="false"
             aria-controls="site-navigation"
             aria-label="Open navigation"
@@ -349,7 +351,7 @@
                 </div>
                 <button
                   aria-label="Edit profile"
-                  class="edit-btn"
+                  class="edit-btn btn btn-outline btn-sm"
                   data-edit="profile"
                   type="button"
                 >
@@ -398,7 +400,7 @@
                   </div>
                   <button
                     aria-label="Edit interests"
-                    class="edit-btn"
+                    class="edit-btn btn btn-outline btn-sm"
                     data-edit="interests"
                     type="button"
                   >
@@ -443,7 +445,7 @@
                   </div>
                   <button
                     aria-label="Edit offer"
-                    class="edit-btn"
+                    class="edit-btn btn btn-outline btn-sm"
                     data-edit="offer"
                     type="button"
                   >
@@ -489,7 +491,7 @@
                   </div>
                   <button
                     aria-label="Edit meet"
-                    class="edit-btn"
+                    class="edit-btn btn btn-outline btn-sm"
                     data-edit="meet"
                     type="button"
                   >
@@ -581,7 +583,7 @@
             </section>
             <div class="source-actions">
               <button
-                class="button primary"
+                class="button primary btn btn-primary"
                 data-action="review-draft"
                 type="button"
               >
@@ -598,7 +600,7 @@
                   <path d="M4 12h15M13 5l7 7-7 7"></path>
                 </svg></button
               ><button
-                class="button outline"
+                class="button outline btn btn-outline"
                 data-action="start-manually"
                 type="button"
               >
@@ -612,7 +614,7 @@
 
     <dialog aria-labelledby="dialog-title" id="app-dialog">
       <form method="dialog">
-        <button aria-label="Close dialog" class="dialog-close">
+        <button aria-label="Close dialog" class="dialog-close btn btn-ghost btn-square btn-sm">
           <svg
             aria-hidden="true"
             class="icon"

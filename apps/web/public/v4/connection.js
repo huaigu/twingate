@@ -31,23 +31,23 @@
       <p id="connection-feedback" role="status" aria-live="polite"></p>
       <div id="connection-details" hidden>
         <div class="connection-columns">
-          <div class="connection-card"><h3>Your contact option</h3><div id="connection-own"></div><button type="button" class="button outline" id="connection-edit">Share a contact option</button><button type="button" class="connection-remove" id="connection-remove" hidden>Remove my contact</button></div>
+          <div class="connection-card"><h3>Your contact option</h3><div id="connection-own"></div><button type="button" class="button outline btn btn-outline" id="connection-edit">Share a contact option</button><button type="button" class="connection-remove btn btn-ghost btn-sm" id="connection-remove" hidden>Remove my contact</button></div>
           <div class="connection-card"><h3 id="connection-other-title">Their contact option</h3><div id="connection-other"></div></div>
         </div>
         <p class="connection-note">Removing a contact hides it on this introduction. It cannot erase a copy the other person has already saved.</p>
       </div>
-      <button type="button" class="button outline" id="connection-refresh">Refresh contact details</button>
+      <button type="button" class="button outline btn btn-outline" id="connection-refresh">Refresh contact details</button>
       <form id="connection-form" hidden autocomplete="off">
         <h3>Choose what to share</h3>
         <label for="connection-type">Contact option</label>
-        <select class="dialog-input" id="connection-type" required><option value="">Choose an option</option><option value="email">Email</option><option value="scheduling_url">HTTPS scheduling page</option><option value="contact_url">HTTPS contact page</option></select>
+        <select class="dialog-input select" id="connection-type" required><option value="">Choose an option</option><option value="email">Email</option><option value="scheduling_url">HTTPS scheduling page</option><option value="contact_url">HTTPS contact page</option></select>
         <label for="connection-label">Label the other person will see</label>
-        <input class="dialog-input" id="connection-label" required maxlength="60" placeholder="For example, my work email" autocomplete="off">
+        <input class="dialog-input input" id="connection-label" required maxlength="60" placeholder="For example, my work email" autocomplete="off">
         <label id="connection-value-label" for="connection-value">Email address or HTTPS link</label>
-        <input class="dialog-input" id="connection-value" required maxlength="1200" spellcheck="false" autocomplete="off" aria-describedby="connection-value-help">
+        <input class="dialog-input input" id="connection-value" required maxlength="1200" spellcheck="false" autocomplete="off" aria-describedby="connection-value-help">
         <p class="connection-note" id="connection-value-help">Enter only a contact option you want this person to receive.</p>
         <p id="connection-form-error" role="alert"></p>
-        <div class="dialog-actions"><button type="submit" class="button primary" id="connection-review">Review what will be shared</button><button type="button" class="button outline" id="connection-cancel">Cancel</button></div>
+        <div class="dialog-actions"><button type="submit" class="button primary btn btn-primary" id="connection-review">Review what will be shared</button><button type="button" class="button outline btn btn-outline" id="connection-cancel">Cancel</button></div>
       </form>
       <div id="connection-preview" class="connection-preview" hidden>
         <h3>Review before sharing</h3>
@@ -55,7 +55,7 @@
         <dl><dt>Contact option</dt><dd id="connection-preview-type"></dd><dt>Label</dt><dd id="connection-preview-label"></dd><dt>Value</dt><dd id="connection-preview-value"></dd></dl>
         <p class="connection-note">Only this contact option is added to this introduction. It stays out of public profiles and agent prompts. Sharing does not send a message or open a website.</p>
         <p id="connection-share-error" role="alert"></p>
-        <div class="dialog-actions"><button type="button" class="button primary" id="connection-share">Share contact</button><button type="button" class="button outline" id="connection-back">Edit details</button><button type="button" class="button outline" id="connection-preview-cancel">Cancel</button></div>
+        <div class="dialog-actions"><button type="button" class="button primary btn btn-primary" id="connection-share">Share contact</button><button type="button" class="button outline btn btn-outline" id="connection-back">Edit details</button><button type="button" class="button outline btn btn-outline" id="connection-preview-cancel">Cancel</button></div>
       </div>`;
     document.getElementById('receipt-body').append(section);
     const get = name => section.querySelector('#connection-' + name);
@@ -96,7 +96,7 @@
         paragraph(other, contact.value).className = 'connection-value';
         const href = contactLink(contact);
         if (href) {
-          const link = document.createElement('a'); link.id = 'connection-other-link'; link.className = 'button outline'; link.href = href;
+          const link = document.createElement('a'); link.id = 'connection-other-link'; link.className = 'button outline btn btn-outline'; link.href = href;
           link.textContent = contact.type === 'email' ? 'Open email app ↗' : 'Open ' + titles[contact.type].toLowerCase() + ' ↗';
           link.rel = 'noopener noreferrer'; link.referrerPolicy = 'no-referrer';
           if (contact.type !== 'email') link.target = '_blank';

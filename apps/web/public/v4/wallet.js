@@ -85,7 +85,7 @@
     const message = document.createElement('p'); message.setAttribute('role', 'status'); message.id = 'chain-feedback';
     const actions = document.createElement('div'); actions.className = 'v4-chain-actions';
     panel.append(eyebrow, title, facts, terms, proof, actions, message); document.getElementById('receipt-body').prepend(panel);
-    const button = (label, action) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'button primary'; el.textContent = label; el.onclick = async () => { el.disabled = true; try { await action(); } catch (error) { message.textContent = error.code === 4001 ? 'Wallet request cancelled. Nothing new was approved.' : error.message; } finally { el.disabled = el.dataset.submitted === 'true'; } }; actions.append(el); return el; };
+    const button = (label, action) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'button primary btn btn-primary'; el.textContent = label; el.onclick = async () => { el.disabled = true; try { await action(); } catch (error) { message.textContent = error.code === 4001 ? 'Wallet request cancelled. Nothing new was approved.' : error.message; } finally { el.disabled = el.dataset.submitted === 'true'; } }; actions.append(el); return el; };
     if (record.payment.status === 'awaiting_wallet' && record.role === 'sender') {
       let quote;
       const fund = button('Reviewing quote…', async () => {
@@ -128,7 +128,7 @@
     await api.ready;
     if (api.demo || api.error || !api.chain?.enabled || !api.me || document.body.dataset.page !== 'agent') return;
     const panel = document.createElement('section'); panel.className = 'v4-chain-card v4-chain-settings';
-    panel.innerHTML = '<p class="v4-chain-eyebrow"></p><h2>Make your inbox bond-ready.</h2><p>Save your profile first, then sync its approved hash and introduction policy. Each update requires your wallet. Your profile text stays offchain.</p><p id="profile-chain-status" role="status">Checking your profile…</p><div class="v4-chain-actions"><button class="button primary" id="sync-chain-profile" type="button">Review profile sync</button></div>';
+    panel.innerHTML = '<p class="v4-chain-eyebrow"></p><h2>Make your inbox bond-ready.</h2><p>Save your profile first, then sync its approved hash and introduction policy. Each update requires your wallet. Your profile text stays offchain.</p><p id="profile-chain-status" role="status">Checking your profile…</p><div class="v4-chain-actions"><button class="button primary btn btn-primary" id="sync-chain-profile" type="button">Review profile sync</button></div>';
     panel.querySelector('.v4-chain-eyebrow').textContent = api.chainLabel();
     document.querySelector('.agent-workspace').append(panel);
     const status = panel.querySelector('#profile-chain-status'), sync = panel.querySelector('#sync-chain-profile');
@@ -142,14 +142,14 @@
         const h = document.createElement('h2'); h.id = 'account-dialog-title'; h.textContent = 'Confirm your profile sync';
         const p = document.createElement('p'); p.textContent = plan.transactions.map(tx => tx.label).join(' → ') + '. No AI fee. Each transaction costs network gas' + (api.chain.chainId === 143 ? ' in real MON on Monad Mainnet.' : '.');
         const actions = document.createElement('div'); actions.className = 'dialog-actions';
-        const cancel = document.createElement('button'); cancel.className = 'button outline'; cancel.textContent = 'Cancel'; cancel.onclick = () => dialog.close();
-        const confirm = document.createElement('button'); confirm.className = 'button primary'; confirm.textContent = 'Continue in wallet'; confirm.id = 'confirm-profile-sync';
+        const cancel = document.createElement('button'); cancel.className = 'button outline btn btn-outline'; cancel.textContent = 'Cancel'; cancel.onclick = () => dialog.close();
+        const confirm = document.createElement('button'); confirm.className = 'button primary btn btn-primary'; confirm.textContent = 'Continue in wallet'; confirm.id = 'confirm-profile-sync';
         confirm.onclick = async () => { confirm.disabled = true; api.walletBusy = true; try { for (const tx of (await api.request('/chain/profile/prepare', {})).transactions) { p.textContent = tx.label + ' — confirm in your wallet.'; await api.waitWalletReceipt(await api.walletTransaction(tx)); } dialog.close(); await refresh(); } catch (error) { p.textContent = error.message; confirm.disabled = false; } finally { api.walletBusy = false; } };
         actions.append(cancel, confirm); dialog.append(h, p, actions); dialog.showModal();
       } catch (error) { status.textContent = error.message; } finally { sync.disabled = false; }
     };
     if (api.chain.local) {
-      const faucet = document.createElement('button'); faucet.type = 'button'; faucet.className = 'button outline'; faucet.id = 'local-test-balance'; faucet.textContent = 'Add local test balance';
+      const faucet = document.createElement('button'); faucet.type = 'button'; faucet.className = 'button outline btn btn-outline'; faucet.id = 'local-test-balance'; faucet.textContent = 'Add local test balance';
       faucet.onclick = async () => { faucet.disabled = true; try { await api.request('/chain/faucet', {}); status.textContent = 'Your local wallet has at least 1 DEV for testing. DEV has no monetary value.'; } catch (error) { status.textContent = error.message; } finally { faucet.disabled = false; } };
       panel.querySelector('.v4-chain-actions').append(faucet);
     }

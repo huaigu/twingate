@@ -10,6 +10,8 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",
+    "ui:build": "pnpm --filter @signalpass/web css:build",
+    "ui:check": "pnpm --filter @signalpass/web css:check",
     "test": "pnpm -r test",
     "e2e": "node scripts/e2e.mjs",
     "v4:dev": "pnpm dev",
@@ -21,7 +23,7 @@
     "agent:live:test": "pnpm --filter @signalpass/api exec node --import tsx scripts/agent-live-smoke.ts",
     "agent:live:persistence:test": "pnpm --filter @signalpass/api exec node --import tsx scripts/agent-persistence-live-smoke.ts",
     "wallet:quote:test": "node --test scripts/wallet-quote-test.mjs",
-    "verify": "pnpm agent:refinement:test && pnpm v4:flow:test && pnpm wallet:quote:test && pnpm -r typecheck && pnpm -r test && pnpm e2e",
+    "verify": "pnpm ui:check && pnpm agent:refinement:test && pnpm v4:flow:test && pnpm wallet:quote:test && pnpm -r typecheck && pnpm -r test && pnpm e2e",
     "dev": "pnpm --parallel --filter @signalpass/api --filter @signalpass/web dev",
     "contracts:build": "pnpm --filter @signalpass/contracts build",
     "contracts:test": "pnpm --filter @signalpass/contracts test",

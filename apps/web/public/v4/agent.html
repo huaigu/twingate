@@ -10,17 +10,19 @@
     />
     <title>Profile &amp; privacy · SignalPass</title>
     <link href="/v4/favicon.svg" rel="icon" type="image/svg+xml" />
-    <link href="/v4/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/v4/final-polish.css?v=695a675436cf" />
-    <script defer src="/v4/client.js?v=1eb914454dca"></script>
-    <script defer src="/v4/wallet.js?v=92a499b59a9c"></script>
-    <script defer="" src="/v4/app.js?v=4c0ee8375110"></script>
-    <link rel="stylesheet" href="/v4/v4.css" />
-    <link rel="stylesheet" href="/v4/polish.css" />
-    <link rel="stylesheet" href="/v4/motion.css" />
-    <link rel="stylesheet" href="/v4/experience.css?v=c5de147e2cda" />
+    <link href="/v4/styles.css?v=444422b60385" rel="stylesheet" />
+    <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
+    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
+    <script defer="" src="/v4/app.js?v=00a71941e674"></script>
+    <link rel="stylesheet" href="/v4/v4.css?v=654cbac318c2" />
+    <link rel="stylesheet" href="/v4/polish.css?v=7605d6cdeccc" />
+    <link rel="stylesheet" href="/v4/motion.css?v=562fbbf4554b" />
+    <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
-    <script defer src="/v4/motion.js"></script>
+    <script defer src="/v4/motion.js?v=20966f246dd7"></script>
+    <link rel="stylesheet" href="/v4/ui.css?v=aacd955e68f1" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=cec39e866028" />
   </head>
   <body data-page="agent">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -47,7 +49,7 @@
             ><a href="/widget/create">Your widget</a>
           </nav>
           <button
-            class="v4-menu-toggle"
+            class="v4-menu-toggle btn btn-ghost btn-square"
             aria-expanded="false"
             aria-controls="site-navigation"
             aria-label="Open navigation"
@@ -331,7 +333,7 @@
                       aria-label="Remove Open source"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -349,7 +351,7 @@
                       aria-label="Remove Developer tools"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -367,7 +369,7 @@
                       aria-label="Remove Onchain UX"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -385,7 +387,7 @@
                       aria-label="Remove AI x crypto"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -403,7 +405,7 @@
                       aria-label="Remove Community building"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -421,7 +423,7 @@
                       aria-label="Remove Design systems"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -439,7 +441,7 @@
                       aria-label="Remove Public goods"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -457,7 +459,7 @@
                       aria-label="Remove Monadic culture"
                       data-remove-interest=""
                       type="button"
-                    >
+                     class="btn btn-ghost btn-square btn-sm">
                       <svg
                         aria-hidden="true"
                         class="icon"
@@ -470,7 +472,7 @@
                       >
                         <path d="m6 6 12 12M6 18 18 6"></path>
                       </svg></button></span
-                  ><button class="add-tag" data-add-interest="" type="button">
+                  ><button class="add-tag btn btn-outline" data-add-interest="" type="button">
                     <svg
                       aria-hidden="true"
                       class="icon"
@@ -565,8 +567,7 @@
                       id="matching-toggle"
                       role="switch"
                       type="checkbox"
-                    /><span class="toggle-track"></span
-                    ><span data-toggle-label="">On</span></label
+                     class="toggle toggle-primary" /><span data-toggle-label="">On</span></label
                   >
                 </div>
                 <div class="matching-description">
@@ -613,17 +614,17 @@
                 </div>
                 <p>Public profiles and interests are visible in the directory. Public profiles that opt into suggestions can be considered by the agent.</p>
                 <p>Your private profile is included in your own request only when you select “Use my approved profile.” Links you add are saved as references; SignalPass does not fetch your posts or connect those accounts.</p>
-                <a class="button outline" href="/profile/import">Edit my approved context →</a>
+                <a class="button outline btn btn-outline" href="/profile/import">Edit my approved context →</a>
               </section>
               <div class="agent-actions">
                 <button
-                  class="button outline"
+                  class="button outline btn btn-outline"
                   data-action="preview-profile"
                   type="button"
                 >
                   Preview public profile</button
                 ><button
-                  class="button primary"
+                  class="button primary btn btn-primary"
                   data-action="save-agent"
                   type="button"
                 >
@@ -638,7 +639,7 @@
 
     <dialog aria-labelledby="dialog-title" id="app-dialog">
       <form method="dialog">
-        <button aria-label="Close dialog" class="dialog-close">
+        <button aria-label="Close dialog" class="dialog-close btn btn-ghost btn-square btn-sm">
           <svg
             aria-hidden="true"
             class="icon"

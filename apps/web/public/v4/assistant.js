@@ -5,7 +5,7 @@
   const $ = (query) => document.querySelector(query);
   const node = (tag, className, value) => { const element = document.createElement(tag); if (className) element.className = className; if (value !== undefined) element.textContent = String(value); return element; };
   const link = (label, href, className = 'sp-text-link') => { const element = node('a', className, label); element.href = href; return element; };
-  const action = (label, handler, className = 'button outline') => { const element = node('button', className, label); element.type = 'button'; element.addEventListener('click', handler); return element; };
+  const action = (label, handler, className = 'button outline btn btn-outline') => { const element = node('button', className, label); element.type = 'button'; element.addEventListener('click', handler); return element; };
   const text = (value) => typeof value === 'string' ? value : '';
   const validHandle = (handle) => typeof handle === 'string' && /^[a-z0-9_-]{3,32}$/.test(handle);
   const validId = (id) => typeof id === 'string' && /^[0-9a-f-]{36}$/i.test(id);
@@ -45,20 +45,20 @@
     const goal = $('#agent-goal').value.slice(0, 1200);
     try { sessionStorage.setItem(resumeKey, JSON.stringify({ owner: owner(), goal, runId: owner() && validId(currentRun?.id) ? currentRun.id : null, handle: owner() && validHandle(selectedHandle) ? selectedHandle : null, createdAt: Date.now() })); } catch {}
   }
-  function profileLink() { const element = link('Review your profile →', '/profile/import?returnTo=assistant', 'button outline'); element.addEventListener('click', persistResume); return element; }
+  function profileLink() { const element = link('Review your profile →', '/profile/import?returnTo=assistant', 'button outline btn btn-outline'); element.addEventListener('click', persistResume); return element; }
   function showError(error, { kind = 'search', retry, handle } = {}) {
     const box = $(kind === 'draft' ? '#agent-draft-error' : kind === 'refine' ? '#agent-refine-error' : '#agent-error');
     const code = error.name === 'TimeoutError' || error.name === 'AbortError' ? 'agent_timeout' : error.code;
     box.replaceChildren(node('p', '', errorMessages[code] || 'This request could not be completed. Your previous work is still here.'));
     const actions = node('div', 'assistant-actions');
     if (code === 'profile_required') { persistResume(); actions.append(profileLink()); }
-    else if (code === 'authentication_required') { persistResume(); actions.append(link('Refresh sign-in →', '/assistant', 'button outline')); }
+    else if (code === 'authentication_required') { persistResume(); actions.append(link('Refresh sign-in →', '/assistant', 'button outline btn btn-outline')); }
     else if (code === 'agent_profile_consent_required') {
-      actions.append(action('Review profile permission', () => { $('#agent-draft-consent').focus(); }, 'button outline'));
+      actions.append(action('Review profile permission', () => { $('#agent-draft-consent').focus(); }, 'button outline btn btn-outline'));
     } else if (retry && !['agent_not_configured', 'agent_budget_exhausted', 'agent_refinement_limit', 'agent_run_not_found', 'agent_candidate_unavailable', 'agent_draft_stale', 'agent_history_cleared'].includes(code)) {
-      actions.append(action(kind === 'draft' ? 'Try this draft again' : kind === 'refine' ? 'Retry this refinement' : 'Retry this search', retry, 'button outline assistant-retry'));
+      actions.append(action(kind === 'draft' ? 'Try this draft again' : kind === 'refine' ? 'Retry this refinement' : 'Retry this search', retry, 'button outline btn btn-outline assistant-retry'));
     }
-    if (['agent_run_not_found', 'agent_candidate_unavailable', 'agent_draft_stale'].includes(code)) actions.append(action('Search this goal again', () => search($('#agent-goal').value.trim()), 'button outline assistant-retry'));
+    if (['agent_run_not_found', 'agent_candidate_unavailable', 'agent_draft_stale'].includes(code)) actions.append(action('Search this goal again', () => search($('#agent-goal').value.trim()), 'button outline btn btn-outline assistant-retry'));
     const person = validHandle(handle) ? handle : validHandle(selectedHandle) ? selectedHandle : null;
     actions.append(link(person ? 'Write an introduction myself ↗' : 'Browse people myself ↗', person ? '/introductions/new/' + encodeURIComponent(person) : '/discover'));
     box.append(actions); box.hidden = false;
@@ -74,6 +74,8 @@
     $('#agent-submit').textContent = busy && activeWork === 'search' ? 'Looking for useful connections…' : currentRun ? 'Search this goal again →' : 'Find relevant people →';
     $('#agent-submit').classList.toggle('primary', !currentRun);
     $('#agent-submit').classList.toggle('outline', Boolean(currentRun));
+    $('#agent-submit').classList.toggle('btn-primary', !currentRun);
+    $('#agent-submit').classList.toggle('btn-outline', Boolean(currentRun));
     $('#agent-goal-form').setAttribute('aria-busy', String(busy && activeWork === 'search'));
     $('#agent-refine-form').setAttribute('aria-busy', String(busy && activeWork === 'refine'));
     $('#agent-selection').setAttribute('aria-busy', String(busy && activeWork === 'draft'));
@@ -84,8 +86,12 @@
     const selectedDraft = Boolean(currentDraft && currentDraft.recipientHandle === selectedHandle);
     $('#agent-prepare-selected').classList.toggle('primary', !selectedDraft);
     $('#agent-prepare-selected').classList.toggle('outline', selectedDraft);
+    $('#agent-prepare-selected').classList.toggle('btn-primary', !selectedDraft);
+    $('#agent-prepare-selected').classList.toggle('btn-outline', selectedDraft);
     $('#agent-draft-handoff').classList.toggle('primary', selectedDraft);
     $('#agent-draft-handoff').classList.toggle('outline', !selectedDraft);
+    $('#agent-draft-handoff').classList.toggle('btn-primary', selectedDraft);
+    $('#agent-draft-handoff').classList.toggle('btn-outline', !selectedDraft);
     ['#agent-goal', '#agent-use-profile', '#agent-draft-consent', '#agent-refine-answer'].forEach((id) => { $(id).disabled = busy; });
     document.querySelectorAll('[data-example],.assistant-select-match,#agent-confirm-clear,#agent-clear-history,#agent-edit-goal,.assistant-history-entry button,.assistant-retry').forEach((button) => { button.disabled = busy; });
   }
@@ -103,15 +109,15 @@
   function renderStatus() {
     const badge = $('#agent-state'); badge.dataset.state = '';
     if (api.demo) {
-      badge.textContent = 'Sample mode'; notice('Sample mode does not generate AI recommendations or drafts. Open the live workspace to use your agent.', [link('Open live agent →', '/assistant?demo=0', 'button outline'), link('Browse sample people', '/discover?demo=1')]);
+      badge.textContent = 'Sample mode'; notice('Sample mode does not generate AI recommendations or drafts. Open the live workspace to use your agent.', [link('Open live agent →', '/assistant?demo=0', 'button outline btn btn-outline'), link('Browse sample people', '/discover?demo=1')]);
     } else if (api.error) {
       badge.textContent = 'Connection unavailable'; notice('We couldn’t load your workspace. Reconnect to try again. Nothing has been sent.', [action('Try again', () => { persistResume(); location.reload(); })]);
     } else if (!api.me) {
-      badge.textContent = 'Ready when you are'; notice('Start with a goal, then connect your wallet to keep working. Sign-in is free and does not request a payment. Or try offline fictional sample people: no wallet, AI requests, or external messages.', [action('Connect wallet', connect), link('Try sample people', '/discover?demo=1', 'button outline')]);
+      badge.textContent = 'Ready when you are'; notice('Start with a goal, then connect your wallet to keep working. Sign-in is free and does not request a payment. Or try offline fictional sample people: no wallet, AI requests, or external messages.', [action('Connect wallet', connect), link('Try sample people', '/discover?demo=1', 'button outline btn btn-outline')]);
     } else if (!status) {
       badge.textContent = 'Availability unknown'; notice('We couldn’t check your agent’s availability. Try again, or browse people yourself.', [action('Try again', () => { persistResume(); location.reload(); }), link('Browse people →', '/discover')]);
     } else if (!status.enabled) {
-      badge.textContent = 'Not available yet'; notice('Your agent isn’t available on this deployment yet. You can still browse people and prepare an introduction yourself.', [link('Browse people →', '/discover', 'button outline')]);
+      badge.textContent = 'Not available yet'; notice('Your agent isn’t available on this deployment yet. You can still browse people and prepare an introduction yourself.', [link('Browse people →', '/discover', 'button outline btn btn-outline')]);
     } else { badge.textContent = 'Live agent'; badge.dataset.state = 'ready'; notice(''); }
     const provider = [text(status?.provider), text(status?.model)].filter(Boolean).join(' · ');
     $('#agent-disclosure').textContent = `Your goal, any follow-up answers, and selected public profiles are sent to ${provider ? `the configured AI provider (${provider})` : 'SignalPass’s AI provider'}. Your approved profile is included only when you check the box. This does not share your profile with another person.`;
@@ -198,7 +204,7 @@
           $('#agent-preserved-draft').hidden = false;
           $('#agent-preserved-draft').textContent = 'Earlier draft for ' + (text(currentDraft.recipientName) || currentDraft.recipientHandle) + '. Choose Prepare introduction above to write to the newly selected person.';
         }
-      }, 'button outline assistant-select-match'); select.dataset.handle = match.handle; select.setAttribute('aria-pressed', 'false');
+      }, 'button outline btn btn-outline assistant-select-match'); select.dataset.handle = match.handle; select.setAttribute('aria-pressed', 'false');
       actions.append(select, link('View profile ↗', '/discover/' + encodeURIComponent(match.handle))); card.append(actions); container.append(card);
     });
     const question = text(run.nextQuestion);
@@ -236,7 +242,7 @@
         try { const result = await api.request('/agent/drafts/' + encodeURIComponent(record.id)); renderDraft(result.draft, true, true); progress('Saved draft ready to review.'); }
         catch (error) { showError(error); progress(); }
         finally { busy = false; updateControls(); }
-      }, '');
+      }, 'btn btn-ghost btn-sm sp-control-wrap');
       row.append(button, node('small', '', (kind === 'goal' ? 'Goal' : record.expiresAt <= Date.now() / 1000 ? 'Expired draft' : 'Unsent draft') + ' · ' + dateLabel(record.createdAt))); box.append(row);
     });
     $('#agent-clear-history').hidden = !entries.length; updateControls();

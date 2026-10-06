@@ -90,7 +90,7 @@
   };
   api.chooseHandle = (suggested) => new Promise((resolve, reject) => {
     const dialog = api.accountDialog();
-    dialog.innerHTML = '<form><h2 id="account-dialog-title">Your public handle</h2><p>Choose the address of your approved profile. Visibility stays under your control.</p><label for="account-handle">Handle</label><input id="account-handle" class="dialog-input" pattern="[a-z0-9_-]{3,32}" minlength="3" maxlength="32" required value="' + escape(suggested) + '"><div class="dialog-actions"><button type="button" class="button outline" id="cancel-handle">Cancel</button><button class="button primary">Save profile</button></div></form>';
+    dialog.innerHTML = '<form><h2 id="account-dialog-title">Your public handle</h2><p>Choose the address of your approved profile. Visibility stays under your control.</p><label for="account-handle">Handle</label><input id="account-handle" class="dialog-input input" pattern="[a-z0-9_-]{3,32}" minlength="3" maxlength="32" required value="' + escape(suggested) + '"><div class="dialog-actions"><button type="button" class="button outline btn btn-outline" id="cancel-handle">Cancel</button><button class="button primary btn btn-primary">Save profile</button></div></form>';
     let done = false;
     dialog.querySelector('form').onsubmit = (e) => { e.preventDefault(); done = true; const handle = dialog.querySelector('input').value; dialog.close(); resolve(handle); };
     dialog.querySelector('#cancel-handle').onclick = () => dialog.close();
@@ -169,7 +169,7 @@
     const overline = document.createElement('span'); overline.className = 'v4-empty-eyebrow'; overline.textContent = eyebrow;
     const heading = document.createElement('h2'); heading.textContent = title;
     const body = document.createElement('p'); body.textContent = description;
-    const cta = document.createElement(href ? 'a' : 'button'); cta.className = 'button outline'; cta.textContent = action;
+    const cta = document.createElement(href ? 'a' : 'button'); cta.className = 'button outline btn btn-outline'; cta.textContent = action;
     if (href) cta.href = href; else { cta.type = 'button'; cta.onclick = onAction; }
     copy.append(overline, heading, body, cta); container.append(art, copy);
   };
@@ -179,7 +179,7 @@
     const bar = document.createElement('div'); bar.className = 'v4-session-bar';
     const label = document.createElement('span'); label.className = 'v4-session-copy'; label.setAttribute('role', 'status');
     const title = document.createElement('strong'), detail = document.createElement('small');
-    const button = document.createElement('button'); button.type = 'button'; button.className = 'button outline'; button.id = 'session-action';
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'button outline btn btn-outline'; button.id = 'session-action';
     title.textContent = demo ? 'Sample mode' : api.error ? 'Let’s reconnect.' : api.me ? (api.me.profile?.displayName || api.me.session.address.slice(0, 8)) : 'Your next connection starts here.';
     detail.textContent = demo ? 'Sample people · no messages or payments' : api.error ? 'Connection unavailable. No new action was sent.' : api.me ? (api.chain?.enabled ? api.chainLabel() + ' · manual review · AI fee 0' : 'Live introductions · no payments') : (api.chain?.enabled && api.chain.chainId === 143 ? 'Free wallet sign-in · mainnet bonds use real MON' : 'Free wallet sign-in · no payment');
     label.append(title, detail); if (api.error) label.classList.add('has-error'); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
