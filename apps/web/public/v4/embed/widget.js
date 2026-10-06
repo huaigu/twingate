@@ -46,7 +46,7 @@
       profile.persona
     ];
     const root = host.attachShadow({ mode: "open" });
-    root.innerHTML = `<link rel="stylesheet" href="${new URL("../ui.css?v=aacd955e68f1", script.src).href}"><style>
+    root.innerHTML = `<link rel="stylesheet" href="${new URL("../ui.css?v=422d6b92bf58", script.src).href}"><style>
       :host{display:block;width:100%;max-width:660px;color:#202238;font-family:Arial,sans-serif;container-type:inline-size;container-name:signalpass}
       *{box-sizing:border-box}.card{padding:24px 26px 27px;background:linear-gradient(125deg,#fffbf4ed,#f9f2e8e8),url('${asset("paper-light.webp")}') center/420px;border:1px solid #fffcf7;border-radius:18px;box-shadow:0 14px 30px #58402619,0 2px 6px #58402610}
       header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid #e9e1d6}.brand{font:700 29px/1.2 "Times New Roman",serif;letter-spacing:-1.2px;display:flex;align-items:center;gap:9px;color:#202238}
