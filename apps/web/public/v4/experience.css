@@ -185,7 +185,7 @@ body.sp-workspace { --scale: 1; --sp-shell-gutter: clamp(20px, 4vw, 56px); font-
 @media (max-width: 1180px) {
  .site-header, .v4-header.site-header { gap: 14px; }
  .v4-menu a { padding-inline: 8px; font-size: 12px; }
- .session-in-header [data-session-state="connected"] .v4-session-copy { display: none; }
+ .session-in-header [data-session-state="connected"] .v4-session-copy:not(.has-error) { display: none; }
 }
 @media (max-width: 900px) {
  .v4-header.site-header { height: auto; min-height: 84px; flex-wrap: wrap; }

@@ -34,6 +34,13 @@ body[data-page="inbox"] .inbox-workspace :is(.inbox-group-title, .inbox-row > ti
   }
 }
 
+@media (max-width: 1180px) {
+  /* Keep a multiline bio clear of the existing 40px Edit button. */
+  body[data-page="sources"] .source-workspace .draft-person > div {
+    padding-bottom: 44px;
+  }
+}
+
 body[data-page="sources"] .source-workspace .source-chip {
   max-width: 100%;
   white-space: normal;
@@ -52,6 +59,17 @@ body[data-page="inbox"] .inbox-workspace .inbox-tab {
 
 body[data-page="inbox"] .inbox-workspace .inbox-tab.active {
   color: var(--sp-violet);
+}
+
+/* Sent entries contain text only, so they do not need the avatar columns. */
+body[data-page="inbox"] .inbox-workspace a.inbox-row[data-group="sent"] {
+  grid-template-columns: minmax(0, 1fr);
+  overflow-wrap: anywhere;
+}
+
+/* Keep long names inside the space reserved beside the desktop timestamp. */
+body[data-page="inbox"] .inbox-workspace .inbox-person-info > strong {
+  overflow-wrap: anywhere;
 }
 
 /* Keep the two-column tablet list compact, with readable scrollable tabs.
@@ -135,6 +153,7 @@ body[data-page="compose"].sp-workspace .shared-curiosity strong br {
 }
 
 #app-dialog :is(button, a, input, textarea, select):focus-visible,
+.dialog-input:focus-visible,
 body:is([data-page="sources"], [data-page="inbox"], [data-page="compose"]) :is(.source-tile, .edit-btn, .inbox-tab, .inbox-row, .context-button):focus-visible {
   outline: 3px solid var(--sp-violet);
   outline-offset: 3px;

@@ -18,8 +18,8 @@
 .assistant-state[data-state="ready"]::before { content: ""; display: inline-block; height: 6px; width: 6px; border-radius: 50%; background: #6b875e; margin-right: 6px; vertical-align: 1px; }
 .sp-assistant h2 { font: 26px/1.2 var(--sp-font-display); letter-spacing: -.65px; margin: 0 0 18px; }
 .assistant-goal-panel textarea { width: 100%; resize: vertical; min-height: 130px; max-height: 450px; border: 1px solid #d4cbdc; border-radius: 10px; padding: 17px 18px; font: 15px/1.75 var(--sp-font-text); color: var(--sp-ink); background: #f7f4ee; }
-.assistant-goal-panel textarea::placeholder { color: #807b87; }
-.sp-assistant :is(textarea,input,button,a):focus-visible { outline: 3px solid #a393d8; outline-offset: 3px; }
+.assistant-goal-panel textarea::placeholder { color: var(--sp-muted); }
+.sp-assistant :is(textarea,input,button,a):focus-visible { outline: 3px solid var(--sp-violet); outline-offset: 3px; }
 .assistant-field-hint { color: #655e6c; font: 13px/1.65 var(--sp-font-text); margin: 9px 0; }
 .assistant-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 20px; }
 .assistant-examples > span { font-size: 12px; width: 100%; color: #655e6c; margin-bottom: 2px; }
@@ -96,7 +96,7 @@
 .assistant-draft-field h3 { font: 500 11px/1.6 var(--sp-font-text); color: #8a7c91; margin: 0 0 7px; }
 .assistant-draft-field p { font: 15px/1.8 var(--sp-font-text); margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .assistant-draft-panel > .button { margin: 16px 0 5px; }
-.assistant-footer { margin-top: 55px; padding-top: 20px; border-top: 1px solid var(--sp-border); display: flex; justify-content: space-between; gap: 24px; color: #887c8e; font: 11px/1.6 var(--sp-font-text); }
+.assistant-footer { margin-top: 55px; padding-top: 20px; border-top: 1px solid var(--sp-border); display: flex; justify-content: space-between; gap: 24px; color: var(--sp-muted); font: 11px/1.6 var(--sp-font-text); }
 @media (max-width: 1150px) { .assistant-signature { padding: 0; } .assistant-signature span { display: none; } .assistant-layout { grid-template-columns: minmax(0,1fr) 268px; gap: 22px; } .assistant-goal-panel,.assistant-draft-panel { padding: 25px; } }
 @media (max-width: 850px) { .sp-assistant .assistant-heading { flex-direction: row; align-items: center; } .assistant-signature { display: none; } .assistant-layout { grid-template-columns: 1fr; } .assistant-sidebar { grid-template-columns: 1fr 1fr; align-items: start; } .assistant-footer { flex-direction: column; gap: 10px; } }
 @media (max-width: 540px) { .sp-assistant .assistant-heading h1 { font-size: 39px; letter-spacing: -1.5px; } .assistant-sidebar { grid-template-columns: 1fr; } .assistant-goal-panel,.assistant-draft-panel,.assistant-match { padding: 21px 18px; } .assistant-panel-top { align-items: flex-start; flex-direction: column; gap: 8px; } .sp-assistant h2 { font-size: 24px; } .assistant-goal-panel textarea { font-size: 16px; padding: 14px; } .assistant-disclosure { margin-left: 0; } .assistant-submit-row { gap: 12px; } .assistant-submit-row > .button { width: 100%; justify-content: space-between; } .assistant-budget { max-width: none; } .assistant-section-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .assistant-match-actions { gap: 7px 14px; } .assistant-match h3 { font-size: 24px; } .assistant-draft-panel > .button { width: 100%; justify-content: space-between; } }

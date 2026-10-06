@@ -139,7 +139,7 @@
         const plan = await api.request('/chain/profile/prepare', {});
         if (!plan.transactions.length) { await refresh(); return; }
         const dialog = api.accountDialog(); dialog.replaceChildren();
-        const h = document.createElement('h2'); h.textContent = 'Confirm your profile sync';
+        const h = document.createElement('h2'); h.id = 'account-dialog-title'; h.textContent = 'Confirm your profile sync';
         const p = document.createElement('p'); p.textContent = plan.transactions.map(tx => tx.label).join(' → ') + '. No AI fee. Each transaction costs network gas' + (api.chain.chainId === 143 ? ' in real MON on Monad Mainnet.' : '.');
         const actions = document.createElement('div'); actions.className = 'dialog-actions';
         const cancel = document.createElement('button'); cancel.className = 'button outline'; cancel.textContent = 'Cancel'; cancel.onclick = () => dialog.close();
