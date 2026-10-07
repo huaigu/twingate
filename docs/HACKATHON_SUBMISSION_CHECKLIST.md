@@ -1,15 +1,19 @@
 # SignalPass final release and submission checklist
 
-Updated **October 7, 2026**. This is a **local release candidate checklist**; the new package is not deployed and the portal has not been updated today. The last reported entry state was **Ready for judging** with V2 videos; today's portal session is signed out.
+Updated **October 7, 2026**. The **release is deployed and publicly verified**. The portal has not been updated in this session. The last reported entry state was **Ready for judging** with V2 videos; today's portal session is signed out.
 
 The repository remains **private** by the owner's instruction. Leave the organizer invitation unchanged. Earlier eligibility ambiguity remains recorded below.
 
-## Current release blocker
+## Deployed release — portal update still pending
 
-Automatic approval review rejected transfer of the private benchmark script to the verified SignalPass VPS and requires explicit owner permission for that source payload and destination. The rejected transfer and hosted run did not proceed. Do not attempt an alternate upload path.
+The owner authorized the private-source transfer and deployment on October 7. The release switched successfully at **2026-10-07T07:41:13.215281Z**, followed by final public verification. All **16 canary checks**, **20 local release checks** and **5 public checks** passed. The existing API process remained unchanged.
 
-- [ ] Obtain the explicit permission required by automatic approval review before transferring the private benchmark source to the verified VPS.
-- [ ] After permission, complete and review the hosted evaluation, then deploy and verify the release candidate. Until then, retain prepared/pending status for new pages and V3 public links.
+- [x] Obtain the explicit permission required by automatic approval review before transferring the private benchmark source to the verified VPS.
+- [x] Complete and review the bounded hosted evaluation, retaining all case outcomes and the original fixture.
+- [x] Deploy and verify public pages, both films, evidence downloads and the returning-browser journey.
+- [x] Verify public health/readiness HTTP 200 and demo media byte ranges: HTTP 206 for bytes 0–1023 of 7,690,254, with a 1,024-byte response.
+
+Evidence: [deployment record](reports/signalpass-deployment-2026-10-07.json), [release QA](reports/signalpass-release-qa-2026-10-07.json).
 
 ## Verified product evidence
 
@@ -24,20 +28,20 @@ Automatic approval review rejected transfer of the private benchmark script to t
 
 Evidence: [production rehearsal](reports/signalpass-public-journey-2026-10-07.json), [receipt recheck](reports/signalpass-mainnet-receipt-recheck-2026-10-07.json), [original settlement report](reports/signalpass-mainnet-deployment-2026-10-03.md).
 
-## Matching evaluation — hosted run blocked
+## Matching evaluation — completed hosted run
 
 - [x] Prepare 20 fictional requests, explicit expected labels and a fixed BM25 keyword comparison before hosted inference.
 - [x] Require identical eligible candidate profiles for the agent and baseline; keep expected labels out of model input.
 - [x] Record fixture/source hashes, call budget, response failures, case-level outputs and metric denominators.
-- [x] Pass all **20 local schema, scoring and production-route compatibility checks**, plus strict TypeScript validation; make **zero hosted benchmark calls**.
+- [x] Pass all **20 local schema, scoring and production-route compatibility checks**, plus strict TypeScript validation. That local validation used no hosted calls; the subsequent hosted run is recorded separately.
 - [x] Save the baseline-only report: **15/20 strict successes**, **2/4 correct abstentions**, zero operational failures. These are keyword results, not hosted-AI results.
-- [ ] Finish the hosted run, inspect every case and publish the complete report without hiding failures.
-- [ ] Verify the summary matches the machine-readable report, including correct abstentions and unsupported recommendations.
-- [ ] Publish downloadable results and methodology on the evidence page; verify both links.
+- [x] Finish the **20-call hosted run**, inspect case-level output and save the complete report: zero operational failures, no retries. Retain all six strict-case misses.
+- [x] Verify reported counts against the machine-readable report: hosted **14/20** strict success versus BM25 **15/20**; first recommendation **16/16** versus **13/16**; abstention **4/4** versus **2/4**; relevant recommendations **17/27** versus **15/18**.
+- [x] Publish downloadable results, report, methodology, manifest, frozen fixture and qualitative case review; verify the public resources.
 
-<!-- BENCHMARK_PENDING_START -->
-**BENCHMARK_PENDING:** The hosted evaluation has not run. Do not publish a hosted score or an AI-versus-baseline comparison until the report is available. The [baseline-only report](reports/matching-validation-2026-10-07/report.md) and [case-level JSON](reports/matching-validation-2026-10-07/results.json) are complete. Retain the limitations: 20 team-authored fictional cases, no independent human grading, a planned single hosted sample per case and a fixed heuristic keyword baseline.
-<!-- BENCHMARK_PENDING_END -->
+The [hosted report](reports/matching-live-2026-10-07/report.md) and [case-level JSON](reports/matching-live-2026-10-07/results.json) are complete. The agent added **10 unwanted secondary suggestions across six positive cases**. Although all 38 evidence quotes matched source text, the [coding assistant's qualitative review](reports/matching-live-2026-10-07/claim-review.md) found unsupported or contradictory prose. The review also distinguishes stricter benchmark labels from the production prompt's exploratory-match allowance; not every selection miss is a fabricated fact. Do not claim zero hallucinations or overall superiority to BM25. Retain the limitations: 20 team-authored fictional cases, no independent human grading, one hosted sample per case and a fixed heuristic keyword baseline.
+
+The [baseline-only report](reports/matching-validation-2026-10-07/report.md) remains available as the original local validation record.
 
 ## Guided story and public evidence page
 
@@ -45,9 +49,10 @@ Evidence: [production rehearsal](reports/signalpass-public-journey-2026-10-07.js
 - [x] Include evidence comparison, editable draft, review, separate send, context exchange, acceptance and independent contact choices.
 - [x] Prepare the evidence page separating synthetic evaluation, live no-bond rehearsal and historical mainnet settlement.
 - [x] Pass **11 browser checks**, including all **40 scene/viewport combinations** (10 scenes at 320, 390, 768 and 1280px), all contact-sharing choices, review invalidation, text escaping and rewind/restart/reload behavior, on an isolated local server.
-- [x] Review screenshots; fix evidence-page action contrast and mobile text wrapping. These are local checks, not proof of deployment.
-- [ ] Deploy the reviewed files and verify the public URLs in a fresh browser.
-- [ ] Verify homepage links reach the guided story and the evidence page.
+- [x] Review screenshots; fix evidence-page action contrast and mobile text wrapping.
+- [x] Repeat **11 walkthrough checks plus four UI/evidence checks on the canary**: deliberate two-line initial/loading-wallet states, rejected-request retry, no overflow at 320/390/1280px, primary-action contrast of at least 4.5:1 and HTTP 200 for evidence downloads. These are canary checks, not proof of public deployment.
+- [x] Deploy the reviewed files and verify the public pages, loading states, retry behavior, layouts and resource links in the browser.
+- [x] Verify the returning-browser route through homepage → guided story → evidence → watch page, with current content.
 
 Destinations:
 
@@ -56,7 +61,7 @@ Destinations:
 
 ## V3 films and watch page
 
-V3 exports are **completed, validated and saved**, using the latest production captures. The existing V2 films are the last confirmed published versions at this checklist revision. The [actual edit notes](reports/signalpass-video-edit-notes-2026-10-07.md) are authoritative for what is in the finished films; earlier storyboard guidelines may differ.
+V3 films are **completed, validated, saved and publicly playable**, using the latest production captures. The stable watch page now uses V3; old V2 direct URLs remain available. The [actual edit notes](reports/signalpass-video-edit-notes-2026-10-07.md) are authoritative for what is in the finished films; earlier storyboard guidelines may differ.
 
 - [x] Finish the technical demonstration: **172.834 seconds (2:53)**, below **3:00**.
 - [x] Finish the product pitch: **111.467 seconds (1:51)**, below **2:00**.
@@ -64,11 +69,11 @@ V3 exports are **completed, validated and saved**, using the latest production c
 - [x] Present the current quote-backed explanation, human edit, send approval, recipient acceptance and separate contact choices in edited production captures.
 - [x] Label historical mainnet evidence separately; do not attach those transactions to the no-bond introduction.
 - [x] Validate **1920×1080 H.264/AAC** exports, **30 / 20 caption cues**, actual durations and full-file decode with **zero errors**; complete visual review and save the deliverables.
-- [ ] Publish both MP4s, subtitles and poster; update the stable watch page only after exports pass.
-- [ ] Verify public playback and seek/range behavior without sign-in.
-- [ ] Update README and submission-copy video links to verified V3 destinations.
+- [x] Publish both MP4s, subtitles and poster, and update the stable watch page to V3.
+- [x] Verify both films decode and play publicly with the expected durations; verify media range responses without sign-in.
+- [x] Update README and submission-copy links to the verified V3 destinations.
 
-Expected destinations, **not yet confirmed published**:
+**Published and verified destinations:**
 
 - Demo: https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4
 - Pitch: https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4
@@ -83,9 +88,10 @@ See [video briefs](HACKATHON_VIDEO_BRIEFS.md), [export validation](reports/signa
 - [x] State the organizer-as-buyer idea as an unvalidated business hypothesis.
 - [x] Preserve MIT licensing, third-party notices and development provenance prepared previously.
 - [x] Prepare current submission copy with capability and evidence boundaries.
-- [ ] Replace every `BENCHMARK_PENDING` block with checked results or an explicit incomplete status.
-- [ ] After deployment, replace prepared/pending language only where completion has been verified.
-- [ ] Verify README, watch page, evidence page and portal describe the same released version.
+- [x] Replace matching placeholders with checked hosted results, baseline counts and explicit limitations; distinguish good first matches from unwanted additional suggestions.
+- [x] Replace release-candidate and publication-pending language with verified completion facts.
+- [x] Align README, watch page, evidence page and prepared submission copy with this release.
+- [ ] Save and verify the corresponding portal fields after sign-in; the portal update remains incomplete.
 
 ## Submission portal — access and final read-back required
 
@@ -111,4 +117,4 @@ The October 3 organizer invitation was reported pending when last checked. No pr
 
 ## Final release rule
 
-Freeze feature additions once the evidence, walkthrough and films are verified. Finish with a signed-out desktop review and a real-phone check of the judge journey. Keep the working public V2 player available until V3 has passed checks. If a new component fails verification, report its actual state rather than upgrading the completion claim.
+The evidence, walkthrough and films are publicly verified. Preserve this working release while completing the portal update, real-phone wallet check and real-user validation. Existing V2 direct URLs remain available. Any later change needs a new verification record; keep this first benchmark run unchanged.

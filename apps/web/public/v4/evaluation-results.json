@@ -1,16 +1,16 @@
 {
-  "mode": "validate",
+  "mode": "live",
   "fixtureSha256": "a3b918abbacbb5ce99aa23c7c1de1d9061e09016971b2af91bb8bd250fc37d0b",
   "label": "Synthetic engineering benchmark; fictional profiles; author-defined labels; not independent human validation, customer traction, or a production usage study.",
-  "startedAt": "2026-10-07T06:00:19.446Z",
+  "startedAt": "2026-10-07T07:20:14.835Z",
   "sourceRevision": "9a5e56461d051c12b8c85a1f5d449063d0564411",
   "sourceHashes": {
-    "agent-routes.ts": "ac1d12f49ad8d321314333bcf6b99c75351915bc32b4afe1dba32cb7b208a7d3",
-    "agent-provider.ts": "3c7cdaa52995e16024e498bef3160c72d4b3d016a972153e23385f71e15b5d2a",
-    "agent-evidence.ts": "3cdfc7faf00c1a9e8db9d18be1f9bbff6ee4d98b1ab156775ffe5abca4732687"
+    "agent-routes.ts": "c327bdb9068964b8cc9fe30fc3331592b27202668a21d23e8815a48037f3d715",
+    "agent-provider.ts": "fe024c541c83ab47cba60fda2209a1ce0c8a66afa5b8270647f980930f12889c",
+    "agent-evidence.ts": "c7713eb1d0e109351f4a49af3dedf9a1772b8584105cb2a9af3c38a9c8df1418"
   },
-  "provider": null,
-  "model": null,
+  "provider": "tokenrhythm",
+  "model": "deepseek-v4-flash",
   "baselineConfig": {
     "name": "BM25 lexical baseline",
     "k1": 1.2,
@@ -22,8 +22,8 @@
     "description": "Frozen heuristic thresholds, not tuned on these case labels or a live run. Case-insensitive Unicode tokens, English stopword removal and conservative English suffix normalization; no embeddings or translation. Standard BM25 across combined public profile fields; maximum three candidates above evidence and relative-score thresholds."
   },
   "complete": true,
-  "finishedAt": "2026-10-07T06:00:20.989Z",
-  "providerCalls": 0,
+  "finishedAt": "2026-10-07T07:21:07.357Z",
+  "providerCalls": 20,
   "maxProviderCalls": 20,
   "concurrency": 1,
   "baseline": {
@@ -56,12 +56,56 @@
     "unsupportedCandidateSelections": 3,
     "failures": 0,
     "latencyMs": {
-      "median": 0.233,
-      "p95": 0.336
+      "median": 0.639,
+      "p95": 3.127
     }
   },
-  "hosted": null,
-  "hostedAudit": null,
+  "hosted": {
+    "evaluatedCases": 20,
+    "strictCaseSuccess": {
+      "numerator": 14,
+      "denominator": 20,
+      "rate": 0.7
+    },
+    "recommendationRelevance": {
+      "numerator": 17,
+      "denominator": 27,
+      "rate": 0.63
+    },
+    "firstRecommendationRelevant": {
+      "numerator": 16,
+      "denominator": 16,
+      "rate": 1
+    },
+    "atLeastOneRelevantRecommendation": {
+      "numerator": 16,
+      "denominator": 16,
+      "rate": 1
+    },
+    "correctAbstention": {
+      "numerator": 4,
+      "denominator": 4,
+      "rate": 1
+    },
+    "unsupportedCandidateSelections": 10,
+    "failures": 0,
+    "latencyMs": {
+      "median": 2348.264,
+      "p95": 3651.45
+    }
+  },
+  "hostedAudit": {
+    "quoteMismatches": {
+      "numerator": 0,
+      "denominator": 38,
+      "rate": 0
+    },
+    "specificClaimFlagCount": 0,
+    "noRawResponse": 0,
+    "invalidRawFormats": 0,
+    "inputTokens": 32413,
+    "outputTokens": 3959
+  },
   "cases": [
     {
       "id": "wallet-wording",
@@ -113,7 +157,7 @@
           "bench-bob"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.234,
+        "latencyMs": 0.677,
         "proposals": [
           {
             "handle": "bench-bob",
@@ -220,8 +264,59 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-bob"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 2192.822,
+        "proposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Bob explicitly offers usability reviews of wallet token approval wording and rejected-request recovery screens, which matches your requested wording review for both the approval dialog and the screen after a rejected request.",
+            "caveat": "Bob focuses on wording and recovery screens but this is a review of text, not code; confirm he has access to your actual dialog copy.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-bob"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Bob explicitly offers usability reviews of wallet token approval wording and rejected-request recovery screens, which matches your requested wording review for both the approval dialog and the screen after a rejected request.",
+            "caveat": "Bob focuses on wording and recovery screens but this is a review of text, not code; confirm he has access to your actual dialog copy.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1615,
+        "outputTokens": 121
+      }
     },
     {
       "id": "keyboard-trap",
@@ -271,7 +366,7 @@
         "status": "ok",
         "handles": [],
         "nextQuestion": null,
-        "latencyMs": 0.285,
+        "latencyMs": 0.543,
         "proposals": [],
         "scores": [
           {
@@ -366,8 +461,133 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-maya",
+          "bench-bob",
+          "bench-leo"
+        ],
+        "nextQuestion": "Do you need a manual accessibility review only, or would automated keyboard-path regression tests also help?",
+        "latencyMs": 2608.941,
+        "proposals": [
+          {
+            "handle": "bench-maya",
+            "reason": "She offers exactly the keyboard-only and screen-reader dialog and focus-order review your popup issue needs.",
+            "caveat": "Maya's review is limited to keyboard and screen reader; she did not explicitly mention returning to the page after popups or testing without a mouse on browsers other than those covered by her own testing.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "His review of rejected-request recovery directly mirrors your need to return to the page after a popup.",
+            "caveat": "Bob's focus is desktop wallets; his reviews cover wording and recovery screens but may not specifically address mouse-less users.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "rejected-request recovery screens"
+              },
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-leo",
+            "reason": "He can automate checks for keyboard reachability and popup return paths as regression tests.",
+            "caveat": "Leo fixes browser automation tests, not manual accessibility; his help would be to codify checkable focus paths rather than perform a human keyboard review.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-maya",
+          "bench-bob",
+          "bench-leo"
+        ],
+        "rawNextQuestion": "Do you need a manual accessibility review only, or would automated keyboard-path regression tests also help?",
+        "rawProposals": [
+          {
+            "handle": "bench-maya",
+            "reason": "She offers exactly the keyboard-only and screen-reader dialog and focus-order review your popup issue needs.",
+            "caveat": "Maya's review is limited to keyboard and screen reader; she did not explicitly mention returning to the page after popups or testing without a mouse on browsers other than those covered by her own testing.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "His review of rejected-request recovery directly mirrors your need to return to the page after a popup.",
+            "caveat": "Bob's focus is desktop wallets; his reviews cover wording and recovery screens but may not specifically address mouse-less users.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "rejected-request recovery screens"
+              },
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-leo",
+            "reason": "He can automate checks for keyboard reachability and popup return paths as regression tests.",
+            "caveat": "Leo fixes browser automation tests, not manual accessibility; his help would be to codify checkable focus paths rather than perform a human keyboard review.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-maya",
+            "field": "canOffer",
+            "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels.",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "rejected-request recovery screens",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          },
+          {
+            "handle": "bench-leo",
+            "field": "canOffer",
+            "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1626,
+        "outputTokens": 420
+      }
     },
     {
       "id": "flaky-browser-tests",
@@ -419,7 +639,7 @@
           "bench-leo"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.217,
+        "latencyMs": 0.652,
         "proposals": [
           {
             "handle": "bench-leo",
@@ -526,8 +746,89 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-leo",
+          "bench-ivy"
+        ],
+        "nextQuestion": "您的测试是运行在浏览器扩展或钱包相关的Playwright测试吗？如果是，Leo或Ivy的领域可能更贴合；否则我可能无法只通过当前目录找到合适的匹配。此外，您希望隔离账号状态（如登录）还是浏览器状态（如缓存）？这有助于我进一步精炼可能的建议。",
+        "latencyMs": 4712.478,
+        "proposals": [
+          {
+            "handle": "bench-leo",
+            "reason": "Leo专门处理Playwright测试的调试，包括CI中的测试隔离，直接对应用户的测试独立通过但联合失败的问题。",
+            "caveat": "注意，这主要是关于测试隔离和CI中的flaky测试，而Leo的背景正好覆盖了这一点。",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          },
+          {
+            "handle": "bench-ivy",
+            "reason": "Ivy提供测试重现和覆盖审查的经验，尽管具体领域不同，但测试隔离和重现失败测试的方法可能具有迁移价值。",
+            "caveat": "Ivy专注于Solidity合约测试，而非Playwright或浏览器自动化测试。",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-leo",
+          "bench-ivy"
+        ],
+        "rawNextQuestion": "您的测试是运行在浏览器扩展或钱包相关的Playwright测试吗？如果是，Leo或Ivy的领域可能更贴合；否则我可能无法只通过当前目录找到合适的匹配。此外，您希望隔离账号状态（如登录）还是浏览器状态（如缓存）？这有助于我进一步精炼可能的建议。",
+        "rawProposals": [
+          {
+            "handle": "bench-leo",
+            "reason": "Leo专门处理Playwright测试的调试，包括CI中的测试隔离，直接对应用户的测试独立通过但联合失败的问题。",
+            "caveat": "注意，这主要是关于测试隔离和CI中的flaky测试，而Leo的背景正好覆盖了这一点。",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          },
+          {
+            "handle": "bench-ivy",
+            "reason": "Ivy提供测试重现和覆盖审查的经验，尽管具体领域不同，但测试隔离和重现失败测试的方法可能具有迁移价值。",
+            "caveat": "Ivy专注于Solidity合约测试，而非Playwright或浏览器自动化测试。",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-leo",
+            "field": "canOffer",
+            "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI.",
+            "exact": true
+          },
+          {
+            "handle": "bench-ivy",
+            "field": "canOffer",
+            "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1617,
+        "outputTokens": 270
+      }
     },
     {
       "id": "activation-funnel",
@@ -579,7 +880,7 @@
           "bench-nia"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.27,
+        "latencyMs": 0.636,
         "proposals": [
           {
             "handle": "bench-nia",
@@ -686,8 +987,117 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-nia",
+          "bench-bob"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 1893.327,
+        "proposals": [
+          {
+            "handle": "bench-nia",
+            "reason": "Nia directly offers help defining activation funnels and investigating where users drop off, and builds on measuring onboarding behavior for subscription products — the same core problem you're facing.",
+            "caveat": "Nia's offer is framed around instrumentation and drop-off investigation, which matches your stated need, but you said nothing about the current state of your event data.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Designing event instrumentation, activation funnels, cohort retention analysis, and drop-off investigations."
+              },
+              {
+                "field": "building",
+                "quote": "Measuring onboarding behavior for subscription products."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob builds onboarding flows and offers usability review of the steps where users get stuck, which could inform your activation analysis — though his domain is wallet onboarding, not general SaaS, so this is a tentative connection.",
+            "caveat": "Bob's work focuses on wallet onboarding rather than general SaaS, so the fit is exploratory and may not translate to your context.",
+            "evidence": [
+              {
+                "field": "building",
+                "quote": "Designing onboarding flows for browser-based wallets."
+              },
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-nia",
+          "bench-bob"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-nia",
+            "reason": "Nia directly offers help defining activation funnels and investigating where users drop off, and builds on measuring onboarding behavior for subscription products — the same core problem you're facing.",
+            "caveat": "Nia's offer is framed around instrumentation and drop-off investigation, which matches your stated need, but you said nothing about the current state of your event data.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Designing event instrumentation, activation funnels, cohort retention analysis, and drop-off investigations."
+              },
+              {
+                "field": "building",
+                "quote": "Measuring onboarding behavior for subscription products."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob builds onboarding flows and offers usability review of the steps where users get stuck, which could inform your activation analysis — though his domain is wallet onboarding, not general SaaS, so this is a tentative connection.",
+            "caveat": "Bob's work focuses on wallet onboarding rather than general SaaS, so the fit is exploratory and may not translate to your context.",
+            "evidence": [
+              {
+                "field": "building",
+                "quote": "Designing onboarding flows for browser-based wallets."
+              },
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-nia",
+            "field": "canOffer",
+            "quote": "Designing event instrumentation, activation funnels, cohort retention analysis, and drop-off investigations.",
+            "exact": true
+          },
+          {
+            "handle": "bench-nia",
+            "field": "building",
+            "quote": "Measuring onboarding behavior for subscription products.",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "building",
+            "quote": "Designing onboarding flows for browser-based wallets.",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1618,
+        "outputTokens": 261
+      }
     },
     {
       "id": "chinese-dev-guide",
@@ -739,7 +1149,7 @@
           "bench-omar"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.229,
+        "latencyMs": 0.623,
         "proposals": [
           {
             "handle": "bench-omar",
@@ -846,8 +1256,59 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-omar"
+        ],
+        "nextQuestion": "Do any of your guide's technical terms have specific naming conventions in Simplified Chinese (like keeping English terms for APIs)?",
+        "latencyMs": 2341.787,
+        "proposals": [
+          {
+            "handle": "bench-omar",
+            "reason": "Omar explicitly offers translation between English and Simplified Chinese for developer documentation and terminology checking, directly matching your goal of a Simplified Chinese translation with accurate technical terminology.",
+            "caveat": "Omar does not provide certified or medical translation, but this is a developer guide, not a certified/medical document.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Translating developer documentation between English and Simplified Chinese and checking technical terminology."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-omar"
+        ],
+        "rawNextQuestion": "Do any of your guide's technical terms have specific naming conventions in Simplified Chinese (like keeping English terms for APIs)?",
+        "rawProposals": [
+          {
+            "handle": "bench-omar",
+            "reason": "Omar explicitly offers translation between English and Simplified Chinese for developer documentation and terminology checking, directly matching your goal of a Simplified Chinese translation with accurate technical terminology.",
+            "caveat": "Omar does not provide certified or medical translation, but this is a developer guide, not a certified/medical document.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Translating developer documentation between English and Simplified Chinese and checking technical terminology."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-omar",
+            "field": "canOffer",
+            "quote": "Translating developer documentation between English and Simplified Chinese and checking technical terminology.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1619,
+        "outputTokens": 158
+      }
     },
     {
       "id": "contract-invariants",
@@ -899,7 +1360,7 @@
           "bench-ivy"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.216,
+        "latencyMs": 0.553,
         "proposals": [
           {
             "handle": "bench-ivy",
@@ -1006,8 +1467,119 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-ivy",
+          "bench-dara",
+          "bench-leo"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 3351.864,
+        "proposals": [
+          {
+            "handle": "bench-ivy",
+            "reason": "Directly offers Solidity access-control and reentrancy test coverage, invariant writing, and test failure reproduction.",
+            "caveat": "Ivy's profile does not explicitly claim prior audit experience, only test coverage and reproduction support.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests."
+              }
+            ]
+          },
+          {
+            "handle": "bench-dara",
+            "reason": "Has experience reproducing wallet connection failures, which may relate to reentrancy test failures if wallet interaction is involved.",
+            "caveat": "Dara's focus is Android browser-to-wallet handoffs, not general Solidity testing; they explicitly do not test iOS.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "I do not test iOS apps."
+              }
+            ]
+          },
+          {
+            "handle": "bench-leo",
+            "reason": "General testing and race-condition debugging skills could transfer, but the profile has no Solidity mentions.",
+            "caveat": "Leo's expertise is in browser automation, not Solidity or blockchain testing; the match is exploratory.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-ivy",
+          "bench-dara",
+          "bench-leo"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-ivy",
+            "reason": "Directly offers Solidity access-control and reentrancy test coverage, invariant writing, and test failure reproduction.",
+            "caveat": "Ivy's profile does not explicitly claim prior audit experience, only test coverage and reproduction support.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests."
+              }
+            ]
+          },
+          {
+            "handle": "bench-dara",
+            "reason": "Has experience reproducing wallet connection failures, which may relate to reentrancy test failures if wallet interaction is involved.",
+            "caveat": "Dara's focus is Android browser-to-wallet handoffs, not general Solidity testing; they explicitly do not test iOS.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "I do not test iOS apps."
+              }
+            ]
+          },
+          {
+            "handle": "bench-leo",
+            "reason": "General testing and race-condition debugging skills could transfer, but the profile has no Solidity mentions.",
+            "caveat": "Leo's expertise is in browser automation, not Solidity or blockchain testing; the match is exploratory.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-ivy",
+            "field": "canOffer",
+            "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests.",
+            "exact": true
+          },
+          {
+            "handle": "bench-dara",
+            "field": "canOffer",
+            "quote": "I do not test iOS apps.",
+            "exact": true
+          },
+          {
+            "handle": "bench-leo",
+            "field": "canOffer",
+            "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1622,
+        "outputTokens": 354
+      }
     },
     {
       "id": "reorg-duplicates",
@@ -1059,7 +1631,7 @@
           "bench-chen"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.243,
+        "latencyMs": 3.604,
         "proposals": [
           {
             "handle": "bench-chen",
@@ -1166,8 +1738,73 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-chen"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 1290.984,
+        "proposals": [
+          {
+            "handle": "bench-chen",
+            "reason": "Chen's offer directly addresses the need for idempotent event handling and missed-event recovery, matching the stated goal.",
+            "caveat": "Chen's offer is about general backend reliability rather than blockchain-specific reorg logic, so their assistance may not cover the chain-reorg nuance specifically.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing indexer reorg handling, duplicate webhook suppression, idempotency, retries, and backfill recovery."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Backend teams with reproducible event delivery problems."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-chen"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-chen",
+            "reason": "Chen's offer directly addresses the need for idempotent event handling and missed-event recovery, matching the stated goal.",
+            "caveat": "Chen's offer is about general backend reliability rather than blockchain-specific reorg logic, so their assistance may not cover the chain-reorg nuance specifically.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing indexer reorg handling, duplicate webhook suppression, idempotency, retries, and backfill recovery."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Backend teams with reproducible event delivery problems."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-chen",
+            "field": "canOffer",
+            "quote": "Reviewing indexer reorg handling, duplicate webhook suppression, idempotency, retries, and backfill recovery.",
+            "exact": true
+          },
+          {
+            "handle": "bench-chen",
+            "field": "wantsToMeet",
+            "quote": "Backend teams with reproducible event delivery problems.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1620,
+        "outputTokens": 173
+      }
     },
     {
       "id": "community-program",
@@ -1219,7 +1856,7 @@
           "bench-rosa"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.229,
+        "latencyMs": 0.981,
         "proposals": [
           {
             "handle": "bench-rosa",
@@ -1326,8 +1963,73 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-rosa"
+        ],
+        "nextQuestion": "Have you already mapped out which members want to offer feedback versus which ones want to receive it, or is that the part you need help structuring?",
+        "latencyMs": 2152.45,
+        "proposals": [
+          {
+            "handle": "bench-rosa",
+            "reason": "This exactly matches your goal of collecting needs and offers and facilitating introductions for an opt-in peer feedback session.",
+            "caveat": "Well, Rosa explicitly organizes opt-in feedback sessions and introductions, so she is a direct fit. However, we do not have proof she is available for your specific group or timeline, and her stated focus is on peer-learning communities, not necessarily builder groups with a technical bent.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Planning facilitated feedback sessions, collecting member needs and offers, and running opt-in introductions."
+              },
+              {
+                "field": "building",
+                "quote": "Hosting small online peer-learning communities for builders."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-rosa"
+        ],
+        "rawNextQuestion": "Have you already mapped out which members want to offer feedback versus which ones want to receive it, or is that the part you need help structuring?",
+        "rawProposals": [
+          {
+            "handle": "bench-rosa",
+            "reason": "This exactly matches your goal of collecting needs and offers and facilitating introductions for an opt-in peer feedback session.",
+            "caveat": "Well, Rosa explicitly organizes opt-in feedback sessions and introductions, so she is a direct fit. However, we do not have proof she is available for your specific group or timeline, and her stated focus is on peer-learning communities, not necessarily builder groups with a technical bent.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Planning facilitated feedback sessions, collecting member needs and offers, and running opt-in introductions."
+              },
+              {
+                "field": "building",
+                "quote": "Hosting small online peer-learning communities for builders."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-rosa",
+            "field": "canOffer",
+            "quote": "Planning facilitated feedback sessions, collecting member needs and offers, and running opt-in introductions.",
+            "exact": true
+          },
+          {
+            "handle": "bench-rosa",
+            "field": "building",
+            "quote": "Hosting small online peer-learning communities for builders.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1618,
+        "outputTokens": 178
+      }
     },
     {
       "id": "account-erasure",
@@ -1379,7 +2081,7 @@
           "bench-finn"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.332,
+        "latencyMs": 0.96,
         "proposals": [
           {
             "handle": "bench-finn",
@@ -1486,8 +2188,73 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-finn"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 2354.741,
+        "proposals": [
+          {
+            "handle": "bench-finn",
+            "reason": "Finn is the only match who explicitly works on account deletion and retention windows for SaaS, directly covering both removing personal information and deciding how long to keep the rest.",
+            "caveat": "They focus on practical engineering controls, but if your account-deletion rules are jurisdiction-specific you would still need your own legal input.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Mapping stored personal data, implementing account deletion, defining retention windows, and reducing unnecessary collection. I do not provide legal advice."
+              },
+              {
+                "field": "building",
+                "quote": "Designing data lifecycle controls for small SaaS products."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-finn"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-finn",
+            "reason": "Finn is the only match who explicitly works on account deletion and retention windows for SaaS, directly covering both removing personal information and deciding how long to keep the rest.",
+            "caveat": "They focus on practical engineering controls, but if your account-deletion rules are jurisdiction-specific you would still need your own legal input.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Mapping stored personal data, implementing account deletion, defining retention windows, and reducing unnecessary collection. I do not provide legal advice."
+              },
+              {
+                "field": "building",
+                "quote": "Designing data lifecycle controls for small SaaS products."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-finn",
+            "field": "canOffer",
+            "quote": "Mapping stored personal data, implementing account deletion, defining retention windows, and reducing unnecessary collection. I do not provide legal advice.",
+            "exact": true
+          },
+          {
+            "handle": "bench-finn",
+            "field": "building",
+            "quote": "Designing data lifecycle controls for small SaaS products.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1626,
+        "outputTokens": 137
+      }
     },
     {
       "id": "lp-simulation",
@@ -1539,7 +2306,7 @@
           "bench-sana"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.202,
+        "latencyMs": 3.127,
         "proposals": [
           {
             "handle": "bench-sana",
@@ -1646,8 +2413,87 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-sana"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 2563.265,
+        "proposals": [
+          {
+            "handle": "bench-sana",
+            "reason": "Your request to check impermanent-loss and slippage math matches Sana's explicit offer to explain AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations, and her interest in builders validating pool simulations.",
+            "caveat": "Sana is a peer studying this material, not a formal auditor or advisor.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations."
+              },
+              {
+                "field": "building",
+                "quote": "Studying constant-product automated market makers."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Builders who want to validate a pool simulation."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-sana"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-sana",
+            "reason": "Your request to check impermanent-loss and slippage math matches Sana's explicit offer to explain AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations, and her interest in builders validating pool simulations.",
+            "caveat": "Sana is a peer studying this material, not a formal auditor or advisor.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations."
+              },
+              {
+                "field": "building",
+                "quote": "Studying constant-product automated market makers."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Builders who want to validate a pool simulation."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-sana",
+            "field": "canOffer",
+            "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations.",
+            "exact": true
+          },
+          {
+            "handle": "bench-sana",
+            "field": "building",
+            "quote": "Studying constant-product automated market makers.",
+            "exact": true
+          },
+          {
+            "handle": "bench-sana",
+            "field": "wantsToMeet",
+            "quote": "Builders who want to validate a pool simulation.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1618,
+        "outputTokens": 165
+      }
     },
     {
       "id": "landing-motion",
@@ -1699,7 +2545,7 @@
           "bench-theo"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.202,
+        "latencyMs": 2.295,
         "proposals": [
           {
             "handle": "bench-theo",
@@ -1806,8 +2652,59 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-theo"
+        ],
+        "nextQuestion": "Do you need any other design support beyond the hero section, such as broader brand system work or additional illustrations for other parts of the page?",
+        "latencyMs": 1597.383,
+        "proposals": [
+          {
+            "handle": "bench-theo",
+            "reason": "Theo's offer covers precisely what you need: SVG illustrations and restrained hero animations fitting your brand colors.",
+            "caveat": "Theo focuses on visual identity and motion studies, but does not do user research; for an animated hero you'll need to supply the brief and brand direction.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Creating SVG illustrations, brand color systems, and restrained hero animations."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-theo"
+        ],
+        "rawNextQuestion": "Do you need any other design support beyond the hero section, such as broader brand system work or additional illustrations for other parts of the page?",
+        "rawProposals": [
+          {
+            "handle": "bench-theo",
+            "reason": "Theo's offer covers precisely what you need: SVG illustrations and restrained hero animations fitting your brand colors.",
+            "caveat": "Theo focuses on visual identity and motion studies, but does not do user research; for an animated hero you'll need to supply the brief and brand direction.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Creating SVG illustrations, brand color systems, and restrained hero animations."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-theo",
+            "field": "canOffer",
+            "quote": "Creating SVG illustrations, brand color systems, and restrained hero animations.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1615,
+        "outputTokens": 161
+      }
     },
     {
       "id": "android-handoff",
@@ -1859,7 +2756,7 @@
           "bench-dara"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.436,
+        "latencyMs": 0.595,
         "proposals": [
           {
             "handle": "bench-dara",
@@ -1966,8 +2863,119 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-dara",
+          "bench-bob",
+          "bench-nia"
+        ],
+        "nextQuestion": "Do you need a hands-on reproduction of the failure, a review of the recovery UX, or help adding instrumentation to trace the failure?",
+        "latencyMs": 3651.45,
+        "proposals": [
+          {
+            "handle": "bench-dara",
+            "reason": "Dara explicitly offers to reproduce Android wallet deep-link failures and state recovery when returning to the browser, which directly maps to your stuck-on-connecting issue after deep-link handoff.",
+            "caveat": "Dara's testing is Android-specific but not confirmed to cover your exact wallet app or browser stack.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob can review the recovery screens and connection UX that users see after returning from the wallet, which may help improve the stuck-on-connecting flow.",
+            "caveat": "Bob focuses on UX and desktop wallet prototype feedback, not necessarily Android-specific handoff or connection-state recovery.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-nia",
+            "reason": "Nia's analytics and drop-off investigation skills could help you instrument and track where the connection flow fails, but the match is exploratory rather than direct.",
+            "caveat": "Nia's focus is subscription onboarding analytics, not wallet-specific deep links or Android stacks; a shared interest in onboarding/connecting is exploratory.",
+            "evidence": [
+              {
+                "field": "interests",
+                "quote": "Product analytics, Onboarding"
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-dara",
+          "bench-bob",
+          "bench-nia"
+        ],
+        "rawNextQuestion": "Do you need a hands-on reproduction of the failure, a review of the recovery UX, or help adding instrumentation to trace the failure?",
+        "rawProposals": [
+          {
+            "handle": "bench-dara",
+            "reason": "Dara explicitly offers to reproduce Android wallet deep-link failures and state recovery when returning to the browser, which directly maps to your stuck-on-connecting issue after deep-link handoff.",
+            "caveat": "Dara's testing is Android-specific but not confirmed to cover your exact wallet app or browser stack.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob can review the recovery screens and connection UX that users see after returning from the wallet, which may help improve the stuck-on-connecting flow.",
+            "caveat": "Bob focuses on UX and desktop wallet prototype feedback, not necessarily Android-specific handoff or connection-state recovery.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-nia",
+            "reason": "Nia's analytics and drop-off investigation skills could help you instrument and track where the connection flow fails, but the match is exploratory rather than direct.",
+            "caveat": "Nia's focus is subscription onboarding analytics, not wallet-specific deep links or Android stacks; a shared interest in onboarding/connecting is exploratory.",
+            "evidence": [
+              {
+                "field": "interests",
+                "quote": "Product analytics, Onboarding"
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-dara",
+            "field": "canOffer",
+            "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser.",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          },
+          {
+            "handle": "bench-nia",
+            "field": "interests",
+            "quote": "Product analytics, Onboarding",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1620,
+        "outputTokens": 400
+      }
     },
     {
       "id": "sdk-reference",
@@ -2019,7 +3027,7 @@
           "bench-ravi"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.336,
+        "latencyMs": 0.588,
         "proposals": [
           {
             "handle": "bench-ravi",
@@ -2126,8 +3134,87 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-ravi"
+        ],
+        "nextQuestion": "Do you need the runnable examples to be self-contained with mock data, or should they call live endpoints in the SDK?",
+        "latencyMs": 2840.765,
+        "proposals": [
+          {
+            "handle": "bench-ravi",
+            "reason": "Ravi explicitly offers to write API reference pages and runnable SDK examples from existing TypeScript interfaces, which directly matches your need for English reference pages and runnable examples from public interfaces, and he notes he does not translate, aligning with your no-translation requirement.",
+            "caveat": "Ravi's profile does not state familiarity with your specific interfaces or any prior work with your SDK, so the fit relies on the overlap between your needs and his stated offering.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Writing API reference pages, runnable SDK examples, and migration guides from existing TypeScript interfaces. I do not translate content."
+              },
+              {
+                "field": "building",
+                "quote": "Maintaining English documentation for TypeScript libraries."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Library maintainers who can share their public API definitions."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-ravi"
+        ],
+        "rawNextQuestion": "Do you need the runnable examples to be self-contained with mock data, or should they call live endpoints in the SDK?",
+        "rawProposals": [
+          {
+            "handle": "bench-ravi",
+            "reason": "Ravi explicitly offers to write API reference pages and runnable SDK examples from existing TypeScript interfaces, which directly matches your need for English reference pages and runnable examples from public interfaces, and he notes he does not translate, aligning with your no-translation requirement.",
+            "caveat": "Ravi's profile does not state familiarity with your specific interfaces or any prior work with your SDK, so the fit relies on the overlap between your needs and his stated offering.",
+            "evidence": [
+              {
+                "field": "building",
+                "quote": "Maintaining English documentation for TypeScript libraries."
+              },
+              {
+                "field": "canOffer",
+                "quote": "Writing API reference pages, runnable SDK examples, and migration guides from existing TypeScript interfaces. I do not translate content."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Library maintainers who can share their public API definitions."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-ravi",
+            "field": "building",
+            "quote": "Maintaining English documentation for TypeScript libraries.",
+            "exact": true
+          },
+          {
+            "handle": "bench-ravi",
+            "field": "canOffer",
+            "quote": "Writing API reference pages, runnable SDK examples, and migration guides from existing TypeScript interfaces. I do not translate content.",
+            "exact": true
+          },
+          {
+            "handle": "bench-ravi",
+            "field": "wantsToMeet",
+            "quote": "Library maintainers who can share their public API definitions.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1619,
+        "outputTokens": 221
+      }
     },
     {
       "id": "liquidity-keyword-trap",
@@ -2180,7 +3267,7 @@
           "bench-sana"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.228,
+        "latencyMs": 1.057,
         "proposals": [
           {
             "handle": "bench-tess",
@@ -2298,8 +3385,73 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-sana"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 2144.418,
+        "proposals": [
+          {
+            "handle": "bench-sana",
+            "reason": "The goal is to verify how changing AMM reserves affects execution price. Sana's offer explicitly covers explaining AMM reserves and slippage with numerical simulations, which directly matches the underlying numerical model you want to focus on. Sana prefers teams that want to validate a pool simulation, which is close to your verification need. Note that the word 'verification' is not explicitly offered; Sana offers 'explaining' and 'validation' support, which is a reasonable basis for a conversation about your model.",
+            "caveat": "Sana explicitly does not give investment recommendations, and your need is about numerical verification, not advice.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Builders who want to validate a pool simulation."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-sana"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-sana",
+            "reason": "The goal is to verify how changing AMM reserves affects execution price. Sana's offer explicitly covers explaining AMM reserves and slippage with numerical simulations, which directly matches the underlying numerical model you want to focus on. Sana prefers teams that want to validate a pool simulation, which is close to your verification need. Note that the word 'verification' is not explicitly offered; Sana offers 'explaining' and 'validation' support, which is a reasonable basis for a conversation about your model.",
+            "caveat": "Sana explicitly does not give investment recommendations, and your need is about numerical verification, not advice.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations."
+              },
+              {
+                "field": "wantsToMeet",
+                "quote": "Builders who want to validate a pool simulation."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-sana",
+            "field": "canOffer",
+            "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations.",
+            "exact": true
+          },
+          {
+            "handle": "bench-sana",
+            "field": "wantsToMeet",
+            "quote": "Builders who want to validate a pool simulation.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1622,
+        "outputTokens": 204
+      }
     },
     {
       "id": "independent-security-audit",
@@ -2350,7 +3502,7 @@
           "bench-ivy"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.261,
+        "latencyMs": 0.383,
         "proposals": [
           {
             "handle": "bench-ivy",
@@ -2457,8 +3609,24 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 2472.432,
+        "proposals": []
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [],
+        "rawNextQuestion": null,
+        "rawProposals": [],
+        "quotes": [],
+        "specificClaimFlags": [],
+        "inputTokens": 1619,
+        "outputTokens": 15
+      }
     },
     {
       "id": "medical-spanish",
@@ -2509,7 +3677,7 @@
           "bench-omar"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.232,
+        "latencyMs": 0.349,
         "proposals": [
           {
             "handle": "bench-omar",
@@ -2616,8 +3784,24 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 3106.631,
+        "proposals": []
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [],
+        "rawNextQuestion": null,
+        "rawProposals": [],
+        "quotes": [],
+        "specificClaimFlags": [],
+        "inputTokens": 1616,
+        "outputTokens": 15
+      }
     },
     {
       "id": "confirmed-local-availability",
@@ -2666,7 +3850,7 @@
         "status": "ok",
         "handles": [],
         "nextQuestion": null,
-        "latencyMs": 0.253,
+        "latencyMs": 0.431,
         "proposals": [],
         "scores": [
           {
@@ -2761,8 +3945,24 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 926.212,
+        "proposals": []
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [],
+        "rawNextQuestion": null,
+        "rawProposals": [],
+        "quotes": [],
+        "specificClaimFlags": [],
+        "inputTokens": 1624,
+        "outputTokens": 15
+      }
     },
     {
       "id": "committed-investor",
@@ -2811,7 +4011,7 @@
         "status": "ok",
         "handles": [],
         "nextQuestion": null,
-        "latencyMs": 0.224,
+        "latencyMs": 0.641,
         "proposals": [],
         "scores": [
           {
@@ -2906,8 +4106,24 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 973.448,
+        "proposals": []
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [],
+        "rawNextQuestion": null,
+        "rawProposals": [],
+        "quotes": [],
+        "specificClaimFlags": [],
+        "inputTokens": 1625,
+        "outputTokens": 11
+      }
     },
     {
       "id": "two-complementary-reviews",
@@ -2960,7 +4176,7 @@
           "bench-maya"
         ],
         "nextQuestion": null,
-        "latencyMs": 0.274,
+        "latencyMs": 0.382,
         "proposals": [
           {
             "handle": "bench-bob",
@@ -3078,8 +4294,89 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-bob",
+          "bench-maya"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 2094.223,
+        "proposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Bob's focus is wallet onboarding flows and he specifically offers usability reviews of token approval wording—directly matching your approval-cleartext clarity need.",
+            "caveat": "Bob's offer explicitly covers token approval wording for wallets, which is one of your two requested review areas; he does not mention keyboard accessibility, so he matches only the approval-screen half.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-maya",
+            "reason": "Maya explicitly offers keyboard-only and screen-reader reviews of dialogs and focus order, directly matching your keyboard-accessibility need.",
+            "caveat": "Maya's offer covers keyboard accessibility but not token approval screens; her want is for web teams, and a desktop wallet prototype may still qualify if it uses web technologies, but that is unverified here.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-bob",
+          "bench-maya"
+        ],
+        "rawNextQuestion": null,
+        "rawProposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Bob's focus is wallet onboarding flows and he specifically offers usability reviews of token approval wording—directly matching your approval-cleartext clarity need.",
+            "caveat": "Bob's offer explicitly covers token approval wording for wallets, which is one of your two requested review areas; he does not mention keyboard accessibility, so he matches only the approval-screen half.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-maya",
+            "reason": "Maya explicitly offers keyboard-only and screen-reader reviews of dialogs and focus order, directly matching your keyboard-accessibility need.",
+            "caveat": "Maya's offer covers keyboard accessibility but not token approval screens; her want is for web teams, and a desktop wallet prototype may still qualify if it uses web technologies, but that is unverified here.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          },
+          {
+            "handle": "bench-maya",
+            "field": "canOffer",
+            "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1623,
+        "outputTokens": 239
+      }
     },
     {
       "id": "android-chinese-paraphrase",
@@ -3129,7 +4426,7 @@
         "status": "ok",
         "handles": [],
         "nextQuestion": null,
-        "latencyMs": 0.157,
+        "latencyMs": 0.647,
         "proposals": [],
         "scores": [
           {
@@ -3224,8 +4521,120 @@
           }
         ]
       },
-      "hosted": null,
-      "hostedAudit": null
+      "hosted": {
+        "status": "ok",
+        "handles": [
+          "bench-dara",
+          "bench-bob",
+          "bench-jules"
+        ],
+        "nextQuestion": "Do you specifically need someone to reproduce the handoff on a physical Android device in a particular wallet app, or would a browser-level test environment with mock deep links suffice?",
+        "latencyMs": 2429.843,
+        "proposals": [
+          {
+            "handle": "bench-dara",
+            "reason": "Dara explicitly offers deep-link failure repro and state recovery for Android browser-to-wallet handoffs, directly matching your stuck 'connecting' state.",
+            "caveat": "Dara's self-description is Android-specific and matches your environment, but you will need to coordinate a shared reproduction environment since they are explicitly not testing iOS.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob can review the wallet connection UX and recovery screens from a usability angle, which might help spot issues in your state-restoration flow.",
+            "caveat": "Bob can provide usability review of the recovery/connection flows but cannot test technical deep-link logic in your browser or wallet; this is a design-oriented peer, not a hands-on reproduction partner.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-jules",
+            "reason": "Jules is interested in wallets and could offer a community-informed discussion of your connection issue, but is not a technical reproduction partner.",
+            "caveat": "Jules is informal and explicitly has not built wallets or backends, so this is exploratory conversation about your problem, not a debugging session.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Welcoming newcomers and talking about crypto news. I have not built wallets, audited contracts, or implemented backend services."
+              }
+            ]
+          }
+        ]
+      },
+      "hostedAudit": {
+        "rawReceived": true,
+        "rawFormatValid": true,
+        "rawHandles": [
+          "bench-dara",
+          "bench-bob",
+          "bench-jules"
+        ],
+        "rawNextQuestion": "Do you specifically need someone to reproduce the handoff on a physical Android device in a particular wallet app, or would a browser-level test environment with mock deep links suffice?",
+        "rawProposals": [
+          {
+            "handle": "bench-dara",
+            "reason": "Dara explicitly offers deep-link failure repro and state recovery for Android browser-to-wallet handoffs, directly matching your stuck 'connecting' state.",
+            "caveat": "Dara's self-description is Android-specific and matches your environment, but you will need to coordinate a shared reproduction environment since they are explicitly not testing iOS.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser."
+              }
+            ]
+          },
+          {
+            "handle": "bench-bob",
+            "reason": "Bob can review the wallet connection UX and recovery screens from a usability angle, which might help spot issues in your state-restoration flow.",
+            "caveat": "Bob can provide usability review of the recovery/connection flows but cannot test technical deep-link logic in your browser or wallet; this is a design-oriented peer, not a hands-on reproduction partner.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-jules",
+            "reason": "Jules is interested in wallets and could offer a community-informed discussion of your connection issue, but is not a technical reproduction partner.",
+            "caveat": "Jules is informal and explicitly has not built wallets or backends, so this is exploratory conversation about your problem, not a debugging session.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Welcoming newcomers and talking about crypto news. I have not built wallets, audited contracts, or implemented backend services."
+              }
+            ]
+          }
+        ],
+        "quotes": [
+          {
+            "handle": "bench-dara",
+            "field": "canOffer",
+            "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser.",
+            "exact": true
+          },
+          {
+            "handle": "bench-bob",
+            "field": "canOffer",
+            "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+            "exact": true
+          },
+          {
+            "handle": "bench-jules",
+            "field": "canOffer",
+            "quote": "Welcoming newcomers and talking about crypto news. I have not built wallets, audited contracts, or implemented backend services.",
+            "exact": true
+          }
+        ],
+        "specificClaimFlags": [],
+        "inputTokens": 1631,
+        "outputTokens": 441
+      }
     }
   ]
 }
+

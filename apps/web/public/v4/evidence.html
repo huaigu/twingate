@@ -17,12 +17,19 @@
 <p class="intro">SignalPass helps builder communities turn a specific need into a thoughtful introduction. The assistant shows why someone may fit; each person decides what to send and share.</p>
 <section class="card" aria-labelledby="evaluation-title"><span class="label">01 / MATCHING QUALITY</span><h2 id="evaluation-title">A frozen set of 20 fictional requests</h2>
 <!-- BENCHMARK_SUMMARY_START -->
-<p><strong>Fixture and local route validation passed for all 20 cases.</strong> The frozen BM25 keyword baseline satisfied the predeclared criteria in 15 of 20 cases, including 2 of 4 required abstentions.</p>
-<p>The hosted AI evaluation has not run. No AI quality score or claim to outperform the baseline is made. The result download below contains the keyword baseline and local validation only.</p>
+<p>One complete run with TokenRhythm <code>deepseek-v4-flash</code>, on October 7, 2026: 20 requests, one response per request, no retries and no request failures.</p>
+<div class="scroll"><table><thead><tr><th>Measure</th><th>Hosted AI</th><th>BM25 keyword baseline</th></tr></thead><tbody>
+<tr><td>Strict case success</td><td><strong>14 / 20</strong></td><td>15 / 20</td></tr>
+<tr><td>Relevant first recommendation</td><td>16 / 16 matchable cases</td><td>13 / 16</td></tr>
+<tr><td>Correct no-match result</td><td>4 / 4</td><td>2 / 4</td></tr>
+<tr><td>Relevant returned recommendations</td><td>17 / 27</td><td>15 / 18</td></tr>
+</tbody></table></div>
+<p><strong>The AI did not beat the baseline on the strict overall measure.</strong> It found the right first person, but added 10 unwanted secondary suggestions across six requests. A strict success requires at least one relevant person and no irrelevant suggestions, or a correct no-match result.</p>
+<p>Hosted response time: median 2.35 seconds, p95 3.65 seconds. All 38 checked source quotes were exact. A case-by-case review by the coding assistant still found unsupported or contradictory explanations; quote accuracy alone is not factual accuracy. Read the claim review with the case-level results.</p>
 <!-- BENCHMARK_SUMMARY_END -->
 <p>The cases include direct expertise, paraphrases, misleading keyword overlap and requests for which nobody fits. Expected answers were written before any hosted evaluation. The keyword comparison receives the same eligible profiles as the agent.</p>
 <p class="notice">This is an engineering evaluation on fictional data, with expectations authored by the project team using AI assistance. It is not an independent human study or evidence of customer adoption. Exact source quotes do not prove every generated claim is true.</p>
-<div class="links"><a href="/v4/evaluation-results.json">Download baseline validation results (JSON)</a><a href="/v4/evaluation-methodology.md">Read the methodology</a></div></section>
+<div class="links"><a href="/v4/evaluation-results.json">Download complete case-level results (JSON)</a><a href="/v4/evaluation-methodology.md">Read the methodology</a><a href="/v4/evaluation-claim-review.md">Read the claim review</a><a href="/v4/evaluation-fixture.json">Inspect the frozen profiles and labels</a></div></section>
 <section class="card" aria-labelledby="rehearsal-title"><span class="label">02 / CURRENT PRODUCTION FLOW</span><h2 id="rehearsal-title">Two accounts. One complete introduction.</h2>
 <p>Recorded on October 7, 2026, using clearly fictional Alice and Bob accounts on the live site and the configured TokenRhythm model. Alice found Bob, edited a private draft and separately confirmed delivery. Bob accepted. Each participant reviewed and explicitly shared a contact option.</p>
 <div class="grid"><div class="fact"><strong>2</strong><span>Live AI calls</span></div><div class="fact"><strong>0</strong><span>Wallet transactions</span></div><div class="fact"><strong>390px</strong><span>Accepted receipt checked without horizontal overflow</span></div></div>

@@ -17,7 +17,33 @@ All 20 local route checks passed with zero hosted requests, and a strict TypeScr
 | Correct required abstentions | 2/4 |
 | Operational failures | 0 |
 
-The baseline missed the indirect keyboard-accessibility request, the numerical-model-versus-dashboard distinction, the independent-audit requirement, the certified-medical-translation requirement, and the Chinese Android request. These are recorded baseline failures, not evidence that the hosted model resolves them. **The hosted model has not been run for this benchmark.**
+The baseline missed the indirect keyboard-accessibility request, the numerical-model-versus-dashboard distinction, the independent-audit requirement, the certified-medical-translation requirement, and the Chinese Android request. At this validation stage the hosted model had not been run; the separate first live run is recorded below.
+
+## First live run — 2026-10-07
+
+The authorized live run used TokenRhythm `deepseek-v4-flash`, with the unchanged fixture above and the actual production discovery route/provider sources. It completed from **07:20:14.835 to 07:21:07.357 UTC**, making exactly 20 sequential provider calls, with no retries and no operational failures. It did not create production profiles, send introductions, or make blockchain transactions.
+
+| Metric | Keyword baseline | Hosted model |
+|---|---:|---:|
+| Strict case success | 15/20 | **14/20** |
+| Acceptable returned recommendations | 15/18 (83.3%) | **17/27 (63.0%)** |
+| First recommendation relevant on positive cases | 13/16 | **16/16** |
+| Positive cases with at least one relevant recommendation | 14/16 | **16/16** |
+| Correct required abstentions | 2/4 | **4/4** |
+| Unacceptable secondary or primary selections | 3 | **10** |
+| Operational failures | 0 | 0 |
+| Median latency | 0.639 ms | 2,348.264 ms |
+| p95 latency | 3.127 ms | 3,651.450 ms |
+
+**The hosted model did not beat this baseline on overall strict success or recommendation relevance.** Its strengths were first-choice relevance and required abstention. All six selection failures came from adding weak secondary recommendations despite already having a correct first choice. The 20 cases are too small and hand-authored to support population-level accuracy claims.
+
+The labels require direct task fit; the production prompt permits clearly qualified exploratory suggestions in some circumstances. Some misses therefore reflect that product-policy difference, rather than fabricated facts. The separate manual review distinguishes caveated adjacent suggestions from actual unsupported claims or contradictory evidence.
+
+Provider-reported usage was 32,413 input tokens and 3,959 output tokens. Raw evidence quotes matched their fields in 38/38 checks, and the narrow automated claim heuristic flagged zero phrases. **Manual review nevertheless found unsupported and contradictory text**, including a Solidity recommendation justified only by an iOS disclaimer and a reorg specialist incorrectly described as lacking reorg-specific scope. Exact substrings are not proof that an explanation follows from its source.
+
+Retained evidence: [complete results](reports/matching-live-2026-10-07/results.json), [generated report](reports/matching-live-2026-10-07/report.md), and [manual review of all 20 cases](reports/matching-live-2026-10-07/claim-review.md). The original fixture, labels, baseline, and first-run results were not rewritten after observing model output. No production behavior changed as part of this evaluation.
+
+The report records pinned source revision `9a5e56461d051c12b8c85a1f5d449063d0564411` and exact loaded hashes: route `c327bdb9068964b8cc9fe30fc3331592b27202668a21d23e8815a48037f3d715`; provider `fe024c541c83ab47cba60fda2209a1ce0c8a66afa5b8270647f980930f12889c`; evidence ordering `c7713eb1d0e109351f4a49af3dedf9a1772b8584105cb2a9af3c38a9c8df1418`. These match the existing remote source files and the pinned local source after normalizing the extra terminal newline introduced during local restoration.
 
 ## What is evaluated
 

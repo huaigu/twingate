@@ -1,0 +1,25 @@
+{
+  "mode": "live",
+  "fixtureSha256": "a3b918abbacbb5ce99aa23c7c1de1d9061e09016971b2af91bb8bd250fc37d0b",
+  "label": "Synthetic engineering benchmark; fictional profiles; author-defined labels; not independent human validation, customer traction, or a production usage study.",
+  "startedAt": "2026-10-07T07:20:14.835Z",
+  "sourceRevision": "9a5e56461d051c12b8c85a1f5d449063d0564411",
+  "sourceHashes": {
+    "agent-routes.ts": "c327bdb9068964b8cc9fe30fc3331592b27202668a21d23e8815a48037f3d715",
+    "agent-provider.ts": "fe024c541c83ab47cba60fda2209a1ce0c8a66afa5b8270647f980930f12889c",
+    "agent-evidence.ts": "c7713eb1d0e109351f4a49af3dedf9a1772b8584105cb2a9af3c38a9c8df1418"
+  },
+  "provider": "tokenrhythm",
+  "model": "deepseek-v4-flash",
+  "baselineConfig": {
+    "name": "BM25 lexical baseline",
+    "k1": 1.2,
+    "b": 0.75,
+    "minimumDistinctMatches": 2,
+    "minimumQueryCoverage": 0.2,
+    "minimumRelativeScore": 0.6,
+    "maximumRecommendations": 3,
+    "description": "Frozen heuristic thresholds, not tuned on these case labels or a live run. Case-insensitive Unicode tokens, English stopword removal and conservative English suffix normalization; no embeddings or translation. Standard BM25 across combined public profile fields; maximum three candidates above evidence and relative-score thresholds."
+  }
+}
+

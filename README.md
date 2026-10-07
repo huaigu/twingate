@@ -10,7 +10,7 @@ Built first for builder communities: a member needs specific help, another membe
 
 ## Demo
 
-> October 7 refresh: release candidate. The V3 media and new walkthrough/evidence routes are prepared; publication and the hosted benchmark await VPS authorization. The existing live site remains available.
+> Updated October 7: the guided story, evidence page and V3 films are live. Public browser checks verified both videos, the walkthrough, mobile loading states and evidence links.
 
 [![Watch SignalPass in action](https://signalpass.coderbojack.space/media/signalpass-demo-20261007-v3.png)](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html)
 
@@ -42,7 +42,11 @@ Mainnet profile registration, bond locks, acceptance, decline and full refunds w
 
 ## Matching quality and evidence
 
-The [public evidence page](https://signalpass.coderbojack.space/v4/evidence.html) separates the synthetic matching benchmark, production browser rehearsal and historical mainnet settlement. The [evaluation methodology](docs/MATCHING_EVALUATION.md) documents the frozen cases, production discovery route and BM25 keyword comparison. Results are engineering evidence on fictional profiles, not independent human evaluation or customer traction.
+The [public evidence page](https://signalpass.coderbojack.space/v4/evidence.html) separates the synthetic matching benchmark, production browser rehearsal and historical mainnet settlement. The [evaluation methodology](docs/MATCHING_EVALUATION.md) documents the frozen cases, production discovery route and BM25 keyword comparison.
+
+In one **20-call hosted evaluation** with no operational failures, the agent returned a relevant first result for **16/16** positive cases and abstained correctly in **4/4** no-match cases. However, **10 unwanted secondary suggestions** lowered strict case success to **14/20**, versus **15/20** for the keyword baseline; returned recommendation relevance was **17/27**, versus **15/18**. This is a mixed result, not evidence of overall superiority to keyword matching.
+
+All 38 quoted fragments matched source text, but a [qualitative review by the coding assistant](docs/reports/matching-live-2026-10-07/claim-review.md) still found unsupported or contradictory explanations. The review distinguishes actual claim errors from secondary matches permitted by the product's exploratory policy but rejected by the benchmark's stricter direct-fit rule. Exact quotes do not prove every generated claim. These are engineering results on 20 team-authored fictional cases, with one hosted sample per case, not independent human evaluation or customer traction. [Complete report and limitations](docs/reports/matching-live-2026-10-07/report.md) · [Case-level output](docs/reports/matching-live-2026-10-07/results.json).
 
 An October 7 production rehearsal repeated discovery, edited-message delivery, acceptance and separately approved contact sharing on the latest interface. It used two hosted inference calls, no wallet transaction, and passed persistence and a 390px receipt-layout check. [Machine-readable rehearsal report](docs/reports/signalpass-public-journey-2026-10-07.json).
 
@@ -79,6 +83,7 @@ The live API uses one process and persistent SQLite with WAL. Private records ar
 ## Development and evidence
 
 - [Development guide](docs/DEVELOPMENT.md): setup, tests, deployment and original commit provenance.
+- [October 7 deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [public release QA](docs/reports/signalpass-release-qa-2026-10-07.json).
 - [Two-person pilot guide](docs/PILOT.md): a consent-based first trial, feedback questions and cleanup.
 - [Hosted agent](docs/HOSTED_AGENT.md) and [public provider/restart verification](docs/reports/signalpass-tokenrhythm-2026-10-03.md).
 - [Product direction](SIGNALPASS_PRODUCT_DIRECTION.md), [product walkthrough](docs/HACKATHON_PRODUCT_DEMO.md) and [VPS operations](docs/VPS-DEPLOYMENT.md).

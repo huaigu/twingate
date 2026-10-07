@@ -1,8 +1,8 @@
 # SignalPass submission copy
 
-Prepared **October 7, 2026** as a **local release candidate, not a deployed update**. This file contains reviewer-ready copy; editing it does **not** update the submission portal. Today's portal session is signed out. The last reported portal state was **Ready for judging**, with editable entry fields and the V2 video links. Recheck the saved entry after signing in before claiming it contains this release.
+Updated **October 7, 2026** for the **deployed and publicly verified release**. This file contains reviewer-ready copy; editing it does **not** update the submission portal. Today's portal session is signed out. The last reported portal state was **Ready for judging**, with editable entry fields and the V2 video links. Recheck the saved entry after signing in before claiming it contains this release.
 
-**Release blocker:** automatic approval review rejected transfer of the private benchmark script to the verified SignalPass VPS and requires explicit owner permission for that source payload and destination. That transfer and hosted evaluation did not proceed. Deployment and new public media verification remain pending; no alternative transfer route is authorized by this document. The October 7 production rehearsal and historical receipt recheck below were completed separately.
+**Release status:** the owner authorized the private-source transfer and deployment on October 7. The hosted matching evaluation is complete, and the V3 films, guided story, evidence downloads and two-line wallet-loading fix are live. All **16 canary checks**, **20 local release checks** and **5 final public checks** passed. Both films played in the public browser; the existing API process remained unchanged. A returning browser also showed the new homepage, story, evidence and watch-page content. See [deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [release QA](docs/reports/signalpass-release-qa-2026-10-07.json). The submission portal remains signed out and has not been updated in this session.
 
 ## Name and one-line description
 
@@ -36,14 +36,27 @@ These tests establish an implementation on Monad. They do not establish reduced 
 
 | Evidence | What it establishes | What it does not establish |
 | --- | --- | --- |
-| October 7 production rehearsal | Two independently signed-in fictional accounts completed live AI discovery and drafting, human editing, separately approved no-bond delivery, acceptance, independent contact sharing and refresh persistence. | Real customer outcomes, bond settlement within that same introduction, or real-phone wallet compatibility. |
-| Matching evaluation preparation and local baseline | Twenty frozen fictional cases passed local schema, scoring and production-route compatibility checks; the runner passed strict TypeScript validation. BM25 baseline: 15/20 strict successes and 2/4 correct abstentions. Zero hosted benchmark calls. | Hosted matching quality, an AI-versus-baseline comparison, independent human assessment, population-level quality or adoption. Hosted results remain pending below. |
+| October 7 production rehearsal | Two independently signed-in fictional accounts completed live AI discovery and drafting, draft editing, separately approved no-bond delivery, acceptance, independent contact sharing and refresh persistence. | Real customer outcomes, bond settlement within that same introduction, or real-phone wallet compatibility. |
+| Matching evaluation | One completed 20-call hosted run on the frozen fictional cases, compared with BM25 using identical candidates. Hosted strict success: 14/20; BM25: 15/20. First-match relevance and abstention improved, while excess secondary suggestions reduced overall precision. | Independent human assessment, population-level quality, overall superiority to the baseline, perfect factuality or adoption. |
 | Historical mainnet receipts | Two locks and two successful refund decisions on acceptance/decline; all four receipts rechecked October 7. | Mainnet expiry, refund of gas, current dollar costs, or measured end-to-end confirmation latency. |
 | Guided fictional story | A wallet-free way to understand match evidence, review, delivery, recipient decisions and separate contact choices. | Live inference, real delivery, real transactions or observed usage. |
 
-<!-- BENCHMARK_PENDING_START -->
-**BENCHMARK_PENDING:** The hosted matching evaluation has not run. Publish no hosted score or AI-versus-baseline quality claim until its complete results and methodology are checked. The [local baseline-only report](docs/reports/matching-validation-2026-10-07/report.md) records 15/20 strict successes, 2/4 correct abstentions and zero operational failures; these are keyword results, not AI results. Replace this block after the hosted run with exact counts, failures and a link to the frozen report; retain the synthetic-data limitations.
-<!-- BENCHMARK_PENDING_END -->
+### Completed matching evaluation — mixed results
+
+The frozen 20-case evaluation made **20 sequential hosted calls with zero operational failures and no retries** through the production discovery route. Expected labels were set before inference; candidates were identical for both methods.
+
+| Metric | Hosted agent | BM25 keyword baseline |
+| --- | --- | --- |
+| Strict case success | **14/20 (70%)** | **15/20 (75%)** |
+| First recommendation relevant, positive cases | **16/16** | **13/16** |
+| Correct no-match response | **4/4** | **2/4** |
+| Relevant returned recommendations | **17/27 (63%)** | **15/18 (83.3%)** |
+
+The agent found a relevant first result in every positive case and correctly abstained in all four no-match cases. However, it added **10 unwanted secondary suggestions across six positive cases**, producing a lower strict-success score and lower recommendation precision than this baseline. These results do **not** show an overall win over keyword matching.
+
+All **38 quoted evidence fragments** appeared exactly in their source fields. A [qualitative review by the coding assistant](docs/reports/matching-live-2026-10-07/claim-review.md), not an independent human assessment, nevertheless found unsupported or contradictory generated prose. Exact quotation is not a hallucination test, and the narrow automated claim check missed those semantic issues. Some secondary-choice misses also reflect a stricter benchmark requirement for direct task fit than the production prompt's allowance for exploratory suggestions; not every miss is a fabricated fact. The next quality task is to suppress weak secondary suggestions and require each explanation to follow from its evidence.
+
+Hosted median latency was **2,348.264ms**, with **3,651.450ms p95** in this run; this includes the in-process route and remote inference and is not comparable to local keyword CPU time. The set contains 20 team-authored fictional cases and 15 profiles, with one hosted sample per case, no independent human grading and no adoption evidence. See the [complete report](docs/reports/matching-live-2026-10-07/report.md) and [case-level results](docs/reports/matching-live-2026-10-07/results.json).
 
 The October 7 rehearsal used **2 hosted AI calls and 0 wallet transactions**. Observed discovery and draft response times were **3.141 seconds** and **3.568 seconds** in that run. The exact edited message reached the recipient; acceptance and both contact decisions survived refresh. The accepted receipt fit a **390px browser viewport** without horizontal overflow. Controlled injected wallets were used for sign-in; this was not a physical-phone wallet handoff test. Cleanup hid the test profiles, removed shared contacts and signed out the sessions.
 
@@ -51,21 +64,21 @@ The October 7 rehearsal used **2 hosted AI calls and 0 wallet transactions**. Ob
 
 - Live product: https://signalpass.coderbojack.space/
 - Live assistant: https://signalpass.coderbojack.space/assistant?demo=0
-- Guided fictional story, prepared for this release: https://signalpass.coderbojack.space/v4/walkthrough.html
-- Public evidence page, prepared for this release: https://signalpass.coderbojack.space/v4/evidence.html
+- Guided fictional story: https://signalpass.coderbojack.space/v4/walkthrough.html
+- Public evidence page: https://signalpass.coderbojack.space/v4/evidence.html
 - Stable video watch page: https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html
 - Source, access required: https://github.com/huaigu/twingate
 
-**V3 exports are completed, validated and saved; publication and public playback verification remain pending:**
+**V3 films are published and public playback is verified:**
 
 - Technical demo, **172.834 seconds (2:53)**: https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4
 - Product pitch, **111.467 seconds (1:51)**: https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4
 
 Both exports are **1920×1080 H.264/AAC**, with 30 English caption cues for the demo and 20 for the pitch. Both passed complete decode with zero errors and visual review. They use generic synthesized narration reused from V2 over edited October 7 production captures; they are not uninterrupted recordings or recordings of the founder speaking. [Validation](docs/reports/signalpass-video-validation-2026-10-07.json), [edit provenance](docs/reports/signalpass-video-edit-notes-2026-10-07.md) and [media manifest](docs/reports/signalpass-media-manifest-2026-10-07.json) record the actual outputs.
 
-The existing V2 films remain the last confirmed published versions until V3 publishing is verified. Keep the stable watch-page URL; replace its video sources and verify public playback after publication is authorized.
+The stable watch page now plays V3. Existing V2 direct URLs were preserved, so previously shared links remain available. The portal's dedicated video fields have not been updated in this signed-out session.
 
-## Judge access instructions — ready to paste after release verification
+## Judge access instructions — ready to paste into the portal
 
 Start with the guided fictional story at https://signalpass.coderbojack.space/v4/walkthrough.html. No wallet is needed. It uses prepared sample text entirely within the page. Compare the evidence for Bob's offer, edit and review Alice's introduction, follow both sides of the conversation, and choose contact sharing independently. Back rewinds later sample actions; restart or reload clears edits.
 
@@ -110,7 +123,9 @@ An organizer-facing paid community plan is a hypothesis. Before building more co
 - [October 7 read-only receipt recheck](docs/reports/signalpass-mainnet-receipt-recheck-2026-10-07.json)
 - [October 3 original mainnet report](docs/reports/signalpass-mainnet-deployment-2026-10-03.md)
 - [Matching evaluation methodology](docs/MATCHING_EVALUATION.md)
+- [Completed hosted evaluation](docs/reports/matching-live-2026-10-07/report.md) and [case-level results](docs/reports/matching-live-2026-10-07/results.json)
 - [Baseline-only local validation](docs/reports/matching-validation-2026-10-07/report.md)
-- [Release candidate verification report](docs/reports/signalpass-judge-release-2026-10-07.md)
+- [Release verification report](docs/reports/signalpass-judge-release-2026-10-07.md)
+- [Deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [public release QA](docs/reports/signalpass-release-qa-2026-10-07.json)
 - [Release and submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md)
 - [Current video briefs](docs/HACKATHON_VIDEO_BRIEFS.md)
