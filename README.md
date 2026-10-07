@@ -4,20 +4,23 @@
 
 SignalPass is an **AI introduction assistant** for communities. Tell it who you want to meet or what you need help with. Your Personal Agent suggests relevant people, shows the profile quotes behind each suggestion, and helps you write a thoughtful first message. You review what is sent; the other person decides whether to continue.
 
-Monad builders are our first community, with a broader vision of personal agents helping people connect around shared interests and complementary goals.
+Built first for builder communities: a member needs specific help, another member has relevant experience, and both need a clear reason to start a conversation. Monad builders are our initial community. Our broader vision is personal agents helping people connect around shared interests and complementary goals.
 
-[Open SignalPass](https://signalpass.coderbojack.space/) · [Try your Personal Agent](https://signalpass.coderbojack.space/assistant?demo=0) · [Explore the sample](https://signalpass.coderbojack.space/discover?demo=1)
+[Open SignalPass](https://signalpass.coderbojack.space/) · [Try your Personal Agent](https://signalpass.coderbojack.space/assistant?demo=0) · [Try the guided story](https://signalpass.coderbojack.space/v4/walkthrough.html) · [Inspect the evidence](https://signalpass.coderbojack.space/v4/evidence.html)
 
 ## Demo
 
-[![Watch SignalPass in action](https://signalpass.coderbojack.space/media/signalpass-demo-20261003-v2.jpg)](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html)
+> October 7 refresh: release candidate. The V3 media and new walkthrough/evidence routes are prepared; publication and the hosted benchmark await VPS authorization. The existing live site remains available.
 
-[Watch the two-person demo](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html) · [Watch the product pitch](https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261003-v2.mp4)
+[![Watch SignalPass in action](https://signalpass.coderbojack.space/media/signalpass-demo-20261007-v3.png)](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html)
 
-Alice needs feedback on a wallet prototype. Bob offers usability reviews. Follow their introduction in a **2:56 narrated product demo**, or watch the **1:51 product pitch** for the idea and why it matters. The films use edited production recordings, fictional participants, real AI responses, English narration and subtitles, and original music. The introduction uses no bond; the separate Monad segment shows verified mainnet test transactions.
+[Watch the two-person demo](https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html) · [Watch the product pitch](https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4)
+
+Alice needs feedback on a wallet prototype. Bob offers usability reviews. Follow their introduction in a **2:53 narrated product demo**, or watch the **1:51 product pitch** for the idea and why it matters. The films use edited production recordings, fictional participants, real AI responses, English narration and subtitles, and original music. The introduction uses no bond; the separate Monad segment shows verified mainnet test transactions.
 
 - **Live product:** [start an assisted introduction](https://signalpass.coderbojack.space/assistant?demo=0). Live matching requires people to approve their profiles, make them public and opt into matching. Use **Send without a bond** for a first complete journey.
-- **Sample walkthrough:** [explore fictional people](https://signalpass.coderbojack.space/discover?demo=1) without a wallet. This mode is explicitly illustrative: it uses no live AI, sends no external introduction and makes no payment. Open the live link above to exit sample mode.
+- **Guided story:** [follow Alice and Bob](https://signalpass.coderbojack.space/v4/walkthrough.html) without a wallet. Compare a weak fit with Bob’s explicit offer, edit and review a sample introduction, exchange context, accept and choose contact sharing independently. These prepared examples run only in the page; no live AI, real delivery or payment occurs. Back rewinds later actions; restart or reload clears sample edits.
+- **Free exploration:** [browse fictional profiles](https://signalpass.coderbojack.space/discover?demo=1) in the existing sample app. Open the live assistant link to exit that sample mode.
 - **Current service status:** [deployment and capability boundaries](https://signalpass.coderbojack.space/status).
 
 On October 3, two explicitly fictional accounts completed the public HTTPS flow with live AI, an edited and separately confirmed introduction, acceptance and mutual contact sharing. This rehearsal used no bond; the receipt was also checked at a 390-pixel viewport. [Public journey evidence](docs/reports/signalpass-public-journey-2026-10-03.md). Synthetic rehearsals are not community traction or a recommendation-quality benchmark; their profiles were hidden after verification.
@@ -37,6 +40,12 @@ For an introduction that benefits from an extra commitment, the sender can expli
 
 Mainnet profile registration, bond locks, acceptance, decline and full refunds were verified using project-owned wallets. Expiry is verified in the local EVM suite only. These settlement checks are separate from the public no-bond AI rehearsal. [Contract addresses and transaction evidence](docs/reports/signalpass-mainnet-deployment-2026-10-03.md) · [Wallet-bond design](docs/WALLET_BONDS.md).
 
+## Matching quality and evidence
+
+The [public evidence page](https://signalpass.coderbojack.space/v4/evidence.html) separates the synthetic matching benchmark, production browser rehearsal and historical mainnet settlement. The [evaluation methodology](docs/MATCHING_EVALUATION.md) documents the frozen cases, production discovery route and BM25 keyword comparison. Results are engineering evidence on fictional profiles, not independent human evaluation or customer traction.
+
+An October 7 production rehearsal repeated discovery, edited-message delivery, acceptance and separately approved contact sharing on the latest interface. It used two hosted inference calls, no wallet transaction, and passed persistence and a 390px receipt-layout check. [Machine-readable rehearsal report](docs/reports/signalpass-public-journey-2026-10-07.json).
+
 ## Run locally
 
 Use **Node.js 22.13 or later** and **pnpm 10.32.1**. Git access is required to clone this repository. Foundry is needed for contract tests or the optional local bond flow.
@@ -50,7 +59,7 @@ pnpm dev
 
 Open **http://localhost:3004/**. This starts the API and web app; the default no-payment introduction flow does not need a chain. Existing clones can run `git submodule update --init --recursive` to initialize `forge-std`.
 
-A fresh installation leaves the hosted Personal Agent disabled until a server-side provider is configured. Follow [the hosted agent guide](docs/HOSTED_AGENT.md); never put a provider key in the browser. API settings must be exported into the process environment; `.env` is not loaded automatically. For an illustrative walkthrough, open `http://localhost:3004/discover?demo=1`.
+A fresh installation leaves the hosted Personal Agent disabled until a server-side provider is configured. Follow [the hosted agent guide](docs/HOSTED_AGENT.md); never put a provider key in the browser. API settings must be exported into the process environment; `.env` is not loaded automatically. For the guided fictional story, open `http://localhost:3004/v4/walkthrough.html`.
 
 For a real **local** EVM bond flow, install Forge and Anvil, run `pnpm chain:dev`, and open **http://localhost:3005/**. It is explicitly labelled DEV and is not Monad Mainnet. [Full setup, verification commands and deployment](docs/DEVELOPMENT.md).
 
@@ -84,3 +93,4 @@ AI coding tools were used to draft contract, domain, service and UI code. The pr
 ## License
 
 Project code is licensed under the [MIT License](LICENSE). Third-party components retain their own licenses and notices; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+

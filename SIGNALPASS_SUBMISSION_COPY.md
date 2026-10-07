@@ -1,106 +1,116 @@
-# SignalPass Submission Copy
+# SignalPass submission copy
 
-> Status: current-state submission copy, reviewed against the public verification reports on 2026-10-03.
-> Primary track: **03 Social, Attention & Culture**.
-> Public product: [SignalPass](https://signalpass.coderbojack.space/). Evidence below distinguishes the complete public no-bond journey from the separate mainnet settlement tests.
+Prepared **October 7, 2026** as a **local release candidate, not a deployed update**. This file contains reviewer-ready copy; editing it does **not** update the submission portal. Today's portal session is signed out. The last reported portal state was **Ready for judging**, with editable entry fields and the V2 video links. Recheck the saved entry after signing in before claiming it contains this release.
 
-## Name
+**Release blocker:** automatic approval review rejected transfer of the private benchmark script to the verified SignalPass VPS and requires explicit owner permission for that source payload and destination. That transfer and hosted evaluation did not proceed. Deployment and new public media verification remain pending; no alternative transfer route is authorized by this document. The October 7 production rehearsal and historical receipt recheck below were completed separately.
 
-SignalPass
+## Name and one-line description
 
-## One-Liner
+**SignalPass**
 
-SignalPass gives people a personal agent to find a reason to connect, prepare an introduction they approve, and make an optional refundable attention commitment on Monad.
-
-## Vision
+An AI introduction assistant for builder communities: find someone relevant, understand why they fit, and send a first message you approve.
 
 **People worth knowing, with context.**
 
-We want everyone to have a private Personal Agent that understands who they are, helps them find people worth meeting, and prepares the first conversation. People choose what to share and whether a relationship begins. Monad builders are our first community, not the limit of that vision.
+## Product description
 
-## Description
+A builder community can have the right person in it and still fail to make the connection. Members describe themselves differently, useful offers get buried, and a vague first message gives the recipient little reason to respond.
 
-Good connections often start with a bad introduction: a vague message that gives someone little reason to reply. SignalPass helps people explain who they are, why they want to connect, what they can offer and what they would like to do next.
+SignalPass helps turn a specific need into a thoughtful introduction. A member describes what they want help with. The assistant considers eligible public profiles and explains each suggestion with exact profile quotes. It distinguishes a relevant offer from a shared interest, shows uncertainty and can return no suitable match. Its search is limited to the available directory.
 
-The public Web app provides a Personal Agent: describe a goal, consider a few people with quotes from their public profiles, clarify what matters and prepare a private introduction draft. The “Why you two” card connects what you need with what another person says they can offer. Source quotes support the suggestion; they do not establish expertise or mutual interest. Users do not need their own agent host or model key.
+The sender reviews a private draft, changes the wording and separately approves delivery. The recipient can ask for context, accept or decline. After acceptance, each person decides whether to reveal a contact or scheduling option. AI cannot send a message, accept an introduction or spend money on a person's behalf.
 
-The sender edits the draft, reviews the exact message and chooses what profile context to share before confirming delivery. The recipient can ask for context, accept or decline. After acceptance, each participant can explicitly share a contact or scheduling channel; acceptance itself reveals no contact details. A public browser rehearsal completed this entire journey with two fictional, independently signed-in accounts and live AI, using the no-bond option. The agent cannot send, accept or spend on either person's behalf. The manual directory and editor remain available without AI.
+For example, Alice needs feedback on a wallet prototype. Bob explicitly offers reviews of wallet connection and approval screens. The useful part is the reason to approach Bob and a clear, modest request that he can evaluate. Our recorded example uses fictional participants on the live product; it is not customer traction.
 
-Optional refundable attention bonds are live on Monad Mainnet, chain 143. The sender approves a signed quote; delivery follows confirmed funding. Two project-owned wallets have completed registration, locks, acceptance and decline with full bond refunds and public transaction evidence. An unanswered request can be resolved after its deadline; this expiry path is verified locally and has not yet been exercised on mainnet. Manual review charges zero AI evaluation fee, while network gas still applies. Paying never guarantees a response or acceptance.
+The first market hypothesis is existing builder communities, starting with the Monad ecosystem. Community organizers already spend time connecting members and could become buyers and distribution partners. That customer and payment hypothesis still needs validation. Our broader vision is personal agents helping people find worthwhile connections while people retain the final decision.
 
-The hosted pilot uses TokenRhythm `deepseek-v4-flash`. SignalPass covers inference within limits of 20 attempts per account and 200 across the site per UTC day, including failed attempts. Public discovery, clarification and drafting passed with explicitly fictional profiles; sessions, history, private drafts and quotas survived an actual API service restart. These are functional checks, not community traction or a ranking benchmark. No zero-cost provider claim is made. Monad builders are our first community; the ambition is a better beginning to relationships built around collaboration, learning and shared interests.
+## Why Monad is part of the product
 
-## Current Capability Boundary
+Ordinary introductions can use the no-bond path. A sender can also explicitly approve an optional refundable commitment held by a contract on **Monad Mainnet, chain 143**. Acceptance and decline both return the full bond. An unanswered request requires a resolution transaction after expiry; it is not automatically refunded by a timer. Network gas is separate and is not returned.
 
-| Capability | What can be claimed today |
-| --- | --- |
-| Web introductions | Authenticated cross-account delivery, profile approval and visibility, context requests/replies, recipient decisions, participant-only receipts, explicit accepted-contact sharing and persistence are implemented. |
-| Wallet bonds | Mainnet registration, signed quotes, funding verification, acceptance/decline and full refunds have [public transaction evidence](docs/reports/signalpass-mainnet-deployment-2026-10-03.md). Expiry refund remains locally verified only. |
-| AI evaluation and cost | The wallet-bond flow uses human review with zero AI evaluation fee. Hosted discovery/refinement/drafting is sponsored by SignalPass within request quotas; it is separate from sender-funded evaluation. The current provider's billing amount was not established by testing. |
-| Hosted Personal Agent | TokenRhythm is enabled on the public site. Three public provider calls verified discovery, clarification and drafting, with real API restart persistence and owner-only access. See [activation and acceptance evidence](docs/reports/signalpass-tokenrhythm-2026-10-03.md). |
-| Combined public journey | A [public Chromium rehearsal](docs/reports/signalpass-public-journey-2026-10-03.md) completed live AI → edited introduction → separate send confirmation → acceptance → explicit contact sharing. Exact edited wording was delivered; acceptance and shared contacts survived refresh. This used two fictional accounts and the no-bond option, with no MON transaction. |
-| Bring your own agent | A person can import a JSON profile draft and review it. This is not a direct OpenClaw or Hermes integration. |
-| Privacy | Private introduction records have participant access controls. The server does not provide application-level encryption at rest or end-to-end encrypted chat. |
-| Sponsors | Dynamic, a live Envio index and Nansen verification are not integrated. Hunyuan remains unconfigured. No sponsor integration is claimed as complete. |
+The contract gives participants inspectable escrow and settlement rather than only an application balance. Monad is the initial community and deployment ecosystem. Project-owned wallets verified mainnet locks and full refunds on acceptance and decline on October 3; all four relevant transaction receipts were read again successfully on October 7. Mainnet expiry has not been exercised; the expiry path has local test coverage.
 
-## Roadmap — Not Shipped Claims
+These tests establish an implementation on Monad. They do not establish reduced spam, increased reply rates, unique throughput requirements, or cheaper settlement than other chains. The deliberately tiny **0.000075 MON** test bonds were smaller than their transaction gas costs. Bond economics remain a product question to validate, not a proven advantage.
 
-1. **Useful connections in practice:** recruit a small, consenting first community of Monad builders. Record whether source-backed suggestions help, whether drafts need factual corrections and whether accepted introductions lead to useful conversations. Public matching requires approved, public, opted-in profiles. Rehearsal profiles were hidden after testing; no community outcome figures are claimed.
-2. **Recommendation quality:** compare genuinely relevant, weak and no-match cases across a varied, consented candidate pool. Functional provider and browser checks do not establish ranking quality or every generated claim's accuracy.
-3. **Sender-funded evaluation:** connect real evaluation to settlement before charging an evaluation fee. Display the fee separately from the refundable bond and explain when it is earned. Pre-evaluation expiry must refund both the unearned fee and bond; AI must never seize the bond or accept an introduction.
-4. **Optional enhancements:** evaluate recipient inbox assistance, embedded wallets, event indexing, consented verified signals, external agent hosts and 3D personas when they improve the introduction experience or meet a selected bounty's verified requirements.
+## Evidence available for review
 
-## Copy Rules
+| Evidence | What it establishes | What it does not establish |
+| --- | --- | --- |
+| October 7 production rehearsal | Two independently signed-in fictional accounts completed live AI discovery and drafting, human editing, separately approved no-bond delivery, acceptance, independent contact sharing and refresh persistence. | Real customer outcomes, bond settlement within that same introduction, or real-phone wallet compatibility. |
+| Matching evaluation preparation and local baseline | Twenty frozen fictional cases passed local schema, scoring and production-route compatibility checks; the runner passed strict TypeScript validation. BM25 baseline: 15/20 strict successes and 2/4 correct abstentions. Zero hosted benchmark calls. | Hosted matching quality, an AI-versus-baseline comparison, independent human assessment, population-level quality or adoption. Hosted results remain pending below. |
+| Historical mainnet receipts | Two locks and two successful refund decisions on acceptance/decline; all four receipts rechecked October 7. | Mainnet expiry, refund of gas, current dollar costs, or measured end-to-end confirmation latency. |
+| Guided fictional story | A wallet-free way to understand match evidence, review, delivery, recipient decisions and separate contact choices. | Live inference, real delivery, real transactions or observed usage. |
 
-- Lead with **people**, **context**, **introductions** and **human consent**. Describe Monad builders as the initial community.
-- Describe hosted discovery/refinement/drafting as publicly enabled with TokenRhythm. The complete public browser journey used fictional profiles and no bond; mainnet settlement was verified separately. Neither result establishes community outcomes or ranking quality. Broader Personal Agent abilities remain vision.
-- Identify **sample mode**, **live no-payment mode**, **local EVM**, **testnet** and **Monad Mainnet (143)** accurately. Mainnet acceptance/decline refunds do not establish mainnet expiry behavior.
-- Keep fees and bonds separate. The current manual-review wallet flow has a zero AI evaluation fee; gas still applies. A refundable bond does not buy acceptance or eliminate every form of spam.
-- Do not call SignalPass a chat protocol, public infrastructure layer, or standalone pay-to-DM product.
-- SignalPass-sponsored AI usage is not a promise that the provider is free; 20/200 daily limits cap attempts, not currency spend. Historical OpenRouter zero-cost test results do not describe current TokenRhythm billing.
-- Do not claim private chat, autonomous outreach, private-profile matching, source verification, recipient inbox AI, installed agent skills or sponsor integrations without implementation and runtime evidence.
-- Do not describe wallet context as a wealth score or let it imply automatic access decisions.
-- Keep future capabilities in the roadmap, not in present-tense submission claims.
+<!-- BENCHMARK_PENDING_START -->
+**BENCHMARK_PENDING:** The hosted matching evaluation has not run. Publish no hosted score or AI-versus-baseline quality claim until its complete results and methodology are checked. The [local baseline-only report](docs/reports/matching-validation-2026-10-07/report.md) records 15/20 strict successes, 2/4 correct abstentions and zero operational failures; these are keyword results, not AI results. Replace this block after the hosted run with exact counts, failures and a link to the frozen report; retain the synthetic-data limitations.
+<!-- BENCHMARK_PENDING_END -->
 
-## Portal fields saved — October 3, 2026
+The October 7 rehearsal used **2 hosted AI calls and 0 wallet transactions**. Observed discovery and draft response times were **3.141 seconds** and **3.568 seconds** in that run. The exact edited message reached the recipient; acceptance and both contact decisions survived refresh. The accepted receipt fit a **390px browser viewport** without horizontal overflow. Controlled injected wallets were used for sign-in; this was not a physical-phone wallet handoff test. Cleanup hid the test profiles, removed shared contacts and signed out the sessions.
 
-The [submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md) tracks remaining work. The primary track is Social, Attention & Culture; unsupported Envio, Dynamic and Hunyuan bounty selections were removed. The entry remains a saved draft, with the owner's two video links outstanding. The repository remains private at the owner's direction. An invitation to the organizer's stated address was sent on October 3 and is awaiting MonadMetropolis's acceptance. The form permits private sharing, but Rules v3.0 sections 4.1 and 7.2 require public source; eligibility through private sharing needs organizer clarification. The October 3 progress update records this blocker, completed work and ordered next steps. Saving progress is not final submission.
+## Product and reviewer links
 
-### Go-to-market and user acquisition
+- Live product: https://signalpass.coderbojack.space/
+- Live assistant: https://signalpass.coderbojack.space/assistant?demo=0
+- Guided fictional story, prepared for this release: https://signalpass.coderbojack.space/v4/walkthrough.html
+- Public evidence page, prepared for this release: https://signalpass.coderbojack.space/v4/evidence.html
+- Stable video watch page: https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html
+- Source, access required: https://github.com/huaigu/twingate
 
-We will start with a small, opt-in group of 8–12 Monad builders, designers and usability researchers whose offers and current needs complement each other. Recruitment will begin through the team's existing relationships and permitted posts in relevant builder communities. These are planned channels, not existing partnerships or committed users.
+**V3 exports are completed, validated and saved; publication and public playback verification remain pending:**
 
-Each participant will approve a short profile with one concrete need and one useful contribution. We will help the first participants complete an introduction, then ask both sides whether the explanation was useful, whether the draft needed corrections and whether they chose to continue the conversation.
+- Technical demo, **172.834 seconds (2:53)**: https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4
+- Product pitch, **111.467 seconds (1:51)**: https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4
 
-After a useful exchange, participants can share their public SignalPass profile and invite a relevant peer. We want introductions with a clear purpose, rather than referrals driven by rewards or indiscriminate outreach.
+Both exports are **1920×1080 H.264/AAC**, with 30 English caption cues for the demo and 20 for the pitch. Both passed complete decode with zero errors and visual review. They use generic synthesized narration reused from V2 over edited October 7 production captures; they are not uninterrupted recordings or recordings of the founder speaking. [Validation](docs/reports/signalpass-video-validation-2026-10-07.json), [edit provenance](docs/reports/signalpass-video-edit-notes-2026-10-07.md) and [media manifest](docs/reports/signalpass-media-manifest-2026-10-07.json) record the actual outputs.
 
-We will track onboarding completion, time to the first approved introduction, recipient responses and participant-reported useful conversations, with consent. The first goal is to learn what makes an introduction worth answering. We have not yet established adoption or conversion figures; public rehearsal accounts are excluded from community metrics. Broader acquisition follows that initial learning.
+The existing V2 films remain the last confirmed published versions until V3 publishing is verified. Keep the stable watch-page URL; replace its video sources and verify public playback after publication is authorized.
 
-### Live product
+## Judge access instructions — ready to paste after release verification
 
-https://signalpass.coderbojack.space/
+Start with the guided fictional story at https://signalpass.coderbojack.space/v4/walkthrough.html. No wallet is needed. It uses prepared sample text entirely within the page. Compare the evidence for Bob's offer, edit and review Alice's introduction, follow both sides of the conversation, and choose contact sharing independently. Back rewinds later sample actions; restart or reload clears edits.
 
-### Judge access instructions
+Watch the production demonstration at https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html. The October 7 recording uses real hosted inference and two fictional accounts, with no bond. Historical Monad transactions are presented separately. The evidence page at https://signalpass.coderbojack.space/v4/evidence.html explains the checks and their limitations.
 
-Live product: https://signalpass.coderbojack.space/
+For live use, open https://signalpass.coderbojack.space/assistant?demo=0 and sign in with an injected Ethereum wallet. The sign-in signature creates a session and does not request payment. Users do not need their own AI key. Matching depends on approved, public profiles whose owners have opted into matching; fictional rehearsal profiles were hidden after testing. An empty or unsuitable directory can correctly return no match.
 
-Use an injected Ethereum wallet to sign in. The sign-in signature creates a session; it does not request a payment. Users do not need an AI API key or an external agent installation.
+A full live introduction needs two consenting participants with independent wallets. Describe a concrete goal, review the source quote, edit the private draft and confirm delivery separately. Choose **Send without a bond** for a first run. The recipient can accept, ask for context or decline; each participant then controls their own contact disclosure.
 
-The live directory was empty after QA cleanup on October 3. For live matching, use two consenting people with independent wallets and approved profiles. The intended recipient must be public, open to introductions and opted into matching.
+Hosted discovery, refinement and drafting use TokenRhythm within **20 inference attempts per account and 200 site-wide per UTC day**. Failed attempts count. These are request limits, not a promise of free provider billing or a monetary spend cap. Optional mainnet bonds require MON and gas; the recorded public transaction evidence can be inspected without making a transaction.
 
-Open https://signalpass.coderbojack.space/assistant?demo=0, describe a concrete goal and choose whether to use your approved profile. Review the recommendation's source quote, prepare a draft, edit it and use the separate confirmation to send. Choose 'Send without a bond' for the first complete journey. The other participant can accept, then each person separately chooses whether to share a contact option.
+## Go-to-market and business hypothesis
 
-For an interface-only walkthrough, use https://signalpass.coderbojack.space/discover?demo=1. This is explicitly offline sample mode: no live AI generation, external delivery or payments. Sample mode persists across navigation; the assistant link above explicitly returns to live mode.
+Start with **one existing builder community**, with the organizer's permission, rather than asking unrelated strangers to populate a new network. Invite a small opt-in group with complementary current needs and offers. Each participant approves what becomes public and can leave the directory.
 
-Included AI usage is limited to 20 attempts per account and 200 site-wide per UTC day. Optional Monad Mainnet bonds require real MON and gas; inspect recorded transaction evidence without transacting.
+The initial workflow is deliberately assisted: collect one concrete need and one offer, help members complete their first introduction, and ask both sides whether the suggested person was relevant, whether the draft needed factual corrections and whether a useful conversation followed. Exclude test accounts from all adoption figures.
 
-Public browser rehearsal (fictional accounts, no bond): https://github.com/huaigu/twingate/blob/main/docs/reports/signalpass-public-journey-2026-10-03.md
+An organizer-facing paid community plan is a hypothesis. Before building more community administration or charging, ask an organizer whether this reduces the time they spend making introductions and whether they would run another cohort. No current partner, revenue, conversion rate, testimonial or real-user outcome is claimed.
 
-Separate mainnet transactions and refunds: https://github.com/huaigu/twingate/blob/main/docs/reports/signalpass-mainnet-deployment-2026-10-03.md
+## Source access and portal state
 
-Repository evidence links require access because the source repository is private. An invitation to metropolis@hackathon.monad.xyz (GitHub: MonadMetropolis) was sent on October 3 and is awaiting acceptance. The submission form permits this sharing route, but Rules v3.0 sections 4.1 and 7.2 require public source. Organizer clarification is needed before relying on private access for eligibility; the repository remains private pending resolution. These mainnet transaction links are publicly accessible:
+- Keep **huaigu/twingate private**, as directed by the owner. Do not change repository visibility or invitations as part of this release.
+- An invitation was sent on October 3 to the organizer address `metropolis@hackathon.monad.xyz`, associated with `MonadMetropolis`. It was pending in the last verified record; today's acceptance status has not been checked.
+- The earlier review found a conflict between the form's private-sharing route and Rules v3.0 §§4.1 and 7.2 requiring public source. Written organizer clarification remains unresolved. Sending an invitation does not resolve eligibility.
+- The last recorded primary track was **Social, Attention & Culture**. Unsupported Envio, Dynamic and Hunyuan bounty selections were removed in the earlier portal update. Do not claim new sponsor integrations.
+- The last reported portal state was **Ready for judging**, still editable, using V2 material. The portal is signed out in today's session, so this local copy and the new media must still be saved and read back after access is restored.
+- The previously recorded deadline was **October 13, 2026, 20:59 PDT**, equivalent to **October 14, 11:59 China time**. This is a prior portal observation, not a fresh deadline verification.
 
-- Accepted introduction lock: https://monadvision.com/tx/0x3f64e633da6c0bff6880703bf8e228419b39125f3fd14747bd048031c45850f6
-- Acceptance refund: https://monadvision.com/tx/0xe7c23bc70532bafe2bc2d9ef14b465a73214358a129626a0a40e1b6bb05ab00a
-- Declined introduction lock: https://monadvision.com/tx/0x977ba65dcc77ededf7966c3e1c52b21003dd41e476b2dd8079528cc9e1c64717
-- Decline refund: https://monadvision.com/tx/0xb4b86d8c62b3611d897fb7908cb50ac06e6ba0617e75b7a17b52d967f6103190
+## Scope boundaries for every submission field
+
+- Exact quotes are self-reported profile evidence, not verified qualifications or proof that every generated explanation is correct.
+- The guided story is deterministic prepared content. The production recording uses live inference. The benchmark is a separate synthetic evaluation. Keep all three labels clear.
+- Do not call fictional participants customers or count rehearsals as adoption.
+- Contact information typed voluntarily into a message is part of that message. Profile contact options are not shared automatically on acceptance.
+- Private records have participant access controls; SignalPass does not provide end-to-end encrypted chat or application-level encryption at rest.
+- Hosted discovery/drafting, optional escrow bonds and a future sender-funded evaluation service are separate. Current manual bond review charges zero AI evaluation fee; gas still applies.
+- Recipient inbox AI, direct OpenClaw/Hermes integration, Dynamic, live Envio indexing, Nansen verification and Hunyuan generation are not shipped claims.
+
+## Repository evidence
+
+- [October 7 production rehearsal](docs/reports/signalpass-public-journey-2026-10-07.json)
+- [October 7 read-only receipt recheck](docs/reports/signalpass-mainnet-receipt-recheck-2026-10-07.json)
+- [October 3 original mainnet report](docs/reports/signalpass-mainnet-deployment-2026-10-03.md)
+- [Matching evaluation methodology](docs/MATCHING_EVALUATION.md)
+- [Baseline-only local validation](docs/reports/matching-validation-2026-10-07/report.md)
+- [Release candidate verification report](docs/reports/signalpass-judge-release-2026-10-07.md)
+- [Release and submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md)
+- [Current video briefs](docs/HACKATHON_VIDEO_BRIEFS.md)

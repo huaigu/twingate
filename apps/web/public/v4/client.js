@@ -185,7 +185,34 @@
     label.append(title, detail); if (api.error) label.classList.add('has-error'); bar.dataset.sessionState = demo ? 'demo' : api.me ? 'connected' : 'guest';
     button.textContent = demo ? 'Open live product' : api.me ? 'Sign out' : 'Connect wallet';
     const clearAssistantReturn = () => { try { sessionStorage.removeItem('signalpass-assistant-return'); } catch {} };
-    button.onclick = async () => { button.disabled = true; try { if (demo) { location.href = '/?demo=0'; return; } if (api.me) { await api.request('/auth/logout', {}); clearAssistantReturn(); location.reload(); } else await api.connect(); } catch (error) { label.textContent = error.message; label.classList.add('has-error'); button.disabled = false; } };
+    button.onclick = async () => {
+      if (button.disabled) return;
+      const connecting = !demo && !api.me;
+      const idleLabel = button.textContent;
+      button.disabled = true;
+      if (connecting) {
+        button.classList.add('session-connecting');
+        button.setAttribute('aria-busy', 'true');
+        button.innerHTML = '<span class="session-busy-label"><span class="session-busy-title">Connecting…</span><span class="session-busy-detail">Check your wallet</span></span>';
+      }
+      try {
+        if (demo) { location.href = '/?demo=0'; return; }
+        if (api.me) {
+          await api.request('/auth/logout', {});
+          clearAssistantReturn();
+          location.reload();
+        } else await api.connect();
+      } catch (error) {
+        label.textContent = error.message;
+        label.classList.add('has-error');
+        if (connecting) {
+          button.classList.remove('session-connecting');
+          button.removeAttribute('aria-busy');
+          button.textContent = idleLabel;
+        }
+        button.disabled = false;
+      }
+    };
     bar.append(label, button);
     const slot = document.getElementById('session-slot');
     if (slot) { slot.replaceChildren(bar); slot.setAttribute('aria-busy', 'false'); }
@@ -209,3 +236,4 @@
     });
   })();
 })();
+

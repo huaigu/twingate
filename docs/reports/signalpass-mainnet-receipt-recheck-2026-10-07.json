@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-10-07",
+  "rpc": "https://rpc.monad.xyz",
+  "transactions": [
+    {
+      "transactionHash": "0x3f64e633da6c0bff6880703bf8e228419b39125f3fd14747bd048031c45850f6",
+      "status": "0x1",
+      "blockNumber": 110043655,
+      "gasUsed": 424469,
+      "effectiveGasPriceWei": 102000000000,
+      "gasPaidMON": "0.043295838"
+    },
+    {
+      "transactionHash": "0xe7c23bc70532bafe2bc2d9ef14b465a73214358a129626a0a40e1b6bb05ab00a",
+      "status": "0x1",
+      "blockNumber": 110043665,
+      "gasUsed": 96478,
+      "effectiveGasPriceWei": 102000000000,
+      "gasPaidMON": "0.009840756"
+    },
+    {
+      "transactionHash": "0x977ba65dcc77ededf7966c3e1c52b21003dd41e476b2dd8079528cc9e1c64717",
+      "status": "0x1",
+      "blockNumber": 110043677,
+      "gasUsed": 383361,
+      "effectiveGasPriceWei": 102000000000,
+      "gasPaidMON": "0.039102822"
+    },
+    {
+      "transactionHash": "0xb4b86d8c62b3611d897fb7908cb50ac06e6ba0617e75b7a17b52d967f6103190",
+      "status": "0x1",
+      "blockNumber": 110043689,
+      "gasUsed": 96480,
+      "effectiveGasPriceWei": 102000000000,
+      "gasPaidMON": "0.009840960"
+    }
+  ],
+  "notes": "Read-only inspection of historical transactions. No new wallet transactions. Gas is separate from refundable bonds."
+}

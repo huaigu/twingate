@@ -9,9 +9,6 @@
   }
 }
 @layer utilities {
-  .\@container {
-    container-type: inline-size;
-  }
   @layer daisyui.l1.l2.l3 {
     .tab:is(.tabs > .tab) {
       position: relative;
@@ -1813,6 +1810,9 @@
   }
   .contents {
     display: contents;
+  }
+  .grid {
+    display: grid;
   }
   .hidden {
     display: none;
