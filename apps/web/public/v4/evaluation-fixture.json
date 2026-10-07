@@ -1,0 +1,1089 @@
+{
+  "version": 1,
+  "label": "Synthetic engineering benchmark; fictional profiles; author-defined labels; not independent human validation, customer traction, or a production usage study.",
+  "sourceRevision": "9a5e56461d051c12b8c85a1f5d449063d0564411",
+  "annotationPolicy": "Expected labels were written before any hosted-model run. Acceptable means the profile explicitly offers the requested kind of help and meets every hard constraint. Unsupported credentials, availability, location, or mere topic interest are insufficient. Positive cases need at least one acceptable recommendation and no unacceptable recommendation; returning every acceptable profile is not required. Negative cases require no recommendation. All non-acceptable handles in the declared candidate pool are explicitly unacceptable.",
+  "baseline": {
+    "name": "BM25 lexical baseline",
+    "k1": 1.2,
+    "b": 0.75,
+    "minimumDistinctMatches": 2,
+    "minimumQueryCoverage": 0.2,
+    "minimumRelativeScore": 0.6,
+    "maximumRecommendations": 3,
+    "description": "Frozen heuristic thresholds, not tuned on these case labels or a live run. Case-insensitive Unicode tokens, English stopword removal and conservative English suffix normalization; no embeddings or translation. Standard BM25 across combined public profile fields; maximum three candidates above evidence and relative-score thresholds."
+  },
+  "profiles": [
+    {
+      "handle": "bench-bob",
+      "displayName": "Bob",
+      "building": "Designing onboarding flows for browser-based wallets.",
+      "canOffer": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens.",
+      "wantsToMeet": "Builders who want written feedback on a desktop wallet prototype.",
+      "interests": [
+        "Wallet UX",
+        "Monad"
+      ]
+    },
+    {
+      "handle": "bench-maya",
+      "displayName": "Maya",
+      "building": "Building accessible web application interfaces.",
+      "canOffer": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels.",
+      "wantsToMeet": "Web teams that can share a working prototype.",
+      "interests": [
+        "Accessibility",
+        "Web interfaces"
+      ]
+    },
+    {
+      "handle": "bench-leo",
+      "displayName": "Leo",
+      "building": "Maintaining browser automation for web applications.",
+      "canOffer": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI.",
+      "wantsToMeet": "Teams with reproducible browser test failures.",
+      "interests": [
+        "Playwright",
+        "Testing",
+        "CI"
+      ]
+    },
+    {
+      "handle": "bench-nia",
+      "displayName": "Nia",
+      "building": "Measuring onboarding behavior for subscription products.",
+      "canOffer": "Designing event instrumentation, activation funnels, cohort retention analysis, and drop-off investigations.",
+      "wantsToMeet": "Product teams with event data and a clearly defined activation step.",
+      "interests": [
+        "Product analytics",
+        "Onboarding"
+      ]
+    },
+    {
+      "handle": "bench-omar",
+      "displayName": "Omar",
+      "building": "Writing English and Simplified Chinese developer tutorials.",
+      "canOffer": "Translating developer documentation between English and Simplified Chinese and checking technical terminology. I do not provide certified or medical translation.",
+      "wantsToMeet": "Developer-tool teams localizing their existing guides.",
+      "interests": [
+        "Developer documentation",
+        "Localization"
+      ]
+    },
+    {
+      "handle": "bench-ivy",
+      "displayName": "Ivy",
+      "building": "Writing Solidity contract tests for small applications.",
+      "canOffer": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests. I do not offer independent security audits or certifications.",
+      "wantsToMeet": "Builders seeking a technical testing peer before an audit.",
+      "interests": [
+        "Solidity",
+        "Contract testing",
+        "Monad"
+      ]
+    },
+    {
+      "handle": "bench-chen",
+      "displayName": "Chen",
+      "building": "Operating blockchain event ingestion services.",
+      "canOffer": "Reviewing indexer reorg handling, duplicate webhook suppression, idempotency, retries, and backfill recovery.",
+      "wantsToMeet": "Backend teams with reproducible event delivery problems.",
+      "interests": [
+        "Indexing",
+        "Webhooks",
+        "Backend reliability"
+      ]
+    },
+    {
+      "handle": "bench-rosa",
+      "displayName": "Rosa",
+      "building": "Hosting small online peer-learning communities for builders.",
+      "canOffer": "Planning facilitated feedback sessions, collecting member needs and offers, and running opt-in introductions.",
+      "wantsToMeet": "Community organizers testing small online member programs.",
+      "interests": [
+        "Community operations",
+        "Peer feedback"
+      ]
+    },
+    {
+      "handle": "bench-finn",
+      "displayName": "Finn",
+      "building": "Designing data lifecycle controls for small SaaS products.",
+      "canOffer": "Mapping stored personal data, implementing account deletion, defining retention windows, and reducing unnecessary collection. I do not provide legal advice.",
+      "wantsToMeet": "Engineering teams working through practical privacy controls.",
+      "interests": [
+        "Privacy engineering",
+        "Data retention"
+      ]
+    },
+    {
+      "handle": "bench-sana",
+      "displayName": "Sana",
+      "building": "Studying constant-product automated market makers.",
+      "canOffer": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations.",
+      "wantsToMeet": "Builders who want to validate a pool simulation.",
+      "interests": [
+        "DeFi",
+        "AMM",
+        "Liquidity"
+      ]
+    },
+    {
+      "handle": "bench-theo",
+      "displayName": "Theo",
+      "building": "Making visual identities and motion studies for landing pages.",
+      "canOffer": "Creating SVG illustrations, brand color systems, and restrained hero animations. I do not conduct user research.",
+      "wantsToMeet": "Founders with a visual brief and existing product direction.",
+      "interests": [
+        "Brand design",
+        "SVG",
+        "Animation"
+      ]
+    },
+    {
+      "handle": "bench-jules",
+      "displayName": "Jules",
+      "building": "Learning about crypto through community discussions.",
+      "canOffer": "Welcoming newcomers and talking about crypto news. I have not built wallets, audited contracts, or implemented backend services.",
+      "wantsToMeet": "People interested in an informal learning conversation.",
+      "interests": [
+        "Wallets",
+        "Security audits",
+        "Rust",
+        "Crypto"
+      ]
+    },
+    {
+      "handle": "bench-dara",
+      "displayName": "Dara",
+      "building": "Testing Android browser-to-wallet handoffs.",
+      "canOffer": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser. I do not test iOS apps.",
+      "wantsToMeet": "Teams with an Android wallet connection reproduction.",
+      "interests": [
+        "Android",
+        "Wallet integration",
+        "Mobile testing"
+      ]
+    },
+    {
+      "handle": "bench-ravi",
+      "displayName": "Ravi",
+      "building": "Maintaining English documentation for TypeScript libraries.",
+      "canOffer": "Writing API reference pages, runnable SDK examples, and migration guides from existing TypeScript interfaces. I do not translate content.",
+      "wantsToMeet": "Library maintainers who can share their public API definitions.",
+      "interests": [
+        "TypeScript",
+        "SDK documentation"
+      ]
+    },
+    {
+      "handle": "bench-tess",
+      "displayName": "Tess",
+      "building": "Designing dashboards for financial data.",
+      "canOffer": "Improving chart labels, visual hierarchy, and layouts for portfolio and liquidity dashboards. I do not model AMM pricing or give financial advice.",
+      "wantsToMeet": "Teams who already have the data and need clearer presentation.",
+      "interests": [
+        "Data visualization",
+        "Liquidity dashboards"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "wallet-wording",
+      "category": "direct-match",
+      "goal": "I need a usability review of the wording in my desktop wallet token approval dialog and the screen shown after a rejected request.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-bob"
+        ],
+        "unacceptableHandles": [
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "An explicit offer covers wallet approval wording and rejected-request screens; wallet interest or integration debugging is insufficient."
+      }
+    },
+    {
+      "id": "keyboard-trap",
+      "category": "paraphrase",
+      "goal": "People who cannot use a mouse get stuck after opening a popup in my web app. I need someone to check whether they can reach each control and return to the page.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-maya"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Keyboard-only dialog and focus reviews directly address the described interaction problem."
+      }
+    },
+    {
+      "id": "flaky-browser-tests",
+      "category": "direct-match",
+      "goal": "Our Playwright tests pass separately but fail together in CI because accounts and browser state leak between tests. I want help with isolation.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-leo"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Only the browser automation offer explicitly covers flaky tests and test isolation."
+      }
+    },
+    {
+      "id": "activation-funnel",
+      "category": "direct-match",
+      "goal": "Users register for our SaaS but never create their first workspace. I need help defining activation events and analyzing where the onboarding funnel loses people.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-nia"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Requires product event analysis rather than rewriting wallet screens or visualizing an existing dashboard."
+      }
+    },
+    {
+      "id": "chinese-dev-guide",
+      "category": "constraint-match",
+      "goal": "I have an English developer getting-started guide. I need a Simplified Chinese translation with accurate technical terminology, not a new English API reference.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-omar"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The required language pair is explicit in Omar's offer and absent from Ravi's."
+      }
+    },
+    {
+      "id": "contract-invariants",
+      "category": "constraint-match",
+      "goal": "I need a technical peer to improve Solidity access-control invariants and reproduce a reentrancy test failure. This is preparation before an independent audit.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-ivy"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Contract testing is offered explicitly; this goal does not require an auditor or certification."
+      }
+    },
+    {
+      "id": "reorg-duplicates",
+      "category": "direct-match",
+      "goal": "My blockchain indexer delivers a webhook twice after a chain reorganization. I need help making event handling idempotent and recovering missed events.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-chen"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Indexer reorgs, duplicate webhooks, idempotency, and backfills are all within Chen's explicit offer."
+      }
+    },
+    {
+      "id": "community-program",
+      "category": "direct-match",
+      "goal": "I run a small online builder group. Help me organize an opt-in peer feedback session by collecting member needs and offers and facilitating introductions.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-rosa"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The request concerns running a community program, not implementing a matching model."
+      }
+    },
+    {
+      "id": "account-erasure",
+      "category": "paraphrase",
+      "goal": "When someone closes their SaaS account, we need to remove their personal information from stored records and decide how long to keep the rest. I want implementation help, not legal advice.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-finn"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Account deletion and retention are explicitly offered as engineering work."
+      }
+    },
+    {
+      "id": "lp-simulation",
+      "category": "direct-match",
+      "goal": "I am simulating liquidity-provider returns in a constant-product AMM and need someone to check the impermanent-loss and slippage math.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-sana"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "AMM numerical simulation is offered; a liquidity dashboard designer is not a substitute."
+      }
+    },
+    {
+      "id": "landing-motion",
+      "category": "direct-match",
+      "goal": "We already have our product direction. I need an SVG illustration and a subtle animated hero section that fit our brand colors.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-theo"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The desired visual deliverables are explicit in Theo's offer."
+      }
+    },
+    {
+      "id": "android-handoff",
+      "category": "direct-match",
+      "goal": "On Android, returning from the wallet app leaves our browser stuck on connecting. I need help reproducing the deep-link handoff and recovering connection state.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-dara"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The request specifically concerns mobile wallet handoff and state recovery, not general wallet UX copy."
+      }
+    },
+    {
+      "id": "sdk-reference",
+      "category": "constraint-match",
+      "goal": "I maintain a TypeScript SDK and need English API reference pages and runnable examples derived from our public interfaces. No translation is needed.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-ravi"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Ravi explicitly offers references and examples from TypeScript interfaces; translation experience alone is insufficient."
+      }
+    },
+    {
+      "id": "liquidity-keyword-trap",
+      "category": "misleading-overlap",
+      "goal": "Our liquidity dashboard already looks good. I need to verify how changing AMM reserves affects execution price; please focus on the underlying numerical model, not charts.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-sana"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "This explicitly excludes visual design despite strong dashboard and liquidity keyword overlap in Tess's profile."
+      }
+    },
+    {
+      "id": "independent-security-audit",
+      "category": "insufficient-evidence",
+      "goal": "I need an independent professional security audit and formal certification of a Solidity contract. A testing peer or somebody interested in security is not enough.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "No profile offers an independent audit or certification; Ivy explicitly disclaims them."
+      }
+    },
+    {
+      "id": "medical-spanish",
+      "category": "no-match",
+      "goal": "I need a certified English-to-Spanish medical translator to translate clinical consent forms. Developer-documentation translation is not suitable.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "No profile establishes the required language pair, medical expertise, or certification."
+      }
+    },
+    {
+      "id": "confirmed-local-availability",
+      "category": "insufficient-evidence",
+      "goal": "I need a facilitator whose profile explicitly confirms that they can host an in-person session in Sao Paulo tomorrow. Do not suggest anyone whose location or availability is unconfirmed.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "The directory has an online facilitator but no stated Sao Paulo location or confirmed availability."
+      }
+    },
+    {
+      "id": "committed-investor",
+      "category": "no-match",
+      "goal": "I need to meet an investor whose profile says they are currently writing pre-seed checks for consumer startups. I do not want fundraising advice or an introduction to another builder.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "There is no investor or stated investment offer in the directory."
+      }
+    },
+    {
+      "id": "two-complementary-reviews",
+      "category": "multiple-plausible",
+      "goal": "I need feedback on a desktop wallet prototype: either the clarity of token approval screens or keyboard accessibility of its dialogs. A reviewer in either area would help.",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-bob",
+          "bench-maya"
+        ],
+        "unacceptableHandles": [
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Two distinct explicit offers support the stated alternatives; recommending either or both is acceptable."
+      }
+    },
+    {
+      "id": "android-chinese-paraphrase",
+      "category": "multilingual-paraphrase",
+      "goal": "我在做安卓浏览器里的钱包连接。用户跳到钱包应用后再返回，网页一直显示连接中。想找人一起复现这个问题，检查跳转和状态恢复；不是找人翻译文档。",
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-leo",
+        "bench-nia",
+        "bench-omar",
+        "bench-ivy",
+        "bench-chen",
+        "bench-rosa",
+        "bench-finn",
+        "bench-sana",
+        "bench-theo",
+        "bench-jules",
+        "bench-dara",
+        "bench-ravi",
+        "bench-tess"
+      ],
+      "expected": {
+        "acceptableHandles": [
+          "bench-dara"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The Chinese request describes Android wallet handoff and recovery, not translation; the relevant profile is in English."
+      }
+    }
+  ]
+}

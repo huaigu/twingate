@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "canaryWalkthrough": {
+    "passed": 11,
+    "failed": 0,
+    "viewports": [
+      320,
+      390,
+      768,
+      1280
+    ],
+    "scenesPerViewport": 10,
+    "includes": [
+      "explicit selection and edited draft review",
+      "independent contact consent in all four combinations",
+      "escaping,rewind,restart,reload",
+      "no external or mutating requests"
+    ]
+  },
+  "canaryUi": {
+    "base": "http://127.0.0.1:3081",
+    "startedAt": "2026-10-07T07:32:30.552Z",
+    "checks": [
+      "Two-line session/wallet pending and rejection retry at 320px",
+      "Two-line session/wallet pending and rejection retry at 390px",
+      "Two-line session/wallet pending and rejection retry at 1280px",
+      "Evidence CTA contrast and mobile layout at 320/390/1280px"
+    ],
+    "failures": [],
+    "api": "Browser stubs only; no live API or AI requests",
+    "finishedAt": "2026-10-07T07:32:35.912Z"
+  },
+  "canaryMedia": {
+    "base": "http://127.0.0.1:3081",
+    "startedAt": "2026-10-07T07:37:14.429Z",
+    "checks": [
+      "Watch tabs select playable V3 films, correct durations and captions"
+    ],
+    "failures": [],
+    "api": "Browser stubs only; no live API or AI requests",
+    "finishedAt": "2026-10-07T07:37:16.961Z"
+  },
+  "public": {
+    "base": "https://signalpass.coderbojack.space",
+    "startedAt": "2026-10-07T07:42:22.002Z",
+    "checks": [
+      "Two-line session/wallet pending and rejection retry at 320px",
+      "Two-line session/wallet pending and rejection retry at 390px",
+      "Two-line session/wallet pending and rejection retry at 1280px",
+      "Evidence CTA contrast and mobile layout at 320/390/1280px",
+      "Watch tabs select playable V3 films, correct durations and captions"
+    ],
+    "failures": [],
+    "api": "Wallet/session API routes stubbed. Read-only health/ready GETs reached the public service. No hosted AI or mutations.",
+    "videos": [
+      {
+        "src": "https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4",
+        "duration": 172.833979,
+        "playbackAdvanced": true
+      },
+      {
+        "src": "https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4",
+        "duration": 111.466667,
+        "playbackAdvanced": true
+      }
+    ],
+    "publicProxy": [
+      {
+        "path": "/api/health",
+        "status": 200
+      },
+      {
+        "path": "/api/ready",
+        "status": 200
+      },
+      {
+        "path": "/media/signalpass-live-demo-20261007-v3.mp4",
+        "status": 206,
+        "contentRange": "bytes 0-1023/7690254",
+        "bytes": 1024
+      }
+    ],
+    "finishedAt": "2026-10-07T07:42:29.877Z"
+  },
+  "returningBrowser": {
+    "verified": [
+      "homepage shows new two-line session status and guided-story CTA",
+      "guided story opens from homepage",
+      "evidence page displays complete hosted comparison",
+      "stable video page exposes both V3 films"
+    ],
+    "base": "https://signalpass.coderbojack.space/"
+  },
+  "limitations": [
+    "Wallet pending and rejection tested with browser stubs; no physical phone-wallet claim.",
+    "No new AI calls or blockchain transactions during release QA."
+  ]
+}

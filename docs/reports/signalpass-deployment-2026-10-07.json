@@ -1,0 +1,158 @@
+{
+  "startedAt": "2026-10-07T07:41:11.903985+00:00",
+  "previousRelease": "/opt/signalpass/releases/ui-components-review-20261006",
+  "release": "/opt/signalpass/releases/judge-evidence-20261007",
+  "baseSourceCommit": "ceffc00191e43a94de20f7bfa2213d12c32ed0b1",
+  "apiPidBefore": "3749435",
+  "checks": [
+    {
+      "url": "http://127.0.0.1:3080/v4/evidence.html",
+      "status": 200,
+      "bytes": 10174,
+      "sha256": "2dbe20490974fc09f65c70b60eac6c1eb266ea0b1bfc853887c9da4809a84c88"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/walkthrough.html",
+      "status": 200,
+      "bytes": 3548,
+      "sha256": "17bbe229c7460f4aa0045204f47748f785e3c1bf8c69ed9b4c7b02fda8056cce"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evidence.html",
+      "status": 200,
+      "bytes": 10174,
+      "sha256": "2dbe20490974fc09f65c70b60eac6c1eb266ea0b1bfc853887c9da4809a84c88"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-results.json",
+      "status": 200,
+      "bytes": 147864,
+      "sha256": "f3e68484c326025092de7cfbc35b6de502007c449885fcf6bd58b0b916750d2d"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-methodology.md",
+      "status": 200,
+      "bytes": 14598,
+      "sha256": "a6d8f99a22e0634041c723834ee85c693ba9e02de4951a6d43f731fe4cad48cf"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-claim-review.md",
+      "status": 200,
+      "bytes": 11964,
+      "sha256": "5a51d8d9cdfa6e9b508eaab00bb66ef09afc8e9fb50dd54887d1dccfe71682e9"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-report.md",
+      "status": 200,
+      "bytes": 4215,
+      "sha256": "6d4638b0877becc0308eca70420321ce78c4fea4572c8f3ffb57d85bc9c37ea3"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-manifest.json",
+      "status": 200,
+      "bytes": 1331,
+      "sha256": "d28b85332f6d3583fa52ab8b2874372fedc1fe3017f290dbae3849778ce93b09"
+    },
+    {
+      "url": "http://127.0.0.1:3080/v4/evaluation-fixture.json",
+      "status": 200,
+      "bytes": 33232,
+      "sha256": "a3b918abbacbb5ce99aa23c7c1de1d9061e09016971b2af91bb8bd250fc37d0b"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-demo-20261003.html",
+      "status": 200,
+      "bytes": 6829,
+      "sha256": "71d21f36e81d6728c980bcb55f1edf791111841eb95276a99c5b44b3c5ed44e2"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-live-demo-20261007-v3.mp4",
+      "status": 200,
+      "bytes": 7690254,
+      "sha256": "41af0be05ac6f81be5afc916bd387f40989f22049d199c4801846ede75c9cf2a"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-product-pitch-20261007-v3.mp4",
+      "status": 200,
+      "bytes": 5323120,
+      "sha256": "11c81dc24f0eb1af9761649c7d5dfb18745ea16e4b5b409f7992ee45034e555e"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-live-demo-20261007-v3.en.srt",
+      "status": 200,
+      "bytes": 3179,
+      "sha256": "2cde2d5832cca72337936c02f3dcf5559384bd5126b1ee08a87ff5e951e00c3b"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-product-pitch-20261007-v3.en.srt",
+      "status": 200,
+      "bytes": 2019,
+      "sha256": "b45ca9957b7a7c0266ba2b943b5a145798b0443f619e5a16dda84477a28794fa"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-demo-20261007-v3.png",
+      "status": 200,
+      "bytes": 117976,
+      "sha256": "390a862412dec478feebc8f7b60f48a1171b0aa84ca68a92716accf09d00164e"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-live-demo-20261007-v3.mp4",
+      "status": 206,
+      "bytes": 1024,
+      "sha256": "bf5cbaec8f6f5d92dcc85e692ffc69175a8ab6cf578a98cee0784b0c8e342e1b",
+      "contentRange": "bytes 0-1023/7690254"
+    },
+    {
+      "url": "http://127.0.0.1:3080/media/signalpass-product-pitch-20261007-v3.mp4",
+      "status": 206,
+      "bytes": 1024,
+      "sha256": "a2d49668ba83f0559fb67e0ec1a6b273c39b89f81a757c9fe88c0ed8f57b663f",
+      "contentRange": "bytes 0-1023/5323120"
+    },
+    {
+      "url": "http://127.0.0.1:3080/api/health",
+      "status": 200,
+      "bytes": 157,
+      "sha256": "45d4dd329cf9b1b36c9ff4385fe186aaa43d008082df27d537e86450eb1887c8"
+    },
+    {
+      "url": "http://127.0.0.1:3080/api/ready",
+      "status": 200,
+      "bytes": 103,
+      "sha256": "b9157d98e9f216a429ce97dc28dcbb0488b9a280e2ec35d865a40f2480be83fb"
+    },
+    {
+      "url": "http://127.0.0.1:3080/",
+      "status": 200,
+      "bytes": 23688,
+      "sha256": "f61c8700afa11a26ccd8e21f752c6ef7a61e61107cc69d32b3bacb22bd080322"
+    }
+  ],
+  "status": "deployed",
+  "publicVerifierNote": "Cloudflare error 1010 rejects Python urllib; ordinary browser checks follow without changing security controls.",
+  "apiRestarted": false,
+  "finishedAt": "2026-10-07T07:41:13.215281+00:00",
+  "browserVerification": {
+    "status": "passed",
+    "returningBrowser": {
+      "homepage": "New loading status and guided-story CTA visible",
+      "walkthrough": "Fictional ten-step story accessible",
+      "evidence": "Hosted14/20 versus baseline15/20 and downloadable evidence visible",
+      "watch": "V3demo2:53 and pitch1:51 tabs visible"
+    },
+    "securityControlsChanged": false,
+    "report": "signalpass-release-qa-2026-10-07.json",
+    "publicCheckCount": 5,
+    "finishedAt": "2026-10-07T07:42:29.877Z"
+  },
+  "recoveredDeploymentIssues": [
+    {
+      "issue": "Python urllib public probe rejected by Cloudflare error1010",
+      "response": "Automatic rollback; established that ordinary browsers load normally, then performed public checks through those browsers."
+    },
+    {
+      "issue": "Helper restart wait30seconds shorter than existing service stop allowance75seconds",
+      "response": "Restored old release; increased helper wait to180seconds without changing service configuration."
+    }
+  ]
+}
