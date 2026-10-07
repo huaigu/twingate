@@ -22,17 +22,17 @@
     <link rel="stylesheet" href="/v4/experience.css?v=87ed5d61798b" />
     <link rel="stylesheet" href="/v4/first-visit.css?v=1c4c4e4a379a" />
     <link rel="stylesheet" href="/v4/final-polish.css?v=26c189d2830f" />
-    <script defer src="/v4/client.js?v=548feed2881d"></script>
+    <script defer src="/v4/client.js?v=b7a5b1ad2ea8"></script>
     <script defer src="/v4/wallet.js?v=a024a23be1bd"></script>
     <script defer src="/v4/navigation.js?v=d6229d42e203"></script>
     <script defer src="/v4/hero.js?v=61cebe29dfd4"></script>
     <script defer src="/v4/motion.js?v=20966f246dd7"></script>
-    <link rel="stylesheet" href="/v4/ui.css?v=422d6b92bf58" />
-    <link rel="stylesheet" href="/v4/ui-compat.css?v=a17098093354" />
+    <link rel="stylesheet" href="/v4/ui.css?v=b7b12404240f" />
+    <link rel="stylesheet" href="/v4/ui-compat.css?v=88a56720332a" />
   </head>
   <body class="v4-home sp-home">
     <a class="skip-link" href="#main">Skip to content</a>
-    <div id="session-slot" aria-busy="true"><span class="session-loading" role="status" style="white-space:nowrap;min-height:40px;justify-content:center">Loading…</span></div>
+    <div id="session-slot" aria-busy="true"><span class="session-loading session-busy-label" role="status"><span class="session-busy-title">Loading…</span><span class="session-busy-detail">Checking your session</span></span></div>
     <div class="hero-page">
       <header class="site-header">
         <a class="brand" href="/" aria-label="SignalPass home"
@@ -90,8 +90,8 @@
               <p class="first-visit-help" id="live-assistant-help">Wallet sign-in required</p>
             </div>
             <div class="first-visit-option">
-              <a class="button secondary btn btn-outline btn-lg" href="/discover?demo=1" aria-describedby="sample-help">Explore a sample</a>
-              <p class="first-visit-help" id="sample-help">Fictional profiles · No wallet or live AI</p>
+              <a class="button secondary btn btn-outline btn-lg" href="/v4/walkthrough.html" aria-describedby="sample-help">Try the guided story</a>
+              <p class="first-visit-help" id="sample-help">Alice + Bob · Fictional · No wallet needed</p>
             </div>
           </div>
           <div class="benefits">
@@ -563,7 +563,7 @@
         </section>
         <section class="sp-how" id="how-it-works" aria-labelledby="how-title">
           <div class="sp-section-heading"><p class="sp-eyebrow">LESS EXPLAINING. MORE POSSIBILITY.</p><h2 id="how-title">A little context changes<br>the whole conversation.</h2></div>
-          <div class="sp-how-steps"><article><span>YOUR CONTEXT</span><h3>Bring something of yourself.</h3><p>What you’re building, what you can offer, and what you’re curious about. Choose what becomes public.</p><a href="/profile/import">Shape your profile ↗</a></article><article><span>A REASON TO CONNECT</span><h3>Look beyond a job title.</h3><p>Explore people’s interests and work. Find a concrete starting point for a conversation worth having.</p><a href="/discover">Meet the community ↗</a></article><article><span>A PERSONAL HELLO</span><h3>Make the invitation yours.</h3><p>Review your words and shared context. The other person can accept, ask a question, or pass.</p><a href="/introductions/new/maya?demo=1">Try a sample introduction ↗</a></article></div>
+          <div class="sp-how-steps"><article><span>YOUR CONTEXT</span><h3>Bring something of yourself.</h3><p>What you’re building, what you can offer, and what you’re curious about. Choose what becomes public.</p><a href="/profile/import">Shape your profile ↗</a></article><article><span>A REASON TO CONNECT</span><h3>Look beyond a job title.</h3><p>Explore people’s interests and work. Find a concrete starting point for a conversation worth having.</p><a href="/discover">Meet the community ↗</a></article><article><span>A PERSONAL HELLO</span><h3>Make the invitation yours.</h3><p>Review your words and shared context. The other person can accept, ask a question, or pass.</p><a href="/v4/walkthrough.html">Follow an introduction ↗</a></article></div>
         </section>
         <section class="sp-calling-card"><div><p class="sp-eyebrow">TAKE YOUR CONTEXT WITH YOU</p><h2>Your corner of the internet.<br>An open door to a good hello.</h2><p>Make a small, personal profile card for the places you already call home.</p><a class="button outline btn btn-outline btn-lg" href="/widget/create">Create your calling card ↗</a></div><div class="calling-card-preview" aria-label="Illustrative profile card"><span class="example-badge">Example card</span><img src="/v4/assets/avatar-alex.webp" width="88" height="88" alt=""><h3>Alex Chen</h3><p>Building useful things<br>with curious people.</p><span class="calling-card-tag">Product</span><span class="calling-card-tag">Open source</span><div class="calling-card-signature">A little context. A better hello. ↗</div></div></section>
       </main>
@@ -571,3 +571,4 @@
     </div>
   </body>
 </html>
+

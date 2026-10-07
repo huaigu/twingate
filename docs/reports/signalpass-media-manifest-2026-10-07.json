@@ -1,0 +1,42 @@
+[
+  {
+    "public_name": "signalpass-live-demo-20261007-v3.mp4",
+    "size_bytes": 7690254,
+    "sha256": "41af0be05ac6f81be5afc916bd387f40989f22049d199c4801846ede75c9cf2a",
+    "artifact_filename": "SignalPass_Technical_Demo_V3_1080p.mp4",
+    "artifact_id": "libfile_46177ceddcec8191aae0620a1edf9db3",
+    "publication_status": "prepared, not deployed"
+  },
+  {
+    "public_name": "signalpass-product-pitch-20261007-v3.mp4",
+    "size_bytes": 5323120,
+    "sha256": "11c81dc24f0eb1af9761649c7d5dfb18745ea16e4b5b409f7992ee45034e555e",
+    "artifact_filename": "SignalPass_Project_Pitch_V3_1080p.mp4",
+    "artifact_id": "libfile_01c2d90caba8819184a5d038068f705f",
+    "publication_status": "prepared, not deployed"
+  },
+  {
+    "public_name": "signalpass-live-demo-20261007-v3.en.srt",
+    "size_bytes": 3179,
+    "sha256": "2cde2d5832cca72337936c02f3dcf5559384bd5126b1ee08a87ff5e951e00c3b",
+    "artifact_filename": "SignalPass_Technical_Demo_V3_1080p.en.srt",
+    "artifact_id": "libfile_4802ff5256708191a4684c89d7ccb17b",
+    "publication_status": "prepared, not deployed"
+  },
+  {
+    "public_name": "signalpass-product-pitch-20261007-v3.en.srt",
+    "size_bytes": 2019,
+    "sha256": "b45ca9957b7a7c0266ba2b943b5a145798b0443f619e5a16dda84477a28794fa",
+    "artifact_filename": "SignalPass_Project_Pitch_V3_1080p.en.srt",
+    "artifact_id": "libfile_3dc1ef237c6881918cb5f371d41a3480",
+    "publication_status": "prepared, not deployed"
+  },
+  {
+    "public_name": "signalpass-demo-20261007-v3.png",
+    "size_bytes": 117976,
+    "sha256": "390a862412dec478feebc8f7b60f48a1171b0aa84ca68a92716accf09d00164e",
+    "artifact_filename": "SignalPass_V3_Poster.png",
+    "artifact_id": "libfile_629981c421b481918c734b605593bb01",
+    "publication_status": "prepared, not deployed"
+  }
+]

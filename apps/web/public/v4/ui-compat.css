@@ -257,3 +257,47 @@
 .btn[hidden], .tab[hidden], :is(.input, .select, .textarea)[hidden] {
   display: none !important;
 }
+
+
+/* Two intentional status lines; session checking never claims wallet access. */
+.session-busy-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.2;
+}
+.session-busy-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.session-busy-detail {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.session-loading.session-busy-label {
+  min-height: 40px;
+  padding: 0;
+  width: 124px;
+  max-width: 100%;
+  text-align: center;
+}
+.session-in-header .v4-session-bar .btn.session-connecting {
+  width: 124px;
+  min-width: 104px;
+  padding-inline: 8px;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .session-loading.session-busy-label { min-height: 44px; }
+}
+@media (max-width: 360px) {
+  .session-loading.session-busy-label { width: 100px; }
+  .session-loading .session-busy-detail { font-size: 9px; }
+  .session-in-header .v4-session-bar .btn.session-connecting { width: 104px; }
+}

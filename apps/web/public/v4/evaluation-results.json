@@ -1,0 +1,3231 @@
+{
+  "mode": "validate",
+  "fixtureSha256": "a3b918abbacbb5ce99aa23c7c1de1d9061e09016971b2af91bb8bd250fc37d0b",
+  "label": "Synthetic engineering benchmark; fictional profiles; author-defined labels; not independent human validation, customer traction, or a production usage study.",
+  "startedAt": "2026-10-07T06:00:19.446Z",
+  "sourceRevision": "9a5e56461d051c12b8c85a1f5d449063d0564411",
+  "sourceHashes": {
+    "agent-routes.ts": "ac1d12f49ad8d321314333bcf6b99c75351915bc32b4afe1dba32cb7b208a7d3",
+    "agent-provider.ts": "3c7cdaa52995e16024e498bef3160c72d4b3d016a972153e23385f71e15b5d2a",
+    "agent-evidence.ts": "3cdfc7faf00c1a9e8db9d18be1f9bbff6ee4d98b1ab156775ffe5abca4732687"
+  },
+  "provider": null,
+  "model": null,
+  "baselineConfig": {
+    "name": "BM25 lexical baseline",
+    "k1": 1.2,
+    "b": 0.75,
+    "minimumDistinctMatches": 2,
+    "minimumQueryCoverage": 0.2,
+    "minimumRelativeScore": 0.6,
+    "maximumRecommendations": 3,
+    "description": "Frozen heuristic thresholds, not tuned on these case labels or a live run. Case-insensitive Unicode tokens, English stopword removal and conservative English suffix normalization; no embeddings or translation. Standard BM25 across combined public profile fields; maximum three candidates above evidence and relative-score thresholds."
+  },
+  "complete": true,
+  "finishedAt": "2026-10-07T06:00:20.989Z",
+  "providerCalls": 0,
+  "maxProviderCalls": 20,
+  "concurrency": 1,
+  "baseline": {
+    "evaluatedCases": 20,
+    "strictCaseSuccess": {
+      "numerator": 15,
+      "denominator": 20,
+      "rate": 0.75
+    },
+    "recommendationRelevance": {
+      "numerator": 15,
+      "denominator": 18,
+      "rate": 0.833
+    },
+    "firstRecommendationRelevant": {
+      "numerator": 13,
+      "denominator": 16,
+      "rate": 0.813
+    },
+    "atLeastOneRelevantRecommendation": {
+      "numerator": 14,
+      "denominator": 16,
+      "rate": 0.875
+    },
+    "correctAbstention": {
+      "numerator": 2,
+      "denominator": 4,
+      "rate": 0.5
+    },
+    "unsupportedCandidateSelections": 3,
+    "failures": 0,
+    "latencyMs": {
+      "median": 0.233,
+      "p95": 0.336
+    }
+  },
+  "hosted": null,
+  "hostedAudit": null,
+  "cases": [
+    {
+      "id": "wallet-wording",
+      "category": "direct-match",
+      "goal": "I need a usability review of the wording in my desktop wallet token approval dialog and the screen shown after a rejected request.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-bob"
+        ],
+        "unacceptableHandles": [
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "An explicit offer covers wallet approval wording and rejected-request screens; wallet interest or integration debugging is insufficient."
+      },
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-dara",
+        "bench-tess",
+        "bench-chen",
+        "bench-ivy",
+        "bench-jules",
+        "bench-omar",
+        "bench-ravi",
+        "bench-rosa",
+        "bench-theo",
+        "bench-finn",
+        "bench-leo",
+        "bench-nia",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-bob"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.234,
+        "proposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-bob",
+            "score": 23.316,
+            "coverage": 0.769,
+            "matchedTerms": 10
+          },
+          {
+            "handle": "bench-maya",
+            "score": 5.77,
+            "coverage": 0.231,
+            "matchedTerms": 3
+          },
+          {
+            "handle": "bench-dara",
+            "score": 2.531,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.076,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 1.313,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 1.173,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "keyboard-trap",
+      "category": "paraphrase",
+      "goal": "People who cannot use a mouse get stuck after opening a popup in my web app. I need someone to check whether they can reach each control and return to the page.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-maya"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Keyboard-only dialog and focus reviews directly address the described interaction problem."
+      },
+      "candidateHandles": [
+        "bench-dara",
+        "bench-ravi",
+        "bench-maya",
+        "bench-sana",
+        "bench-tess",
+        "bench-theo",
+        "bench-bob",
+        "bench-finn",
+        "bench-ivy",
+        "bench-leo",
+        "bench-omar",
+        "bench-chen",
+        "bench-jules",
+        "bench-rosa",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 0.285,
+        "proposals": [],
+        "scores": [
+          {
+            "handle": "bench-maya",
+            "score": 2.992,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 2.416,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.345,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-omar",
+            "score": 2.345,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-leo",
+            "score": 1.98,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-sana",
+            "score": 1.893,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-dara",
+            "score": 1.787,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 1.716,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "flaky-browser-tests",
+      "category": "direct-match",
+      "goal": "Our Playwright tests pass separately but fail together in CI because accounts and browser state leak between tests. I want help with isolation.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-leo"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Only the browser automation offer explicitly covers flaky tests and test isolation."
+      },
+      "candidateHandles": [
+        "bench-leo",
+        "bench-dara",
+        "bench-bob",
+        "bench-ivy",
+        "bench-sana",
+        "bench-chen",
+        "bench-nia",
+        "bench-omar",
+        "bench-theo",
+        "bench-finn",
+        "bench-jules",
+        "bench-maya",
+        "bench-ravi",
+        "bench-rosa",
+        "bench-tess"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-leo"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.217,
+        "proposals": [
+          {
+            "handle": "bench-leo",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Debugging flaky Playwright end-to-end tests, unstable selectors, race conditions, and test isolation in CI."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-leo",
+            "score": 10.09,
+            "coverage": 0.308,
+            "matchedTerms": 4
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 4.605,
+            "coverage": 0.154,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-dara",
+            "score": 4.315,
+            "coverage": 0.154,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-omar",
+            "score": 2.345,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 2.188,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 1.597,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "activation-funnel",
+      "category": "direct-match",
+      "goal": "Users register for our SaaS but never create their first workspace. I need help defining activation events and analyzing where the onboarding funnel loses people.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-nia"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Requires product event analysis rather than rewriting wallet screens or visualizing an existing dashboard."
+      },
+      "candidateHandles": [
+        "bench-nia",
+        "bench-finn",
+        "bench-ravi",
+        "bench-tess",
+        "bench-bob",
+        "bench-jules",
+        "bench-omar",
+        "bench-rosa",
+        "bench-theo",
+        "bench-dara",
+        "bench-ivy",
+        "bench-leo",
+        "bench-maya",
+        "bench-chen",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-nia"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.27,
+        "proposals": [
+          {
+            "handle": "bench-nia",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Designing event instrumentation, activation funnels, cohort retention analysis, and drop-off investigations."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-nia",
+            "score": 12.778,
+            "coverage": 0.333,
+            "matchedTerms": 5
+          },
+          {
+            "handle": "bench-finn",
+            "score": 3.904,
+            "coverage": 0.133,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-chen",
+            "score": 2.613,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.345,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 1.95,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "chinese-dev-guide",
+      "category": "constraint-match",
+      "goal": "I have an English developer getting-started guide. I need a Simplified Chinese translation with accurate technical terminology, not a new English API reference.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-omar"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The required language pair is explicit in Omar's offer and absent from Ravi's."
+      },
+      "candidateHandles": [
+        "bench-omar",
+        "bench-ravi",
+        "bench-jules",
+        "bench-tess",
+        "bench-dara",
+        "bench-ivy",
+        "bench-sana",
+        "bench-theo",
+        "bench-chen",
+        "bench-finn",
+        "bench-leo",
+        "bench-nia",
+        "bench-rosa",
+        "bench-bob",
+        "bench-maya"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-omar"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.229,
+        "proposals": [
+          {
+            "handle": "bench-omar",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Translating developer documentation between English and Simplified Chinese and checking technical terminology. I do not provide certified or medical translation."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-omar",
+            "score": 21.358,
+            "coverage": 0.571,
+            "matchedTerms": 8
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 9.375,
+            "coverage": 0.286,
+            "matchedTerms": 4
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 1.716,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "contract-invariants",
+      "category": "constraint-match",
+      "goal": "I need a technical peer to improve Solidity access-control invariants and reproduce a reentrancy test failure. This is preparation before an independent audit.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-ivy"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Contract testing is offered explicitly; this goal does not require an auditor or certification."
+      },
+      "candidateHandles": [
+        "bench-ivy",
+        "bench-rosa",
+        "bench-dara",
+        "bench-leo",
+        "bench-finn",
+        "bench-jules",
+        "bench-maya",
+        "bench-omar",
+        "bench-tess",
+        "bench-bob",
+        "bench-chen",
+        "bench-nia",
+        "bench-ravi",
+        "bench-sana",
+        "bench-theo"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-ivy"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.216,
+        "proposals": [
+          {
+            "handle": "bench-ivy",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests. I do not offer independent security audits or certifications."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-ivy",
+            "score": 23.498,
+            "coverage": 0.733,
+            "matchedTerms": 11
+          },
+          {
+            "handle": "bench-leo",
+            "score": 4.041,
+            "coverage": 0.133,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 3.792,
+            "coverage": 0.133,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-dara",
+            "score": 3.741,
+            "coverage": 0.133,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.536,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 2.416,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-omar",
+            "score": 1.839,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "reorg-duplicates",
+      "category": "direct-match",
+      "goal": "My blockchain indexer delivers a webhook twice after a chain reorganization. I need help making event handling idempotent and recovering missed events.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-chen"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Indexer reorgs, duplicate webhooks, idempotency, and backfills are all within Chen's explicit offer."
+      },
+      "candidateHandles": [
+        "bench-chen",
+        "bench-nia",
+        "bench-rosa",
+        "bench-tess",
+        "bench-theo",
+        "bench-bob",
+        "bench-dara",
+        "bench-finn",
+        "bench-ivy",
+        "bench-jules",
+        "bench-leo",
+        "bench-maya",
+        "bench-omar",
+        "bench-ravi",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-chen"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.243,
+        "proposals": [
+          {
+            "handle": "bench-chen",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing indexer reorg handling, duplicate webhook suppression, idempotency, retries, and backfill recovery."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-chen",
+            "score": 13.294,
+            "coverage": 0.357,
+            "matchedTerms": 5
+          },
+          {
+            "handle": "bench-nia",
+            "score": 2.587,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-theo",
+            "score": 2.345,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "community-program",
+      "category": "direct-match",
+      "goal": "I run a small online builder group. Help me organize an opt-in peer feedback session by collecting member needs and offers and facilitating introductions.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-rosa"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The request concerns running a community program, not implementing a matching model."
+      },
+      "candidateHandles": [
+        "bench-rosa",
+        "bench-ivy",
+        "bench-bob",
+        "bench-finn",
+        "bench-ravi",
+        "bench-sana",
+        "bench-chen",
+        "bench-dara",
+        "bench-jules",
+        "bench-leo",
+        "bench-maya",
+        "bench-nia",
+        "bench-omar",
+        "bench-tess",
+        "bench-theo"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-rosa"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.229,
+        "proposals": [
+          {
+            "handle": "bench-rosa",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Planning facilitated feedback sessions, collecting member needs and offers, and running opt-in introductions."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-rosa",
+            "score": 30.776,
+            "coverage": 0.813,
+            "matchedTerms": 13
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 6.009,
+            "coverage": 0.25,
+            "matchedTerms": 4
+          },
+          {
+            "handle": "bench-bob",
+            "score": 3.283,
+            "coverage": 0.125,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-finn",
+            "score": 1.405,
+            "coverage": 0.063,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-sana",
+            "score": 1.293,
+            "coverage": 0.063,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "account-erasure",
+      "category": "paraphrase",
+      "goal": "When someone closes their SaaS account, we need to remove their personal information from stored records and decide how long to keep the rest. I want implementation help, not legal advice.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-finn"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Account deletion and retention are explicitly offered as engineering work."
+      },
+      "candidateHandles": [
+        "bench-finn",
+        "bench-ravi",
+        "bench-tess",
+        "bench-dara",
+        "bench-omar",
+        "bench-theo",
+        "bench-jules",
+        "bench-sana",
+        "bench-bob",
+        "bench-ivy",
+        "bench-rosa",
+        "bench-chen",
+        "bench-leo",
+        "bench-maya",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-finn"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.332,
+        "proposals": [
+          {
+            "handle": "bench-finn",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Mapping stored personal data, implementing account deletion, defining retention windows, and reducing unnecessary collection. I do not provide legal advice."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-finn",
+            "score": 12.656,
+            "coverage": 0.375,
+            "matchedTerms": 6
+          },
+          {
+            "handle": "bench-tess",
+            "score": 1.865,
+            "coverage": 0.063,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "lp-simulation",
+      "category": "direct-match",
+      "goal": "I am simulating liquidity-provider returns in a constant-product AMM and need someone to check the impermanent-loss and slippage math.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-sana"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "AMM numerical simulation is offered; a liquidity dashboard designer is not a substitute."
+      },
+      "candidateHandles": [
+        "bench-sana",
+        "bench-tess",
+        "bench-dara",
+        "bench-omar",
+        "bench-theo",
+        "bench-finn",
+        "bench-nia",
+        "bench-ravi",
+        "bench-rosa",
+        "bench-bob",
+        "bench-chen",
+        "bench-ivy",
+        "bench-jules",
+        "bench-leo",
+        "bench-maya"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-sana"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.202,
+        "proposals": [
+          {
+            "handle": "bench-sana",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-sana",
+            "score": 20.427,
+            "coverage": 0.75,
+            "matchedTerms": 9
+          },
+          {
+            "handle": "bench-tess",
+            "score": 4.426,
+            "coverage": 0.167,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-omar",
+            "score": 2.345,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-nia",
+            "score": 2.014,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-dara",
+            "score": 1.787,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-theo",
+            "score": 1.256,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 1.173,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "landing-motion",
+      "category": "direct-match",
+      "goal": "We already have our product direction. I need an SVG illustration and a subtle animated hero section that fit our brand colors.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-theo"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The desired visual deliverables are explicit in Theo's offer."
+      },
+      "candidateHandles": [
+        "bench-theo",
+        "bench-tess",
+        "bench-dara",
+        "bench-finn",
+        "bench-jules",
+        "bench-maya",
+        "bench-nia",
+        "bench-rosa",
+        "bench-sana",
+        "bench-bob",
+        "bench-chen",
+        "bench-ivy",
+        "bench-leo",
+        "bench-omar",
+        "bench-ravi"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-theo"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.202,
+        "proposals": [
+          {
+            "handle": "bench-theo",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Creating SVG illustrations, brand color systems, and restrained hero animations. I do not conduct user research."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-theo",
+            "score": 17.101,
+            "coverage": 0.583,
+            "matchedTerms": 7
+          },
+          {
+            "handle": "bench-tess",
+            "score": 2.379,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-nia",
+            "score": 2.014,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-sana",
+            "score": 1.293,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 1.173,
+            "coverage": 0.083,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "android-handoff",
+      "category": "direct-match",
+      "goal": "On Android, returning from the wallet app leaves our browser stuck on connecting. I need help reproducing the deep-link handoff and recovering connection state.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-dara"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The request specifically concerns mobile wallet handoff and state recovery, not general wallet UX copy."
+      },
+      "candidateHandles": [
+        "bench-dara",
+        "bench-bob",
+        "bench-ivy",
+        "bench-leo",
+        "bench-ravi",
+        "bench-tess",
+        "bench-finn",
+        "bench-jules",
+        "bench-maya",
+        "bench-omar",
+        "bench-rosa",
+        "bench-theo",
+        "bench-chen",
+        "bench-nia",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-dara"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.436,
+        "proposals": [
+          {
+            "handle": "bench-dara",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reproducing Android wallet deep-link failures, canceled connection attempts, and state recovery when returning to the browser. I do not test iOS apps."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-dara",
+            "score": 23.687,
+            "coverage": 0.667,
+            "matchedTerms": 10
+          },
+          {
+            "handle": "bench-bob",
+            "score": 6.172,
+            "coverage": 0.2,
+            "matchedTerms": 3
+          },
+          {
+            "handle": "bench-leo",
+            "score": 2.184,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.076,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-sana",
+            "score": 1.893,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 1.716,
+            "coverage": 0.067,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "sdk-reference",
+      "category": "constraint-match",
+      "goal": "I maintain a TypeScript SDK and need English API reference pages and runnable examples derived from our public interfaces. No translation is needed.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-ravi"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Ravi explicitly offers references and examples from TypeScript interfaces; translation experience alone is insufficient."
+      },
+      "candidateHandles": [
+        "bench-ravi",
+        "bench-omar",
+        "bench-leo",
+        "bench-maya",
+        "bench-rosa",
+        "bench-tess",
+        "bench-theo",
+        "bench-bob",
+        "bench-chen",
+        "bench-dara",
+        "bench-finn",
+        "bench-ivy",
+        "bench-jules",
+        "bench-nia",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-ravi"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.336,
+        "proposals": [
+          {
+            "handle": "bench-ravi",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Writing API reference pages, runnable SDK examples, and migration guides from existing TypeScript interfaces. I do not translate content."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-ravi",
+            "score": 27.236,
+            "coverage": 0.786,
+            "matchedTerms": 11
+          },
+          {
+            "handle": "bench-omar",
+            "score": 4.88,
+            "coverage": 0.143,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-maya",
+            "score": 2.64,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-leo",
+            "score": 1.98,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-theo",
+            "score": 1.839,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "liquidity-keyword-trap",
+      "category": "misleading-overlap",
+      "goal": "Our liquidity dashboard already looks good. I need to verify how changing AMM reserves affects execution price; please focus on the underlying numerical model, not charts.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-sana"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "This explicitly excludes visual design despite strong dashboard and liquidity keyword overlap in Tess's profile."
+      },
+      "candidateHandles": [
+        "bench-tess",
+        "bench-sana",
+        "bench-dara",
+        "bench-omar",
+        "bench-ravi",
+        "bench-theo",
+        "bench-finn",
+        "bench-ivy",
+        "bench-jules",
+        "bench-maya",
+        "bench-rosa",
+        "bench-bob",
+        "bench-chen",
+        "bench-leo",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-tess",
+          "bench-sana"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.228,
+        "proposals": [
+          {
+            "handle": "bench-tess",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Improving chart labels, visual hierarchy, and layouts for portfolio and liquidity dashboards. I do not model AMM pricing or give financial advice."
+              }
+            ]
+          },
+          {
+            "handle": "bench-sana",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Explaining AMM reserves, slippage, liquidity-provider returns, and impermanent loss with numerical simulations. I do not give investment recommendations."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-tess",
+            "score": 15.291,
+            "coverage": 0.333,
+            "matchedTerms": 6
+          },
+          {
+            "handle": "bench-sana",
+            "score": 10,
+            "coverage": 0.222,
+            "matchedTerms": 4
+          },
+          {
+            "handle": "bench-maya",
+            "score": 2.487,
+            "coverage": 0.056,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "independent-security-audit",
+      "category": "insufficient-evidence",
+      "goal": "I need an independent professional security audit and formal certification of a Solidity contract. A testing peer or somebody interested in security is not enough.",
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "No profile offers an independent audit or certification; Ivy explicitly disclaims them."
+      },
+      "candidateHandles": [
+        "bench-ivy",
+        "bench-jules",
+        "bench-rosa",
+        "bench-dara",
+        "bench-tess",
+        "bench-finn",
+        "bench-leo",
+        "bench-omar",
+        "bench-ravi",
+        "bench-sana",
+        "bench-theo",
+        "bench-bob",
+        "bench-chen",
+        "bench-maya",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-ivy"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.261,
+        "proposals": [
+          {
+            "handle": "bench-ivy",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Reviewing access-control and reentrancy test coverage, writing invariants, and reproducing failing contract tests. I do not offer independent security audits or certifications."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-ivy",
+            "score": 18.015,
+            "coverage": 0.615,
+            "matchedTerms": 8
+          },
+          {
+            "handle": "bench-jules",
+            "score": 8.557,
+            "coverage": 0.308,
+            "matchedTerms": 4
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 3.792,
+            "coverage": 0.154,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-leo",
+            "score": 2.061,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-dara",
+            "score": 1.954,
+            "coverage": 0.077,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "medical-spanish",
+      "category": "no-match",
+      "goal": "I need a certified English-to-Spanish medical translator to translate clinical consent forms. Developer-documentation translation is not suitable.",
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "No profile establishes the required language pair, medical expertise, or certification."
+      },
+      "candidateHandles": [
+        "bench-omar",
+        "bench-ravi",
+        "bench-tess",
+        "bench-dara",
+        "bench-finn",
+        "bench-ivy",
+        "bench-jules",
+        "bench-rosa",
+        "bench-sana",
+        "bench-theo",
+        "bench-bob",
+        "bench-chen",
+        "bench-leo",
+        "bench-maya",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-omar"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.232,
+        "proposals": [
+          {
+            "handle": "bench-omar",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Translating developer documentation between English and Simplified Chinese and checking technical terminology. I do not provide certified or medical translation."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-omar",
+            "score": 16.095,
+            "coverage": 0.462,
+            "matchedTerms": 6
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 6.805,
+            "coverage": 0.231,
+            "matchedTerms": 3
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "confirmed-local-availability",
+      "category": "insufficient-evidence",
+      "goal": "I need a facilitator whose profile explicitly confirms that they can host an in-person session in Sao Paulo tomorrow. Do not suggest anyone whose location or availability is unconfirmed.",
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "The directory has an online facilitator but no stated Sao Paulo location or confirmed availability."
+      },
+      "candidateHandles": [
+        "bench-rosa",
+        "bench-dara",
+        "bench-finn",
+        "bench-maya",
+        "bench-ravi",
+        "bench-tess",
+        "bench-ivy",
+        "bench-jules",
+        "bench-omar",
+        "bench-sana",
+        "bench-theo",
+        "bench-bob",
+        "bench-chen",
+        "bench-leo",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 0.253,
+        "proposals": [],
+        "scores": [
+          {
+            "handle": "bench-rosa",
+            "score": 4.689,
+            "coverage": 0.125,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "committed-investor",
+      "category": "no-match",
+      "goal": "I need to meet an investor whose profile says they are currently writing pre-seed checks for consumer startups. I do not want fundraising advice or an introduction to another builder.",
+      "expected": {
+        "acceptableHandles": [],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": true,
+        "rationale": "There is no investor or stated investment offer in the directory."
+      },
+      "candidateHandles": [
+        "bench-tess",
+        "bench-ivy",
+        "bench-ravi",
+        "bench-rosa",
+        "bench-bob",
+        "bench-finn",
+        "bench-sana",
+        "bench-jules",
+        "bench-maya",
+        "bench-omar",
+        "bench-theo",
+        "bench-chen",
+        "bench-dara",
+        "bench-leo",
+        "bench-nia"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 0.224,
+        "proposals": [],
+        "scores": [
+          {
+            "handle": "bench-omar",
+            "score": 3.85,
+            "coverage": 0.118,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 3.601,
+            "coverage": 0.118,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 3.151,
+            "coverage": 0.118,
+            "matchedTerms": 2
+          },
+          {
+            "handle": "bench-tess",
+            "score": 1.865,
+            "coverage": 0.059,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-finn",
+            "score": 1.716,
+            "coverage": 0.059,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 1.527,
+            "coverage": 0.059,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-bob",
+            "score": 1.333,
+            "coverage": 0.059,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-sana",
+            "score": 1.293,
+            "coverage": 0.059,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "two-complementary-reviews",
+      "category": "multiple-plausible",
+      "goal": "I need feedback on a desktop wallet prototype: either the clarity of token approval screens or keyboard accessibility of its dialogs. A reviewer in either area would help.",
+      "expected": {
+        "acceptableHandles": [
+          "bench-bob",
+          "bench-maya"
+        ],
+        "unacceptableHandles": [
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-dara",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "Two distinct explicit offers support the stated alternatives; recommending either or both is acceptable."
+      },
+      "candidateHandles": [
+        "bench-bob",
+        "bench-maya",
+        "bench-dara",
+        "bench-jules",
+        "bench-rosa",
+        "bench-tess",
+        "bench-ivy",
+        "bench-omar",
+        "bench-ravi",
+        "bench-theo",
+        "bench-chen",
+        "bench-finn",
+        "bench-leo",
+        "bench-nia",
+        "bench-sana"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [
+          "bench-bob",
+          "bench-maya"
+        ],
+        "nextQuestion": null,
+        "latencyMs": 0.274,
+        "proposals": [
+          {
+            "handle": "bench-bob",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Usability reviews of wallet connection, token approval wording, and rejected-request recovery screens."
+              }
+            ]
+          },
+          {
+            "handle": "bench-maya",
+            "reason": "Lexical overlap with public profile text; semantic fit and hard constraints are not verified.",
+            "caveat": "A keyword score is not proof of expertise or availability.",
+            "evidence": [
+              {
+                "field": "canOffer",
+                "quote": "Keyboard-only and screen-reader reviews of dialogs, focus order, error messages, and form labels."
+              }
+            ]
+          }
+        ],
+        "scores": [
+          {
+            "handle": "bench-bob",
+            "score": 15.936,
+            "coverage": 0.5,
+            "matchedTerms": 7
+          },
+          {
+            "handle": "bench-maya",
+            "score": 11.361,
+            "coverage": 0.357,
+            "matchedTerms": 5
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 2.536,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-dara",
+            "score": 2.531,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-jules",
+            "score": 2.076,
+            "coverage": 0.071,
+            "matchedTerms": 1
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    },
+    {
+      "id": "android-chinese-paraphrase",
+      "category": "multilingual-paraphrase",
+      "goal": "我在做安卓浏览器里的钱包连接。用户跳到钱包应用后再返回，网页一直显示连接中。想找人一起复现这个问题，检查跳转和状态恢复；不是找人翻译文档。",
+      "expected": {
+        "acceptableHandles": [
+          "bench-dara"
+        ],
+        "unacceptableHandles": [
+          "bench-bob",
+          "bench-maya",
+          "bench-leo",
+          "bench-nia",
+          "bench-omar",
+          "bench-ivy",
+          "bench-chen",
+          "bench-rosa",
+          "bench-finn",
+          "bench-sana",
+          "bench-theo",
+          "bench-jules",
+          "bench-ravi",
+          "bench-tess"
+        ],
+        "mustAbstain": false,
+        "rationale": "The Chinese request describes Android wallet handoff and recovery, not translation; the relevant profile is in English."
+      },
+      "candidateHandles": [
+        "bench-bob",
+        "bench-chen",
+        "bench-dara",
+        "bench-finn",
+        "bench-ivy",
+        "bench-jules",
+        "bench-leo",
+        "bench-maya",
+        "bench-nia",
+        "bench-omar",
+        "bench-ravi",
+        "bench-rosa",
+        "bench-sana",
+        "bench-tess",
+        "bench-theo"
+      ],
+      "baseline": {
+        "status": "ok",
+        "handles": [],
+        "nextQuestion": null,
+        "latencyMs": 0.157,
+        "proposals": [],
+        "scores": [
+          {
+            "handle": "bench-bob",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-chen",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-dara",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-finn",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ivy",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-jules",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-leo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-maya",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-nia",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-omar",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-ravi",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-rosa",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-sana",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-tess",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          },
+          {
+            "handle": "bench-theo",
+            "score": 0,
+            "coverage": 0,
+            "matchedTerms": 0
+          }
+        ]
+      },
+      "hosted": null,
+      "hostedAudit": null
+    }
+  ]
+}

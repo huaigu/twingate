@@ -1,74 +1,126 @@
-# SignalPass video briefs
+# SignalPass V3 video briefs
 
-Prepared **2026-10-03** from the shipped product and recorded verification. **The project owner will record the videos later.** These are outlines and shot lists, not completed videos.
+Updated **October 7, 2026** for the final evidence-focused release candidate. **V3 exports are completed, validated and saved; they have not been published.** Deployment is pending resolution of an automatic-approval blocker on transferring private benchmark source to the verified SignalPass VPS; the required owner permission has not yet been obtained. V2 remains the last confirmed published version.
 
-Portal limits reported during the submission review: technical demonstration **≤3 minutes**, pitch **≤2 minutes**. Leave a few seconds of margin. The public URL is [signalpass.coderbojack.space](https://signalpass.coderbojack.space/).
+Actual durations: technical demonstration **172.834 seconds (2:53)**, product pitch **111.467 seconds (1:51)**. Both are under the previously recorded 3:00 / 2:00 portal limits. Confirm the limits when the entry is reopened.
 
-## Prepare once
+## Completed exports and authoritative edit record
 
-1. Use two independent signed-in browser sessions. For live matching, arrange two real consenting people with approved profiles; the recipient must be public, open and matching-enabled. QA cleanup left the live directory empty. A third relevant participant can make the choice more meaningful, but do not invent activity to fill the directory.
-2. Choose an actual need and offer supported by those profiles. A useful example, only if true for the sender, is: “I need feedback on wallet onboarding. I can offer frontend prototyping in return.” If using fictional rehearsal identities instead, keep **Fictional demo profiles** visible and do not describe them as customers.
-3. Open the sender's `/assistant`, the recipient's `/inbox`, and the [mainnet evidence report](reports/signalpass-mainnet-deployment-2026-10-03.md) with its explorer links in advance. Capture only approved profile/contact details. For illustrative contact sharing, label an `example.com` link as a demonstration value.
-4. Use **Send without a bond** for the introduction story. Show existing mainnet evidence as a separately labelled segment. Recording this outline does not require another funded transaction.
-5. Test the microphone, choose a readable desktop viewport, and save the final edited video where judges can open it without an access request. Keep real model waits visible, or label an edit as “wait shortened.” Saved results must be labelled as a previously recorded run.
+Both films are **1920×1080 H.264/AAC**. The demo has **30 English caption cues**, and the pitch has **20**; both complete files decoded with **zero errors** and passed visual review. The [export validation](reports/signalpass-video-validation-2026-10-07.json) records exact durations and checksums, and the [media manifest](reports/signalpass-media-manifest-2026-10-07.json) records the saved MP4s, caption files and poster.
 
-## Technical demonstration — target 2:50, maximum 3:00
+The [V3 edit notes](reports/signalpass-video-edit-notes-2026-10-07.md) and the editable project's `timeline.json` are authoritative for actual narration and shots. The films reuse generic synthesized English narration from V2 over held October 7 production captures, with enlarged evidence, Alice/Bob role labels and explanatory cards. They are edited presentations, not uninterrupted recordings. The extra refinement shot shows the real form after a successful match; it is not a recorded no-match result.
 
-| Time | Exact shot / action | Suggested narration |
+The editorial direction and storyboards below are **original planning guidelines**, retained for future edits. They are not transcripts or assertions that every planned scene, line or timing appears in the final exports.
+
+## Editorial direction
+
+Open with a plain definition: **“SignalPass is an AI introduction assistant for builder communities.”** Follow one reason for two people to meet: Alice needs wallet UX feedback; Bob explicitly offers wallet connection and approval-screen reviews.
+
+The viewer should understand each screen before it changes. Keep **Alice's view** and **Bob's view** visible, hold the relevant quote and edited message long enough to read, and align narration with the current action. Use close-ups only to direct attention; avoid a rapid tour of screens. A viewer should be able to answer what the product does, why Bob fits and who approves the next action.
+
+Use the latest live production recording for the technical story. Keep the no-bond introduction and historical on-chain evidence clearly separate. The deterministic guided sample is a useful separate entry point, but it must not replace a recorded model result while the narration claims live AI.
+
+## Available evidence and limits
+
+- **October 7 production recording:** two fictional accounts, real TokenRhythm `deepseek-v4-flash` discovery and draft generation, edited message, separate send confirmation, recipient acceptance and independently shared contact options. Two AI calls; zero wallet transactions. The exact edit arrived and the accepted/shared state survived refresh.
+- **Observed response times:** discovery 3.141 seconds and drafting 3.568 seconds for that run. These are individual response observations, not population performance claims.
+- **Phone-sized receipt:** the accepted receipt fit a 390px browser viewport. Sign-in used controlled injected wallets; this is not a physical-phone or wallet-app handoff test.
+- **Context questions:** the latest recorded run did not use model clarification or a recipient question/reply. Explain those as supported options, or show them in the clearly labelled prepared story; do not imply they occurred in this recording.
+- **Mainnet evidence:** October 3 project-wallet locks and full bond refunds for acceptance and decline; four receipts rechecked successfully October 7. Bond principal was 0.000075 MON per case. Gas is separate, nonrefundable and exceeded those deliberately tiny bonds. Mainnet expiry has not been tested.
+- **Matching benchmark:** all 20 local route-validation cases and strict TypeScript checks passed with zero hosted benchmark calls. The keyword baseline scored 15/20 strict successes and 2/4 correct abstentions. Hosted results remain pending below. Do not present those keyword scores as AI quality or fictional cases as customers.
+
+<!-- BENCHMARK_PENDING_START -->
+**BENCHMARK_PENDING:** Use no numerical matching-quality comparison in narration, overlays or end cards until the complete hosted report is checked. If results are ready in time, show the exact strict-success counts and case count beside the named keyword baseline, with “20 fictional cases · team-authored labels” visible. Keep detailed case-level evidence linked rather than squeezing it into the film.
+<!-- BENCHMARK_PENDING_END -->
+
+## Original technical storyboard — target 2:53, not the final transcript
+
+| Time | Shot and visible action | Narration purpose |
 | --- | --- | --- |
-| 0:00–0:12 | Show the live homepage with the URL visible, then enter **My agent**. | “SignalPass helps people find a reason to connect and make a thoughtful first introduction. It is live, with its own hosted Personal Agent.” |
-| 0:12–0:28 | Show the chosen recipient's approved public profile, then the sender's concrete goal. Keep any fictional-profile label visible. | “This person has chosen to be discoverable. I have a specific request and something useful to offer in return.” |
-| 0:28–0:50 | Explicitly select profile-use consent if wanted, click **Find relevant people**, and show the returned candidate. Do not fake the generation state. | “I choose whether the agent can use my approved profile. It considers eligible public profiles and gives me reasons to look closer.” |
-| 0:50–1:10 | Close up **Why you two**, the exact source quote and the caveat. If a clarification question appears, answer it; otherwise continue without inventing one. | “Here is the detail behind this suggestion. A shared interest is a starting point, not proof that someone wants to meet me. I can clarify my goal when needed.” |
-| 1:10–1:35 | Prepare the private draft with explicit consent. Open **Review & edit introduction**. Change one sentence to a real, modest next step and review shared profile context. | “The draft is private. I check the facts, edit the wording and separately choose what to share. The agent cannot send it for me.” |
-| 1:35–1:55 | Open the final review dialog, show the edited sentence and select **Send without a bond**. Confirm once; switch to the other session's real inbox. | “I confirm this exact introduction. This part uses no bond. The other person now receives the wording I approved.” |
-| 1:55–2:17 | Recipient accepts. Refresh sender receipt. Preview one contact option, explicitly share it, and show it from the recipient session. If both share, show both separate confirmations. | “They can accept, ask a question or decline. After acceptance, each of us decides whether to share a contact option. Accepting alone exposes nothing.” |
-| 2:17–2:39 | Title card: **Separate verified Monad Mainnet transactions — October 3**. Show chain 143, the recorded lock and acceptance refund; briefly show the decline/refund pair. | “Separately, we verified real bonds on Monad Mainnet. Project-owned wallets locked funds and received full refunds after both acceptance and decline. Gas is separate. Expiry is tested locally.” |
-| 2:39–2:50 | Show the accepted receipt at a narrow mobile viewport, then end on the live URL. | “The mobile receipt is usable too. The product flow works; our next step is learning from real, consenting people and the conversations they choose to start.” |
+| 0:00–0:14 | Calm product opening, live URL, and one plain product definition. | State who it helps and what it does. A community member has a specific need and needs a relevant person to ask. |
+| 0:14–0:34 | Introduce Alice's wallet-prototype request and Bob's explicit public offer. Keep **Fictional demo profiles** visible. | Establish the reason to meet before showing controls. |
+| 0:34–0:58 | Show the real October 7 discovery result and its exact offer quote. Hold on the explanation and caveat. | Explain the connection to Alice's goal. A profile offer is stronger evidence than generic crypto interest; availability and mutual interest are not guaranteed. |
+| 0:58–1:24 | Show the actual private draft, deliberate human edit and review of the final request. | The draft is a starting point. Alice checks facts and makes the message hers before delivery. |
+| 1:24–1:43 | Show the separate send review and **Send without a bond**, then the sender's receipt. | Make the approval boundary obvious. This introduction spends no MON. |
+| 1:43–2:02 | Switch once to **Bob's view**, show the exact edited message in his independent inbox, then acceptance. | Bob decides. Asking for context and declining are available choices; this recording follows acceptance. |
+| 2:02–2:23 | Show each contact preview and its independent share confirmation, then the accepted receipt after refresh. | Acceptance does not automatically share profile contacts. Each person chooses what to reveal. |
+| 2:23–2:42 | Label: **Separate mainnet tests · October 3 · receipts rechecked October 7**. Show escrow lock and refund evidence. | Explain optional, verifiable settlement; both acceptance and decline returned principal. Gas is separate. Do not imply these are transactions from Alice's no-bond introduction. |
+| 2:42–2:53 | Show the 390px accepted receipt and end on the guided story / live URL. | The latest product journey works. Invite viewers to inspect the evidence and try the story. Keep real-user usefulness as the next business test. |
 
-Use the remaining ten seconds as editing margin. If inference takes longer, shorten narration or label cuts; do not change a recorded result to fit the script. A no-match or provider error should be shown honestly and retried deliberately, or use a disclosed earlier successful recording.
+This is an editing guide, not authority to alter recorded outcomes. Preserve genuine state changes. If waiting time is removed, disclose **wait shortened**; if a saved result is shown, label it as a recorded run. No forced clarification scene is needed: the latest recording returned a recommendation without one.
 
-### Technical shot checklist
+## Original pitch storyboard — target 1:51, not the final transcript
 
-- [ ] Public hostname and live mode visible; no `?demo=1` while claiming live inference.
-- [ ] Recipient is actually approved, public and matching-enabled.
-- [ ] Goal and profile consent shown before inference.
-- [ ] Recommendation source quote and uncertainty are readable.
-- [ ] Private draft, one human edit and the separate delivery confirmation are visible.
-- [ ] The recipient's independent session shows the exact edited message.
-- [ ] Acceptance and contact preview/share are separate actions.
-- [ ] Mainnet segment is labelled as separate existing evidence; do not imply the no-bond introduction is its transaction.
-- [ ] Mobile shot uses the actual receipt; no all-device compatibility claim.
-- [ ] Final runtime is under 3:00 and the uploaded link works for judges.
+The pitch should present a plausible business and one understandable product moment. Keep technology details subordinate to the people and the problem.
 
-## Pitch — target 1:55, maximum 2:00
-
-The pitch explains why this should exist. Use fewer screens than the technical demo and speak directly; do not read out the technology stack or sponsor list.
-
-| Time | Shot | Suggested narration |
+| Time | Visual | Message |
 | --- | --- | --- |
-| 0:00–0:15 | Presenter or calm homepage shot; title **People worth knowing, with context.** Introduce yourself and your role; the current portal lists Bojack as the sole team member. | “I'm Bojack, building SignalPass. Good connections often start with a bad introduction. A vague message gives someone little reason to reply, even when both people could help each other.” |
-| 0:15–0:33 | Goal input, then one real recommendation card. | “SignalPass gives people a Personal Agent to help with that first step. Tell it what you need and what you can offer. It finds relevant public profiles and shows the detail behind each suggestion.” |
-| 0:33–0:52 | Source quote → editable draft → recipient decision, with simple cuts. | “You review the reasons, edit your introduction and decide what to share. The other person decides whether to continue. After acceptance, contact details are still a separate choice.” |
-| 0:52–1:12 | Clearly labelled mainnet lock/refund evidence. | “Monad gives us a verifiable attention commitment: an optional refundable bond. We have tested real locks and full refunds after acceptance and decline on mainnet. Paying never guarantees a reply, and the agent cannot spend on your behalf.” |
-| 1:12–1:31 | Public URL, brief genuine browser-rehearsal clip, and mobile receipt. Caption any fictional profiles. | “The hosted agent is live. We have completed the full no-bond product journey in the public app with fictional rehearsal accounts, and tested mainnet settlement separately. That proves functionality; it does not yet prove community traction.” |
-| 1:31–1:48 | Simple text: **First community: Monad builders, designers and researchers.** | “We are starting with a small group of people who have complementary needs. We will learn whether the explanation helps, whether the draft is accurate and whether an introduction leads to a useful conversation.” |
-| 1:48–1:55 | Presenter or homepage closing card and live URL. | “Our ambition is simple: people worth knowing, with context—and people always keeping the final word.” |
+| 0:00–0:17 | Calm community/problem opening, then product name. | Useful expertise already exists inside builder communities, but members struggle to find the right person and explain why they should talk. |
+| 0:17–0:37 | Alice's goal followed by Bob's explicit offer. | SignalPass is an AI introduction assistant. It connects a specific need with supporting profile evidence and explains the fit. |
+| 0:37–0:59 | One readable draft edit, send review, Bob's decision and contact preview. | Both people control the introduction. AI prepares; people decide what to send and share. |
+| 0:59–1:17 | Clearly separated mainnet escrow/receipt visual. | An optional refundable commitment is implemented on Monad. It provides inspectable custody and settlement; it does not buy a reply. The standard no-bond path remains available. |
+| 1:17–1:35 | Latest live recording and a simple evidence caption. | The production flow has been rehearsed with live AI and fictional accounts; mainnet settlement was verified separately. This is functional evidence, not traction. Add a benchmark figure only if the pending block is replaced with checked results. |
+| 1:35–1:51 | Community-organizer hypothesis, then product URL. | Start with one opt-in builder community. Test whether better introductions reduce organizer work and lead to useful conversations. A paid community plan remains a hypothesis. Close on “People worth knowing, with context.” |
 
-### Pitch shot checklist
+If the owner supplies an introduction in their own voice, it may replace the opening narration. Otherwise label generated voice as AI narration in the watch-page credits; do not impersonate a founder or claim the recording is a personal testimonial.
 
-- [ ] Introduce the actual presenter/team, then one concrete problem, one clear product promise and one understandable Monad role. Update the opening name if a different person records.
-- [ ] People lead the story; Monad builders are the first community, not the permanent product boundary.
-- [ ] Functional proof is separate from future adoption. No fabricated user totals, conversion rates, testimonials or partnerships.
-- [ ] No implied Hunyuan, Dynamic or live Envio integration; none is currently delivered.
-- [ ] Optional bonds, hosted-agent inference and network gas are not presented as the same charge. SignalPass sponsors AI within usage limits; provider billing is not claimed to be zero.
-- [ ] Final runtime is under 2:00 and the uploaded link works for judges.
+## Completed export validation and remaining publication checks
 
-## Evidence to use
+- [x] Render and save both final MP4s, English subtitle sidecars and poster.
+- [x] Confirm actual runtimes, codecs and 1920×1080 dimensions.
+- [x] Decode both complete files with zero errors; verify 30 / 20 caption cues and complete visual review.
+- [x] Record checksums, source/edit provenance and intended public asset names.
+- [ ] Publish the saved assets and verify public playback, captions, posters and seeking.
+- [ ] Save verified links in the portal and read back its actual current state.
 
-- [Full public browser rehearsal](reports/signalpass-public-journey-2026-10-03.md): real inference and exact edited delivery, with fictional accounts and no bond; raw recordings are functional evidence, not finished narrated videos.
-- [TokenRhythm activation](reports/signalpass-tokenrhythm-2026-10-03.md): public discovery/clarification/drafting and actual API restart persistence.
-- [Monad Mainnet transactions](reports/signalpass-mainnet-deployment-2026-10-03.md): registration, lock, acceptance/decline and full bond refunds. No mainnet expiry claim or explorer source-verification claim.
-- [Current submission copy](../SIGNALPASS_SUBMISSION_COPY.md) and [submission checklist](HACKATHON_SUBMISSION_CHECKLIST.md).
+The following detailed planning checklists remain useful for edits and final public review; an unchecked line must not be interpreted as a newly discovered defect in the completed exports. Actual completed validation is recorded above and in the linked reports.
 
-Neither outline requires installing OpenClaw/Hermes, generating a 3D persona or building another sponsor integration before recording.
+### Footage and claims
+
+- [ ] Live footage shows the production origin and actual recorded output; fictional identities remain identifiable as fictional.
+- [ ] The latest “Why you two” source quote is readable and presented as self-reported evidence.
+- [ ] The delivered message is the exact message Alice approved.
+- [ ] Acceptance and profile contact sharing appear as separate decisions.
+- [ ] User-entered contact details in a message are not described as automatically removed or protected from that message's recipient.
+- [ ] The October 7 recording is not described as containing a clarification or recipient Q&A that did not happen.
+- [ ] Historical lock/refund receipts are separated from the current no-bond story.
+- [ ] No claim of mainnet expiry, refunded gas, zero provider cost, measured confirmation latency, anti-spam effectiveness or superior chain economics.
+- [ ] Any benchmark figure exactly matches the finalized report and carries its synthetic-data qualifier.
+- [ ] No unsupported sponsor, real-user, revenue or partnership claim.
+
+### Presentation and exports
+
+- [ ] Alice/Bob role labels stay clear through transitions.
+- [ ] Important screens remain long enough to read; subtitles match the current screen and narration.
+- [ ] Fonts, subtitle contrast and safe margins are readable on a phone.
+- [ ] Speech is clear above the music; no clipped peaks, silent gaps or abrupt endings.
+- [ ] Both complete exports have been watched; final durations are below the portal limits.
+- [ ] Final MP4s support immediate web playback and seeking; subtitles and posters load.
+- [ ] Public viewing works without a login or access request.
+
+## Publishing destinations
+
+Expected V3 URLs; **verify publication before copying them into the entry**:
+
+| Asset | Destination | Validated duration |
+| --- | --- | --- |
+| Technical demo | https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4 | 172.834s (2:53) |
+| Product pitch | https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4 | 111.467s (1:51) |
+| Stable watch page | https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html | Both films |
+| Guided fictional story | https://signalpass.coderbojack.space/v4/walkthrough.html | Self-paced |
+| Evidence | https://signalpass.coderbojack.space/v4/evidence.html | Case-level links |
+
+Retain V2 playback until V3 checks pass. After publishing, update the watch page, README, submission copy and dedicated portal video fields together, then reload and check each. Today's portal session is signed out; no current portal update is claimed here.
+
+## Source references
+
+- [October 7 production rehearsal](reports/signalpass-public-journey-2026-10-07.json)
+- [October 7 receipt recheck](reports/signalpass-mainnet-receipt-recheck-2026-10-07.json)
+- [Original mainnet settlement report](reports/signalpass-mainnet-deployment-2026-10-03.md)
+- [Matching evaluation methodology](MATCHING_EVALUATION.md)
+- [Baseline-only local validation](reports/matching-validation-2026-10-07/report.md)
+- [Actual V3 edit notes](reports/signalpass-video-edit-notes-2026-10-07.md)
+- [V3 export validation](reports/signalpass-video-validation-2026-10-07.json)
+- [Saved media manifest](reports/signalpass-media-manifest-2026-10-07.json)
+- [Submission copy](../SIGNALPASS_SUBMISSION_COPY.md)
+- [Release and submission checklist](HACKATHON_SUBMISSION_CHECKLIST.md)

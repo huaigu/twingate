@@ -1,0 +1,39 @@
+{
+  "origin": "https://signalpass.coderbojack.space",
+  "startedAt": "2026-10-07T05:48:13.105Z",
+  "syntheticParticipants": true,
+  "settlement": "offchain",
+  "providerCalls": 2,
+  "introductionsSubmitted": 1,
+  "walletTransactions": 0,
+  "timings": {
+    "discovery": 3141,
+    "draft": 3568
+  },
+  "screenshots": [
+    "01-goal-and-consent.png",
+    "02-recommendation-and-evidence.png",
+    "03-private-draft.png",
+    "04-reviewed-send-without-bond.png",
+    "05-sender-receipt.png",
+    "06-recipient-review.png",
+    "07-contact-consent-preview.png",
+    "08-recipient-contact-consent.png",
+    "09-mutual-contact-handoff.png",
+    "10-mobile-accepted-receipt.png"
+  ],
+  "browser": "147.0.7727.15",
+  "provider": "tokenrhythm",
+  "model": "deepseek-v4-flash",
+  "clarificationUsed": false,
+  "exactSourceQuotes": 2,
+  "passed": true,
+  "introductionId": "0x19898d8d00c4177670d355be299f1b70362625542785d5b4fc5a7419353fbad8",
+  "draftEditedBeforeSend": true,
+  "exactEditedTextDelivered": true,
+  "recipientAccepted": true,
+  "bothContactsExplicitlyShared": true,
+  "persistedAfterRefresh": true,
+  "mobileReceiptNoOverflow": true,
+  "completedAt": "2026-10-07T05:48:48.607Z"
+}
