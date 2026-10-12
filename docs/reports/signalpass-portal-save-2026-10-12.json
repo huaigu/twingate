@@ -28,12 +28,28 @@
     "pitch_video_publish_consent": false
   },
   "final_submit": {
-    "completed": false,
-    "blocked_by": "automatic approval review",
-    "reason": "The user requested saving; explicit authorization for the separate final submission confirmation is required.",
-    "next_action": "Ask the owner to approve final submission. Do not infer a successful new submission from the existing Ready for judging status."
+    "completed": true,
+    "completed_on": "2026-10-12",
+    "authorization": "The owner replied approve to the explicit request to click Submit entry and finalize the entry for judging.",
+    "action": "Clicked SUBMIT, then SUBMIT ENTRY in the final-submission confirmation.",
+    "result": "The confirmation closed and the entry summary displayed Ready for judging.",
+    "reload_verified": true,
+    "verified_after_reload": [
+      "Ready for judging",
+      "Both V3 video URLs",
+      "Social, Attention & Culture",
+      "No sponsor bounties selected",
+      "Current project description and public-source judge instructions"
+    ],
+    "last_saved_display": "Oct 12, 2026 at 12:02 UTC",
+    "timestamp_note": "The content-save timestamp remained unchanged; no form fields were changed during final submission.",
+    "earlier_block": {
+      "reason": "The user requested saving; explicit authorization for the separate final submission confirmation is required.",
+      "blocked_by": "automatic approval review",
+      "resolved_by": "Explicit owner approval followed by successful final submission."
+    }
   },
   "progress_update_posted": false,
-  "verification_method": "Authenticated browser UI: save progress, wait for All changes saved, full reload, inspect rendered status and saved fields.",
+  "verification_method": "Authenticated browser UI: SAVE PROGRESS and field reload, explicit owner approval, SUBMIT ENTRY confirmation, returned entry summary, full reload and rendered status/field read-back.",
   "scope": "This record concerns portal persistence. It makes no new claim about production tests, eligibility, adoption or live transactions."
 }
