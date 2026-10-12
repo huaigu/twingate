@@ -1,8 +1,8 @@
 # SignalPass submission copy
 
-Updated **October 12, 2026**. The owner made **huaigu/twingate public**, and its Public status was verified in GitHub. The V3 films, guided story and evidence are live. The October 12 release makes **Send without a bond** the live default; six mocked browser scenarios and 15 origin deployment checks passed. This file is the prepared submission copy; editing it does **not** update the portal. The existing entry uses Google sign-in, and the account-selection request was declined on October 12. No portal fields were changed. The last reported state remains **Ready for judging** with V2 links; current saved fields and deadline still require read-back after sign-in.
+Updated **October 12, 2026**. The owner made **huaigu/twingate public**, verified in GitHub. The V3 films, guided story and evidence are live, and **Send without a bond** is the live default. After the owner restored Google sign-in, the portal's **SAVE PROGRESS** action saved the current description, go-to-market plan, public-source instructions and both V3 video links at **12:02 UTC**. A full reload displayed the new fields and **Ready for judging**. A separate **SUBMIT ENTRY** confirmation was blocked by automatic approval review because the latest request authorized saving but did not clearly authorize final submission. No successful new final-submit action is claimed.
 
-**Release status:** the owner authorized the private-source transfer and deployment on October 7. The hosted matching evaluation is complete, and the V3 films, guided story, evidence downloads and two-line wallet-loading fix are live. All **16 canary checks**, **20 local release checks** and **5 final public checks** passed. Both films played in the public browser; the existing API process remained unchanged. A returning browser also showed the new homepage, story, evidence and watch-page content. See [deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [release QA](docs/reports/signalpass-release-qa-2026-10-07.json). The October 7 portal update was not completed. The October 12 sign-in attempt was declined and the prepared copy still needs to be saved.
+**Release status:** the owner authorized the private-source transfer and deployment on October 7. The hosted matching evaluation is complete, and the V3 films, guided story, evidence downloads and two-line wallet-loading fix are live. All **16 canary checks**, **20 local release checks** and **5 final public checks** passed. Both films played in the public browser; the existing API process remained unchanged. A returning browser also showed the new homepage, story, evidence and watch-page content. See [deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [release QA](docs/reports/signalpass-release-qa-2026-10-07.json). The October 7 portal update was not completed. The owner subsequently restored Google sign-in, and the updated fields were saved and reloaded on October 12. See the [portal save verification](docs/reports/signalpass-portal-save-2026-10-12.json) for the saved state and outstanding final-submit approval.
 
 ## Name and one-line description
 
@@ -67,7 +67,7 @@ The October 7 rehearsal used **2 hosted AI calls and 0 wallet transactions**. Ob
 - Guided fictional story: https://signalpass.coderbojack.space/v4/walkthrough.html
 - Public evidence page: https://signalpass.coderbojack.space/v4/evidence.html
 - Stable video watch page: https://signalpass.coderbojack.space/media/signalpass-demo-20261003.html
-- Source, access required: https://github.com/huaigu/twingate
+- Public source: https://github.com/huaigu/twingate
 
 **V3 films are published and public playback is verified:**
 
@@ -76,9 +76,9 @@ The October 7 rehearsal used **2 hosted AI calls and 0 wallet transactions**. Ob
 
 Both exports are **1920×1080 H.264/AAC**, with 30 English caption cues for the demo and 20 for the pitch. Both passed complete decode with zero errors and visual review. They use generic synthesized narration reused from V2 over edited October 7 production captures; they are not uninterrupted recordings or recordings of the founder speaking. [Validation](docs/reports/signalpass-video-validation-2026-10-07.json), [edit provenance](docs/reports/signalpass-video-edit-notes-2026-10-07.md) and [media manifest](docs/reports/signalpass-media-manifest-2026-10-07.json) record the actual outputs.
 
-The stable watch page now plays V3. Existing V2 direct URLs were preserved, so previously shared links remain available. The portal's dedicated video fields have not been updated in this signed-out session.
+The stable watch page now plays V3. Existing V2 direct URLs were preserved, so previously shared links remain available. The portal's dedicated technical-demo and pitch fields now contain the V3 links above, verified after reload on October 12.
 
-## Judge access instructions — ready to paste into the portal
+## Judge access instructions — saved in the portal
 
 Start with the guided fictional story at https://signalpass.coderbojack.space/v4/walkthrough.html. No wallet is needed. It uses prepared sample text entirely within the page. Compare the evidence for Bob's offer, edit and review Alice's introduction, follow both sides of the conversation, and choose contact sharing independently. Back rewinds later sample actions; restart or reload clears edits.
 
@@ -103,9 +103,10 @@ An organizer-facing paid community plan is a hypothesis. Before building more co
 - **Public source:** https://github.com/huaigu/twingate. The owner changed visibility on October 12, and GitHub visibly confirmed Public. The earlier private-source instruction is superseded.
 - An invitation was sent on October 3 to the organizer address `metropolis@hackathon.monad.xyz`, associated with `MonadMetropolis`. It was pending in the last verified record; today's acceptance status has not been checked.
 - Making the repository public removes the previously recorded private-versus-public source conflict. This does not assert that every other eligibility condition has been independently re-audited.
-- The last recorded primary track was **Social, Attention & Culture**. Unsupported Envio, Dynamic and Hunyuan bounty selections were removed in the earlier portal update. Do not claim new sponsor integrations.
-- The last reported portal state was **Ready for judging**, still editable, using V2 material. The portal is signed out in today's session, so this local copy and the new media must still be saved and read back after access is restored.
-- The previously recorded deadline was **October 13, 2026, 20:59 PDT**, equivalent to **October 14, 11:59 China time**. This is a prior portal observation, not a fresh deadline verification.
+- The saved primary track is **Social, Attention & Culture**, freshly verified on October 12. No sponsor bounties are selected. Do not claim unsupported sponsor integrations.
+- On October 12, **SAVE PROGRESS** persisted the revised entry and V3 links. A full reload displayed **Ready for judging**, **Last saved Oct 12, 2026 at 12:02 UTC** and **EDIT ENTRY**. Both optional public-video consents remain disabled.
+- The separate **SUBMIT ENTRY** confirmation was not completed: automatic approval review requires explicit approval for final submission. The displayed Ready for judging status was already present before this update; it does not prove that a new final-submit action succeeded.
+- The portal freshly displayed the deadline **October 13, 2026, 20:59 PDT**, equivalent to **October 14, 11:59 China time**.
 
 ## Scope boundaries for every submission field
 
