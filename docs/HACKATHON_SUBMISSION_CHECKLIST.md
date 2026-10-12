@@ -1,6 +1,6 @@
 # SignalPass final release and submission checklist
 
-Updated **October 12, 2026**. The **release is deployed and publicly verified**. The latest portal fields were saved at **12:02 UTC** and survived a full reload. The portal displays **Ready for judging** with both V3 video links. The separate final-submit confirmation still requires explicit approval after automatic approval review blocked that action.
+Updated **October 12, 2026**. The **release is deployed and publicly verified**. The latest portal fields were saved at **12:02 UTC** and survived a full reload. The portal displays **Ready for judging** with both V3 video links. After explicit owner approval, **SUBMIT ENTRY** completed successfully. A further reload retained **Ready for judging** and both V3 video links.
 
 The owner made **huaigu/twingate public** on October 12; GitHub Public status was verified. The prior private-source instruction is superseded. The owner restored Google sign-in, allowing the entry changes to be saved.
 
@@ -103,7 +103,7 @@ See [video briefs](HACKATHON_VIDEO_BRIEFS.md), [export validation](reports/signa
 - [x] Align README, watch page, evidence page and prepared submission copy with this release.
 - [x] Save and verify the corresponding portal fields after sign-in, including public-source instructions and both V3 video links.
 
-## Submission portal — saved; final-submit approval outstanding
+## Submission portal — saved and submitted
 
 - [x] Restore sign-in to the existing entry using the owner's Google session.
 - [x] Recheck the deadline and editable-entry status from the current portal.
@@ -112,9 +112,9 @@ See [video briefs](HACKATHON_VIDEO_BRIEFS.md), [export validation](reports/signa
 - [x] Preserve **Social, Attention & Culture**, no sponsor bounties and both unchecked optional public-video consents.
 - [ ] Add a milestone update accurately separating completed work, pending real-user validation and the now-public source. No progress post was made during this save.
 - [x] Reload the portal and verify the saved description, go-to-market plan, judge instructions, public-source URL, both V3 links and status. Capture the result.
-- [ ] Complete the separate final-submit confirmation after explicit approval. Automatic approval review rejected **SUBMIT ENTRY** because saving was authorized but final submission was not clearly authorized. No successful new final-submit action is claimed.
+- [x] Complete the separate final-submit confirmation after explicit owner approval. **SUBMIT ENTRY** returned the portal to **Ready for judging**, and a full reload verified the result. The earlier automatic approval block is resolved.
 
-The full reload displayed **Ready for judging**, **Last saved Oct 12, 2026 at 12:02 UTC**, and **EDIT ENTRY**. Ready for judging was also the pre-existing status. The deadline was freshly displayed as **October 13, 2026 at 20:59 PDT** / **October 14 at 11:59 China time**. See the [portal save verification](reports/signalpass-portal-save-2026-10-12.json).
+The full reload displayed **Ready for judging**, **Last saved Oct 12, 2026 at 12:02 UTC**, and **EDIT ENTRY**. Ready for judging was also the pre-existing status; completion is supported by the approved final-submit action and its return to the entry summary, followed by reload verification. The deadline was freshly displayed as **October 13, 2026 at 20:59 PDT** / **October 14 at 11:59 China time**. See the [portal save verification](reports/signalpass-portal-save-2026-10-12.json).
 
 ## Owner-dependent and unresolved items
 
@@ -127,5 +127,5 @@ The October 3 organizer invitation was reported pending when last checked. No pr
 
 ## Final release rule
 
-The evidence, walkthrough and films are publicly verified. Preserve this working release while completing the portal update, real-phone wallet check and real-user validation. Existing V2 direct URLs remain available. Any later change needs a new verification record; keep this first benchmark run unchanged.
+The evidence, walkthrough and films are publicly verified. The portal update and final submission are complete. Preserve this working release while completing the real-phone wallet check and real-user validation. Existing V2 direct URLs remain available. Any later change needs a new verification record; keep this first benchmark run unchanged.
 
