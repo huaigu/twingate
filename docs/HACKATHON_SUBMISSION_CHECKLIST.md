@@ -1,8 +1,18 @@
 # SignalPass final release and submission checklist
 
-Updated **October 7, 2026**. The **release is deployed and publicly verified**. The portal has not been updated in this session. The last reported entry state was **Ready for judging** with V2 videos; today's portal session is signed out.
+Updated **October 12, 2026**. The **release is deployed and publicly verified**. The portal has not been updated in this session. The last reported entry state was **Ready for judging** with V2 videos; today's portal session is signed out.
 
-The repository remains **private** by the owner's instruction. Leave the organizer invitation unchanged. Earlier eligibility ambiguity remains recorded below.
+The owner made **huaigu/twingate public** on October 12; GitHub Public status was verified. The prior private-source instruction is superseded. The existing entry uses Google; the October 12 account-selection request was declined, so portal changes remain pending.
+
+## October 12 no-bond default
+
+- [x] Put **Send without a bond** first and select it on each new send review.
+- [x] Preserve the bond path behind an explicit selection; refresh all six app-script URLs.
+- [x] Pass six canary browser scenarios: desktop and 390px default delivery, explicit bond choice, cancel/reopen, failed-send retry, and disabled-chain behavior. API and wallet were mocked; no messages, AI calls or transactions occurred.
+- [x] Pass JavaScript syntax and all 12 existing local flow regressions.
+- [ ] Activate the reviewed release and verify public asset, health and readiness responses.
+
+Evidence: [focused browser report](reports/no-bond-default-2026-10-12.json).
 
 ## Deployed release — portal update still pending
 
@@ -100,7 +110,7 @@ See [video briefs](HACKATHON_VIDEO_BRIEFS.md), [export validation](reports/signa
 - [ ] Save the clearer product description, acquisition/business hypothesis and current judge instructions.
 - [ ] Save verified V3 technical-demo and pitch links into their dedicated fields.
 - [ ] Preserve the existing primary track and avoid selecting unsupported sponsor bounties.
-- [ ] Add a milestone update accurately separating completed work, pending real-user validation and remaining eligibility uncertainty.
+- [ ] Add a milestone update accurately separating completed work, pending real-user validation and the now-public source and remaining validation limits.
 - [ ] Reload the portal and verify all saved fields, both video links and the actual entry status. Capture the result.
 - [ ] Complete any final submit action required by the portal, then read back the resulting status. Do not infer submission from a local document or progress post.
 
@@ -108,7 +118,7 @@ Earlier context reports **Ready for judging**, with an **Edit entry** option; th
 
 ## Owner-dependent and unresolved items
 
-- [ ] **Source eligibility:** obtain written organizer clarification about the private-repository/public-source rules conflict. The invitation alone does not settle eligibility. Keep source private and leave invitations unchanged meanwhile.
+- [x] **Public source:** the owner made the repository public, resolving the recorded private-source visibility conflict. This check does not assert complete competition eligibility.
 - [ ] **Real-world usefulness:** run a small opt-in pilot with actual community members; ask both sides whether a useful conversation happened. Fictional accounts do not satisfy this item.
 - [ ] **Customer hypothesis:** interview one organizer about their current introduction workload and whether they would try another cohort or pay for a community plan. Do not invent an endorsement.
 - [ ] **Optional founder recording:** replace or supplement AI narration with the owner's voice only if a recording is provided. Do not represent generated narration as the owner speaking.
@@ -118,3 +128,4 @@ The October 3 organizer invitation was reported pending when last checked. No pr
 ## Final release rule
 
 The evidence, walkthrough and films are publicly verified. Preserve this working release while completing the portal update, real-phone wallet check and real-user validation. Existing V2 direct URLs remain available. Any later change needs a new verification record; keep this first benchmark run unchanged.
+

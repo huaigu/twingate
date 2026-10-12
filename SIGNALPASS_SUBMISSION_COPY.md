@@ -1,8 +1,8 @@
 # SignalPass submission copy
 
-Updated **October 7, 2026** for the **deployed and publicly verified release**. This file contains reviewer-ready copy; editing it does **not** update the submission portal. Today's portal session is signed out. The last reported portal state was **Ready for judging**, with editable entry fields and the V2 video links. Recheck the saved entry after signing in before claiming it contains this release.
+Updated **October 12, 2026**. The owner made **huaigu/twingate public**, and its Public status was verified in GitHub. The V3 films, guided story and evidence are live. This file is the prepared submission copy; editing it does **not** update the portal. The existing entry uses Google sign-in, and the account-selection request was declined on October 12. No portal fields were changed. The last reported state remains **Ready for judging** with V2 links; current saved fields and deadline still require read-back after sign-in.
 
-**Release status:** the owner authorized the private-source transfer and deployment on October 7. The hosted matching evaluation is complete, and the V3 films, guided story, evidence downloads and two-line wallet-loading fix are live. All **16 canary checks**, **20 local release checks** and **5 final public checks** passed. Both films played in the public browser; the existing API process remained unchanged. A returning browser also showed the new homepage, story, evidence and watch-page content. See [deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [release QA](docs/reports/signalpass-release-qa-2026-10-07.json). The submission portal remains signed out and has not been updated in this session.
+**Release status:** the owner authorized the private-source transfer and deployment on October 7. The hosted matching evaluation is complete, and the V3 films, guided story, evidence downloads and two-line wallet-loading fix are live. All **16 canary checks**, **20 local release checks** and **5 final public checks** passed. Both films played in the public browser; the existing API process remained unchanged. A returning browser also showed the new homepage, story, evidence and watch-page content. See [deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [release QA](docs/reports/signalpass-release-qa-2026-10-07.json). The October 7 portal update was not completed. The October 12 sign-in attempt was declined and the prepared copy still needs to be saved.
 
 ## Name and one-line description
 
@@ -26,7 +26,7 @@ The first market hypothesis is existing builder communities, starting with the M
 
 ## Why Monad is part of the product
 
-Ordinary introductions can use the no-bond path. A sender can also explicitly approve an optional refundable commitment held by a contract on **Monad Mainnet, chain 143**. Acceptance and decline both return the full bond. An unanswered request requires a resolution transaction after expiry; it is not automatically refunded by a timer. Network gas is separate and is not returned.
+Ordinary introductions default to **Send without a bond**. A sender can also explicitly approve an optional refundable commitment held by a contract on **Monad Mainnet, chain 143**. Acceptance and decline both return the full bond. An unanswered request requires a resolution transaction after expiry; it is not automatically refunded by a timer. Network gas is separate and is not returned.
 
 The contract gives participants inspectable escrow and settlement rather than only an application balance. Monad is the initial community and deployment ecosystem. Project-owned wallets verified mainnet locks and full refunds on acceptance and decline on October 3; all four relevant transaction receipts were read again successfully on October 7. Mainnet expiry has not been exercised; the expiry path has local test coverage.
 
@@ -86,7 +86,7 @@ Watch the production demonstration at https://signalpass.coderbojack.space/media
 
 For live use, open https://signalpass.coderbojack.space/assistant?demo=0 and sign in with an injected Ethereum wallet. The sign-in signature creates a session and does not request payment. Users do not need their own AI key. Matching depends on approved, public profiles whose owners have opted into matching; fictional rehearsal profiles were hidden after testing. An empty or unsuitable directory can correctly return no match.
 
-A full live introduction needs two consenting participants with independent wallets. Describe a concrete goal, review the source quote, edit the private draft and confirm delivery separately. Choose **Send without a bond** for a first run. The recipient can accept, ask for context or decline; each participant then controls their own contact disclosure.
+A full live introduction needs two consenting participants with independent wallets. Describe a concrete goal, review the source quote, edit the private draft and confirm delivery separately. **Send without a bond** is preselected for a first run; leave it selected to avoid payment. The recipient can accept, ask for context or decline; each participant then controls their own contact disclosure.
 
 Hosted discovery, refinement and drafting use TokenRhythm within **20 inference attempts per account and 200 site-wide per UTC day**. Failed attempts count. These are request limits, not a promise of free provider billing or a monetary spend cap. Optional mainnet bonds require MON and gas; the recorded public transaction evidence can be inspected without making a transaction.
 
@@ -100,9 +100,9 @@ An organizer-facing paid community plan is a hypothesis. Before building more co
 
 ## Source access and portal state
 
-- Keep **huaigu/twingate private**, as directed by the owner. Do not change repository visibility or invitations as part of this release.
+- **Public source:** https://github.com/huaigu/twingate. The owner changed visibility on October 12, and GitHub visibly confirmed Public. The earlier private-source instruction is superseded.
 - An invitation was sent on October 3 to the organizer address `metropolis@hackathon.monad.xyz`, associated with `MonadMetropolis`. It was pending in the last verified record; today's acceptance status has not been checked.
-- The earlier review found a conflict between the form's private-sharing route and Rules v3.0 §§4.1 and 7.2 requiring public source. Written organizer clarification remains unresolved. Sending an invitation does not resolve eligibility.
+- Making the repository public removes the previously recorded private-versus-public source conflict. This does not assert that every other eligibility condition has been independently re-audited.
 - The last recorded primary track was **Social, Attention & Culture**. Unsupported Envio, Dynamic and Hunyuan bounty selections were removed in the earlier portal update. Do not claim new sponsor integrations.
 - The last reported portal state was **Ready for judging**, still editable, using V2 material. The portal is signed out in today's session, so this local copy and the new media must still be saved and read back after access is restored.
 - The previously recorded deadline was **October 13, 2026, 20:59 PDT**, equivalent to **October 14, 11:59 China time**. This is a prior portal observation, not a fresh deadline verification.
@@ -129,3 +129,4 @@ An organizer-facing paid community plan is a hypothesis. Before building more co
 - [Deployment evidence](docs/reports/signalpass-deployment-2026-10-07.json) and [public release QA](docs/reports/signalpass-release-qa-2026-10-07.json)
 - [Release and submission checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md)
 - [Current video briefs](docs/HACKATHON_VIDEO_BRIEFS.md)
+
