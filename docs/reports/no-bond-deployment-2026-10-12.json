@@ -1,0 +1,102 @@
+{
+  "startedAt": "2026-10-12T11:54:48.845915+00:00",
+  "previousRelease": "/opt/signalpass/releases/judge-evidence-20261007",
+  "release": "/opt/signalpass/releases/no-bond-default-20261012",
+  "sourceCommit": "182e469d60bef49dec8366aec2da991d371a601d",
+  "apiPidBefore": "3749435",
+  "checks": [
+    {
+      "path": "/v4/app.js?v=ee6ee1e07dfc",
+      "status": 200,
+      "bytes": 76259,
+      "sha256": "ee6ee1e07dfce4d30470f631579383dfc986e7ac8be296decee6f70a340c793f"
+    },
+    {
+      "path": "/v4/compose.html",
+      "status": 200,
+      "bytes": 25131,
+      "sha256": "2197393c9f132844152ece7e3f64eaaaba58a5201a7f197b9f3cbba128145df4"
+    },
+    {
+      "path": "/v4/widget.html",
+      "status": 200,
+      "bytes": 23344,
+      "sha256": "84f76d97684aa1c0be820d04fc434266753187f78c47a6e6d5ca8a1089bfa977"
+    },
+    {
+      "path": "/v4/profile.html",
+      "status": 200,
+      "bytes": 26679,
+      "sha256": "16b10d9038af2497fa1d5e048d29775ce2078553e95d407e703969df60e602be"
+    },
+    {
+      "path": "/v4/discover.html",
+      "status": 200,
+      "bytes": 22466,
+      "sha256": "f1159fc311c5a83904a04c75785c941b90f30093d998449a0f28a8dd3813ca71"
+    },
+    {
+      "path": "/v4/agent.html",
+      "status": 200,
+      "bytes": 28210,
+      "sha256": "0e122d36d8e332d1effe6b47f3220fde97eecaa24a5c3f64607c7f2ccfb4f313"
+    },
+    {
+      "path": "/v4/inbox.html",
+      "status": 200,
+      "bytes": 21692,
+      "sha256": "ebe1cda4b75cf9d82e7b54bf12f5fca59ebcb688f2d881bc29e8f5934e7bef50"
+    },
+    {
+      "path": "/api/health",
+      "status": 200,
+      "bytes": 157,
+      "sha256": "45d4dd329cf9b1b36c9ff4385fe186aaa43d008082df27d537e86450eb1887c8"
+    },
+    {
+      "path": "/api/ready",
+      "status": 200,
+      "bytes": 103,
+      "sha256": "b9157d98e9f216a429ce97dc28dcbb0488b9a280e2ec35d865a40f2480be83fb"
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 23688,
+      "sha256": "f61c8700afa11a26ccd8e21f752c6ef7a61e61107cc69d32b3bacb22bd080322"
+    },
+    {
+      "path": "/v4/walkthrough.html",
+      "status": 200,
+      "bytes": 3548,
+      "sha256": "17bbe229c7460f4aa0045204f47748f785e3c1bf8c69ed9b4c7b02fda8056cce"
+    },
+    {
+      "path": "/v4/evidence.html",
+      "status": 200,
+      "bytes": 10174,
+      "sha256": "2dbe20490974fc09f65c70b60eac6c1eb266ea0b1bfc853887c9da4809a84c88"
+    },
+    {
+      "path": "/media/signalpass-demo-20261003.html",
+      "status": 200,
+      "bytes": 6829,
+      "sha256": "71d21f36e81d6728c980bcb55f1edf791111841eb95276a99c5b44b3c5ed44e2"
+    },
+    {
+      "path": "/media/signalpass-live-demo-20261007-v3.mp4",
+      "status": 206,
+      "bytes": 1024,
+      "sha256": "bf5cbaec8f6f5d92dcc85e692ffc69175a8ab6cf578a98cee0784b0c8e342e1b"
+    },
+    {
+      "path": "/media/signalpass-product-pitch-20261007-v3.mp4",
+      "status": 206,
+      "bytes": 1024,
+      "sha256": "a2d49668ba83f0559fb67e0ec1a6b273c39b89f81a757c9fe88c0ed8f57b663f"
+    }
+  ],
+  "status": "deployed_origin_verified",
+  "apiRestarted": false,
+  "finishedAt": "2026-10-12T11:54:50.972469+00:00"
+}

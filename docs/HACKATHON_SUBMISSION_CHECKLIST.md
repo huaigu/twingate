@@ -10,9 +10,9 @@ The owner made **huaigu/twingate public** on October 12; GitHub Public status wa
 - [x] Preserve the bond path behind an explicit selection; refresh all six app-script URLs.
 - [x] Pass six canary browser scenarios: desktop and 390px default delivery, explicit bond choice, cancel/reopen, failed-send retry, and disabled-chain behavior. API and wallet were mocked; no messages, AI calls or transactions occurred.
 - [x] Pass JavaScript syntax and all 12 existing local flow regressions.
-- [ ] Activate the reviewed release and verify public asset, health and readiness responses.
+- [x] Deploy source commit `182e469d60bef49dec8366aec2da991d371a601d`; pass 15 origin checks, including seven exact asset hashes, health/readiness and both video byte ranges. Public browser navigation loaded the homepage and discovery page with `app.js?v=ee6ee1e07dfc`. The API process did not restart.
 
-Evidence: [focused browser report](reports/no-bond-default-2026-10-12.json).
+Evidence: [focused browser report](reports/no-bond-default-2026-10-12.json), [deployment record](reports/no-bond-deployment-2026-10-12.json).
 
 ## Deployed release — portal update still pending
 
