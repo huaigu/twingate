@@ -29,7 +29,7 @@ On October 3, two explicitly fictional accounts completed the public HTTPS flow 
 
 1. **Start with a goal.** Describe who you want to meet or what you want to work on. Sign in with an injected Ethereum wallet and approve the profile context your agent may use. The sign-in signature creates a session; it is not a payment.
 2. **See people with reasons.** The agent considers eligible public, matching-enabled profiles and shows source quotes alongside its explanation of a possible fit. It may ask a clarification when useful. Profile claims are self-reported; no-match and tentative-fit results are valid outcomes.
-3. **Make the introduction yours.** Review a private draft, edit the context and proposed next step, then confirm the exact message in a separate send review. You can send without a bond. AI cannot send or spend for you.
+3. **Make the introduction yours.** Review a private draft, edit the context and proposed next step, then confirm the exact message in a separate send review. **Send without a bond** is selected by default. A refundable wallet bond requires an explicit choice. AI cannot send or spend for you.
 4. **Let the other person choose.** The recipient can accept, ask for context or decline. After acceptance, each person can preview and explicitly share a contact or scheduling link. Acceptance never reveals contact details automatically.
 
 SignalPass provides the hosted agent: users do not need their own model key, OpenClaw or Hermes. The public pilot uses TokenRhythm `deepseek-v4-flash`, sponsored by SignalPass with limits of **20 inference attempts per account and 200 site-wide per UTC day**. Failures count toward those limits; they are request limits, not a monetary spending cap. Private drafts and history belong to the signed-in account. [Agent setup and privacy boundaries](docs/HOSTED_AGENT.md).
@@ -98,4 +98,5 @@ AI coding tools were used to draft contract, domain, service and UI code. The pr
 ## License
 
 Project code is licensed under the [MIT License](LICENSE). Third-party components retain their own licenses and notices; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
 

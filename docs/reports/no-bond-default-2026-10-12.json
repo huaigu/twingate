@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-12T11:51:43.730Z",
+  "base": "http://127.0.0.1:3082",
+  "checks": [
+    "Default no-bond review and delivery at desktop",
+    "Default no-bond review and delivery at 390px",
+    "Explicit optional bond selection remains available",
+    "Cancelled bond choice resets to no bond on new review",
+    "Failed send retries without switching to a bond",
+    "Deployment with bonds disabled still sends without payment"
+  ],
+  "failures": [],
+  "scope": "Mocked API and wallet; no live mutations or hosted AI calls.",
+  "finishedAt": "2026-10-12T11:51:50.498Z"
+}
