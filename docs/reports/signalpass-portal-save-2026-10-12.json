@@ -1,0 +1,39 @@
+{
+  "project": "SignalPass",
+  "date": "2026-10-12",
+  "portal_url": "https://hackathon.monad.xyz/project?tab=submission",
+  "save_progress": {
+    "completed": true,
+    "last_saved_display": "Oct 12, 2026 at 12:02 UTC",
+    "reload_verified": true
+  },
+  "observed_status": "Ready for judging",
+  "status_already_present_before_update": true,
+  "edit_entry_available": true,
+  "deadline_display": "13 Oct, 20:59 PDT",
+  "deadline_year": 2026,
+  "saved_fields": {
+    "one_liner": "An AI introduction assistant for builder communities: find someone relevant, understand why they fit, and send a first message you approve.",
+    "description_updated": true,
+    "go_to_market_updated": true,
+    "judge_access_instructions_updated": true,
+    "repository_url": "https://github.com/huaigu/twingate",
+    "repository_instructions": "Public source; no repository invitation required",
+    "live_product_url": "https://signalpass.coderbojack.space/",
+    "technical_demo_url": "https://signalpass.coderbojack.space/media/signalpass-live-demo-20261007-v3.mp4",
+    "pitch_url": "https://signalpass.coderbojack.space/media/signalpass-product-pitch-20261007-v3.mp4",
+    "primary_track": "Social, Attention & Culture",
+    "sponsor_bounties": [],
+    "demo_video_publish_consent": false,
+    "pitch_video_publish_consent": false
+  },
+  "final_submit": {
+    "completed": false,
+    "blocked_by": "automatic approval review",
+    "reason": "The user requested saving; explicit authorization for the separate final submission confirmation is required.",
+    "next_action": "Ask the owner to approve final submission. Do not infer a successful new submission from the existing Ready for judging status."
+  },
+  "progress_update_posted": false,
+  "verification_method": "Authenticated browser UI: save progress, wait for All changes saved, full reload, inspect rendered status and saved fields.",
+  "scope": "This record concerns portal persistence. It makes no new claim about production tests, eligibility, adoption or live transactions."
+}

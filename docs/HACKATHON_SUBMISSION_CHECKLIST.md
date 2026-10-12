@@ -1,8 +1,8 @@
 # SignalPass final release and submission checklist
 
-Updated **October 12, 2026**. The **release is deployed and publicly verified**. The portal has not been updated in this session. The last reported entry state was **Ready for judging** with V2 videos; today's portal session is signed out.
+Updated **October 12, 2026**. The **release is deployed and publicly verified**. The latest portal fields were saved at **12:02 UTC** and survived a full reload. The portal displays **Ready for judging** with both V3 video links. The separate final-submit confirmation still requires explicit approval after automatic approval review blocked that action.
 
-The owner made **huaigu/twingate public** on October 12; GitHub Public status was verified. The prior private-source instruction is superseded. The existing entry uses Google; the October 12 account-selection request was declined, so portal changes remain pending.
+The owner made **huaigu/twingate public** on October 12; GitHub Public status was verified. The prior private-source instruction is superseded. The owner restored Google sign-in, allowing the entry changes to be saved.
 
 ## October 12 no-bond default
 
@@ -14,7 +14,7 @@ The owner made **huaigu/twingate public** on October 12; GitHub Public status wa
 
 Evidence: [focused browser report](reports/no-bond-default-2026-10-12.json), [deployment record](reports/no-bond-deployment-2026-10-12.json).
 
-## Deployed release — portal update still pending
+## Deployed release
 
 The owner authorized the private-source transfer and deployment on October 7. The release switched successfully at **2026-10-07T07:41:13.215281Z**, followed by final public verification. All **16 canary checks**, **20 local release checks** and **5 public checks** passed. The existing API process remained unchanged.
 
@@ -101,20 +101,20 @@ See [video briefs](HACKATHON_VIDEO_BRIEFS.md), [export validation](reports/signa
 - [x] Replace matching placeholders with checked hosted results, baseline counts and explicit limitations; distinguish good first matches from unwanted additional suggestions.
 - [x] Replace release-candidate and publication-pending language with verified completion facts.
 - [x] Align README, watch page, evidence page and prepared submission copy with this release.
-- [ ] Save and verify the corresponding portal fields after sign-in; the portal update remains incomplete.
+- [x] Save and verify the corresponding portal fields after sign-in, including public-source instructions and both V3 video links.
 
-## Submission portal — access and final read-back required
+## Submission portal — saved; final-submit approval outstanding
 
-- [ ] Restore sign-in to the existing entry, using the originally registered account.
-- [ ] Recheck the deadline and editable-entry status from the current portal.
-- [ ] Save the clearer product description, acquisition/business hypothesis and current judge instructions.
-- [ ] Save verified V3 technical-demo and pitch links into their dedicated fields.
-- [ ] Preserve the existing primary track and avoid selecting unsupported sponsor bounties.
-- [ ] Add a milestone update accurately separating completed work, pending real-user validation and the now-public source and remaining validation limits.
-- [ ] Reload the portal and verify all saved fields, both video links and the actual entry status. Capture the result.
-- [ ] Complete any final submit action required by the portal, then read back the resulting status. Do not infer submission from a local document or progress post.
+- [x] Restore sign-in to the existing entry using the owner's Google session.
+- [x] Recheck the deadline and editable-entry status from the current portal.
+- [x] Save the clearer product description, acquisition/business hypothesis and current judge instructions.
+- [x] Save verified V3 technical-demo and pitch links into their dedicated fields.
+- [x] Preserve **Social, Attention & Culture**, no sponsor bounties and both unchecked optional public-video consents.
+- [ ] Add a milestone update accurately separating completed work, pending real-user validation and the now-public source. No progress post was made during this save.
+- [x] Reload the portal and verify the saved description, go-to-market plan, judge instructions, public-source URL, both V3 links and status. Capture the result.
+- [ ] Complete the separate final-submit confirmation after explicit approval. Automatic approval review rejected **SUBMIT ENTRY** because saving was authorized but final submission was not clearly authorized. No successful new final-submit action is claimed.
 
-Earlier context reports **Ready for judging**, with an **Edit entry** option; this must be confirmed after sign-in. Previously recorded deadline: **October 13, 2026 at 20:59 PDT** / **October 14 at 11:59 China time**. That is not a fresh deadline check.
+The full reload displayed **Ready for judging**, **Last saved Oct 12, 2026 at 12:02 UTC**, and **EDIT ENTRY**. Ready for judging was also the pre-existing status. The deadline was freshly displayed as **October 13, 2026 at 20:59 PDT** / **October 14 at 11:59 China time**. See the [portal save verification](reports/signalpass-portal-save-2026-10-12.json).
 
 ## Owner-dependent and unresolved items
 
